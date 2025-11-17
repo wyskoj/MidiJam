@@ -1,3 +1,4 @@
 /.idea/**
+/.venv/**
 /res/**
 /cmake-build-debug-visual-studio/
