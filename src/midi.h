@@ -4,8 +4,9 @@
 
 #ifndef MIDIJAM_MIDI_H
 #define MIDIJAM_MIDI_H
+#include "dmusici.h"
 
-extern int g_midiFile_duration;
+extern MUSIC_TIME g_midiFile_duration;
 
 int __cdecl LoadAndPlayMidiFile(char *midiFilePath);
 

@@ -121,7 +121,6 @@ bool CreateMidijamWindow(LPCSTR lpWindowName, HINSTANCE hInstance, GLsizei windo
                     SetPerspectiveProjection(windowWidth, windowHeight),
                     LoadHwfFonts(hwfStream, hwfAppendix_ptr, hwfAppendixEntriesCount))
                 && (CreateFontDisplayLists(), InitLightsCullingAndInputs())) {
-                std::cout << "CreateMidiJamWindow succeeded.\n";
                 return TRUE;
             } else {
             CLEANUP_AND_FAIL:
@@ -625,7 +624,6 @@ void SetPerspectiveProjection(int windowWidth, int windowHeight) {
 }
 
 void MidiJamWindowCleanup() {
-    std::cout << "Cleaning up MidiJam window...\n";
     if (g_fullscreen) {
         ChangeDisplaySettingsA(NULL, 0);
         ShowCursor(TRUE);
@@ -1236,7 +1234,6 @@ __time32_t GetUnixEpochTime(__time32_t *const Time) {
 }
 
 HRESULT PlaySegment() {
-    std::cout << "PlaySegment called\n";
     HRESULT hrSetRepeats; // [esp+0h] [ebp-8h]
     int hrPlaySegment; // [esp+0h] [ebp-8h]
 

@@ -50,7 +50,9 @@ HRESULT IMidiJamTool::GetMediaTypes(DWORD **padwMediaTypes, DWORD dwNumElements)
 }
 
 HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPMSG) {
-    // TODO
+    if ( !pPMSG->pGraph || pPMSG->pGraph->StampPMsg(pPMSG) < 0 )
+        return DMUS_S_FREE;
+    /* TODO */
     return DMUS_S_REQUEUE;
 }
 

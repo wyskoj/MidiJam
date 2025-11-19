@@ -11,7 +11,7 @@
 #include "globals.h"
 #include "MidiJam.h"
 
-int g_midiFile_duration;
+MUSIC_TIME g_midiFile_duration;
 
 int LoadAndPlayMidiFile(char *midiFilePath) {
     // [esp+Ch] [ebp-Ch]
@@ -34,7 +34,8 @@ int LoadAndPlayMidiFile(char *midiFilePath) {
         return 1; // Bad, kill app
     }
 
-    IDirectMusicPerformance8 *pPerformance = g_DirectMusicSegmentWrapper->pPerformance;
-    pPerformance->GetPrepareTime(reinterpret_cast<DWORD *>(&g_midiFile_duration));
+    // The following does not match the decompilation but is what I think was intended
+    IDirectMusicSegment *pSegment = g_DirectMusicSegmentWrapper->pSegment;
+    pSegment->GetLength(&g_midiFile_duration);
     return 0; // Good!
 }

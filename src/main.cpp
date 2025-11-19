@@ -133,7 +133,7 @@ int main() {
         g_workingDirectory[strlen(g_workingDirectory) - 1] = '\0';
     }
 
-    MidiJamInitialize();
+
 
     g_lastUnixEpochTime = GetUnixEpochTime(nullptr);
 
@@ -198,8 +198,11 @@ int main() {
     g_songFillbarBox_ms3d->LoadFromHWF("SongFillbarBox.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
     g_songFillbarBox_ms3d->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
 
+    MidiJamInitialize();
+
     int v613 = 0;
     g_timerEventId = timeSetEvent(5u, 0, UpdateMidiJamMM, 0, TIME_PERIODIC);
+    RECOIL_SCALE_FACTOR = 5;
 
     auto lpCmdLine = __argv[1];
     if (lpCmdLine && strlen(lpCmdLine) > 4) {
