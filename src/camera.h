@@ -44,5 +44,16 @@ extern __int16 g_rotatingCameraIsActive;
 extern GLfloat g_rotatingCameraAngle;
 extern ROTATING_CAMERA_DIRECTION g_rotatingCameraDirection;
 extern __int16 g_rotatingCameraIdleTime;
+extern float g_autoCamDeltaTransform[6];
+extern __int16 g_autoCamIsIdle;
+extern __int16 g_autoCameraIsActive;
+extern __int16 g_lastCameraAngle;
 
+bool IsCameraAngleViable_2();
+bool IsCameraAngleViable_3();
+bool IsCameraAngleViable_4();
+bool IsCameraAngleViable_6();
+
+void TriggerAutoCam();
+void __cdecl MoveCameraToAngle(CameraAngle angle, __int16 isAutocamEnabled);
 #endif //MIDIJAM_CAMERA_H

@@ -205,6 +205,10 @@ __int16 g_rotatingCameraIsActive;
 GLfloat g_rotatingCameraAngle;
 ROTATING_CAMERA_DIRECTION g_rotatingCameraDirection;
 __int16 g_rotatingCameraIdleTime;
+float g_autoCamDeltaTransform[6];
+__int16 g_autoCamIsIdle;
+__int16 g_autoCameraIsActive = 1;
+__int16 g_lastCameraAngle;
 
 // Window
 int g_windowCenterX;

@@ -728,14 +728,14 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //     }
         if ( !g_time_global_current )
           g_time_global_current = pmtNow;
-        //     if ( g_isShuttingDown == 1 )
-        //       pmtNow = g_time_global_current;
+        if ( g_isShuttingDown == 1 )
+          pmtNow = g_time_global_current;
         anyInstrumentActive = 0;
         //     I_Accordion_MM(pmtNow);
         //     if ( g_ds_harp && I_Harp_MM(pmtNow) )
         //       anyInstrumentActive = 1;
-        if ( g_ds_piano && I_Piano_MM(pmtNow) )
-          anyInstrumentActive = 1;
+        if (g_ds_piano && I_Piano_MM(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_ds_xylophone && I_Xylophone_MM(pmtNow) )
         //       anyInstrumentActive = 1;
         //     if ( g_ds_violin && I_Violin_MM(pmtNow) == 1 )
@@ -1163,55 +1163,45 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
                 g_killApplication = 1;
             }
         }
-        // if ( g_killApplication == 1 )
-        //   g_killApplication_0 = 1;
-        //     cameraTransformComponentsAtTarget = 0;
-        //     // check if auto cam is at target transform
-        //     for ( patch = 0; patch < 6; ++patch )
-        //     {
-        //       if ( g_cameraLocation[patch] >= *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch) )
-        //       {
-        //         if ( g_cameraLocation[patch] <= *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch) )
-        //         {
-        //           if ( g_cameraLocation[patch] == *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch) )
-        //             ++cameraTransformComponentsAtTarget;
-        //         }
-        //         else
-        //         {
-        //           // adjust camera transform to reach target
-        //           g_cameraLocation[patch] = g_cameraLocation[patch] + g_autoCamDeltaTransform[patch];
-        //           // check for equality
-        //           if ( g_cameraLocation[patch] <= *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch) )
-        //           {
-        //             g_cameraLocation[patch] = *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch);
-        //             ++cameraTransformComponentsAtTarget;
-        //           }
-        //         }
-        //       }
-        //       else
-        //       {
-        //         // adjust camera transform to reach target
-        //         g_cameraLocation[patch] = g_cameraLocation[patch] + g_autoCamDeltaTransform[patch];
-        //         // check for equality
-        //         if ( g_cameraLocation[patch] >= *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch) )
-        //         {
-        //           g_cameraLocation[patch] = *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch);
-        //           ++cameraTransformComponentsAtTarget;
-        //         }
-        //       }
-        //     }
-        //     if ( cameraTransformComponentsAtTarget == 6 )
-        //       g_autoCamIsIdle = 1;
-        //     ++g_framesSinceStart;
-        //     if ( !(++g_autoCamIdleTime % 1000)
-        //       || !(g_autoCamIdleTime % 200)
-        //       && ((g_targetCameraAngle == CAMERA_2A || g_targetCameraAngle == CAMERA_2B) && !IsCameraAngleViable_2()
-        //        || (g_targetCameraAngle == CAMERA_3A || g_targetCameraAngle == CAMERA_3B) && !IsCameraAngleViable_3()
-        //        || (g_targetCameraAngle == CAMERA_4A || g_targetCameraAngle == CAMERA_4B) && !IsCameraAngleViable_4()
-        //        || g_targetCameraAngle == CAMERA_6 && !IsCameraAngleViable_6()) )
-        //     {
-        //       TriggerAutoCam();
-        //     }
+        if (g_killApplication == 1)
+            g_killApplication_0 = 1;
+        cameraTransformComponentsAtTarget = 0;
+        // check if auto cam is at target transform
+        for (patch = 0; patch < 6; ++patch) {
+            if (g_cameraLocation[patch] >= *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch)) {
+                if (g_cameraLocation[patch] <= *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch)) {
+                    if (g_cameraLocation[patch] == *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch))
+                        ++cameraTransformComponentsAtTarget;
+                } else {
+                    // adjust camera transform to reach target
+                    g_cameraLocation[patch] = g_cameraLocation[patch] + g_autoCamDeltaTransform[patch];
+                    // check for equality
+                    if (g_cameraLocation[patch] <= *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch)) {
+                        g_cameraLocation[patch] = *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch);
+                        ++cameraTransformComponentsAtTarget;
+                    }
+                }
+            } else {
+                // adjust camera transform to reach target
+                g_cameraLocation[patch] = g_cameraLocation[patch] + g_autoCamDeltaTransform[patch];
+                // check for equality
+                if (g_cameraLocation[patch] >= *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch)) {
+                    g_cameraLocation[patch] = *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch);
+                    ++cameraTransformComponentsAtTarget;
+                }
+            }
+        }
+        if (cameraTransformComponentsAtTarget == 6)
+            g_autoCamIsIdle = 1;
+        ++g_framesSinceStart;
+        if (!(++g_autoCamIdleTime % 1000)
+            || !(g_autoCamIdleTime % 200)
+            && ((g_targetCameraAngle == CAMERA_2A || g_targetCameraAngle == CAMERA_2B) && !IsCameraAngleViable_2()
+                || (g_targetCameraAngle == CAMERA_3A || g_targetCameraAngle == CAMERA_3B) && !IsCameraAngleViable_3()
+                || (g_targetCameraAngle == CAMERA_4A || g_targetCameraAngle == CAMERA_4B) && !IsCameraAngleViable_4()
+                || g_targetCameraAngle == CAMERA_6 && !IsCameraAngleViable_6())) {
+            TriggerAutoCam();
+        }
     }
 }
 

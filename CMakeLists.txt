@@ -42,6 +42,7 @@ add_executable(MidiJam src/main.cpp
         src/instrument/instrument.h
         src/glhelp.h
         src/instrument/instrument.cpp
+        src/camera.cpp
 )
 
 target_include_directories(MidiJam PRIVATE "${CMAKE_SOURCE_DIR}/include")
