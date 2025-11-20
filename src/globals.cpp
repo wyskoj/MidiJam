@@ -8,6 +8,7 @@
 #include "camera.h"
 #include "MidiJam.h"
 #include "Ms3dBundle.h"
+#include "instrument/Piano.h"
 
 // State
 int g_killApplication_0;
@@ -22,6 +23,11 @@ int g_time_global_current;
 __int16 g_framesAlive;
 REFERENCE_TIME g_prtStart;
 MUSIC_TIME g_mtStart;
+MidiJamInstrumentId g_midiJamInstrumentIds[300];
+double g_currentTempo;
+double g_currentTempo_scaleFactor0_5;
+double g_currentTempo_scaleFactor0_9;
+double g_currentTempo_scaleFactor1_15;
 
 // HWF
 FILE *g_hwfStream;
@@ -30,6 +36,7 @@ unsigned int g_nHwfAppendixItems;
 
 // World
 float RECOIL_SCALE_FACTOR;
+GLfloat g_pianokey_translation_x[14];
 
 // Models
 Ms3dBundle *g_accordionFold_ms3d;
@@ -93,13 +100,8 @@ Ms3dBundle *g_mutedTriangle_ms3d;
 Ms3dBundle *g_ocarinaHandX_ms3d;
 Ms3dBundle *g_ocarina_ms3d;
 Ms3dBundle *g_panPipe_ms3d;
-Ms3dBundle *g_pianoCase_X_ms3d;
-Ms3dBundle *g_pianoKeyBlackDown_X_ms3d;
-Ms3dBundle *g_pianoKeyBlack_X_ms3d;
-Ms3dBundle *g_pianoKeyWhiteBackDown_X_ms3d;
-Ms3dBundle *g_pianoKeyWhiteBack_X_ms3d;
-Ms3dBundle *g_pianoKeyWhiteFrontDown_X_ms3d;
-Ms3dBundle *g_pianoKeyWhiteFront_X_ms3d;
+Ms3dBundle *g_pianoShadow_ms3d;
+Ms3dBundle *g_pianoStand_ms3d;
 Ms3dBundle *g_piccolo_ms3d;
 Ms3dBundle *g_pizzicatoStringHolder_ms3d;
 Ms3dBundle *g_popBottleMiddle_ms3d;
@@ -180,6 +182,8 @@ Ms3dBundle *g_xylophoneWhiteBar_vibes_ms3d;
 Ms3dBundle *g_zapperLaser_ms3d;
 Ms3dBundle *g_zapper_ms3d;
 
+PianoModels **g_pianoModels_ms3d_arr;
+
 // Camera
 CameraPosition CAMERA_POSITIONS[11] = {
     {-2.0, 60.0, 120.0, -2.0, 20.0, 0.0},
@@ -233,14 +237,18 @@ float g_cymbalRestingAngle[7];
 
 // Unknown
 GLfloat dword_45EBDC[14] = {
-    0, 1, 1, 3, 4, 4, 4, 7, 7, 9, 9, 9, 9, 9
+    0.5, 0.5, 0.5, 1.0, 0.5, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, 0.5, 0.5, 0.5
 };
 __int16 word_45EB30[88] = {
-    1, 12, 3, 1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7, 1, 9, 2, 10, 3, 4,
-    11, 5, 12, 6, 13, 7, 1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7, 1, 9, 2,
-    10, 3, 4, 11, 5, 12, 6, 13, 7, 1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13,
-    7, 1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7, 1, 9, 2, 10, 3, 4, 11, 5,
-    12, 6, 13, 0, 0
+    1, 12, 3,
+    1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7,
+    1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7,
+    1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7,
+    1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7,
+    1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7,
+    1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7,
+    1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7,
+    1,
 };
 DWORD dword_46E6A8;
 __int16 word_46B5D8[92];

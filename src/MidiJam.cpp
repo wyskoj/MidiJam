@@ -11,8 +11,10 @@
 #include "fade.h"
 #include "fonts.h"
 #include "globals.h"
+#include "midi.h"
 #include "Ms3dBundle.h"
 #include "text.h"
+#include "instrument/Piano.h"
 
 bool CreateMidijamWindow(LPCSTR lpWindowName, HINSTANCE hInstance, GLsizei windowWidth, GLsizei windowHeight,
                          int bitDepth, DWORD refreshRate, bool isFullscreen, FILE *hwfStream, char *hwfAppendix_ptr,
@@ -381,21 +383,19 @@ BOOL UpdateMidiJam() {
         g_stage_ms3d->RenderModel();
         glPopMatrix();
         // TODO
-        // // -- PIANO SHADOW --
-        // if ( g_inst_visible_piano > 0 )
-        // {
-        //   glPushMatrix();
-        //   glTranslatef(-50.0, -32.0, -20.0);
-        //   glRotatef(45.0, 0.0, 1.0, 0.0);
-        //   glTranslatef(0.0, 0.0, 5.0);
-        //   if ( g_inst_visible_piano > 1 )
-        //   {
-        //     z = (g_inst_visible_piano - 1) * 0.5 + 1.0;
-        //     glScalef(1.0, 1.0, z);
-        //   }
-        //   Ms3dBundle::RenderModel(g_pianoShadow_ms3d);
-        //   glPopMatrix();
-        // }
+        // -- PIANO SHADOW --
+        if (g_inst_visible_piano > 0) {
+            glPushMatrix();
+            glTranslatef(-50.0, -32.0, -20.0);
+            glRotatef(45.0, 0.0, 1.0, 0.0);
+            glTranslatef(0.0, 0.0, 5.0);
+            if (g_inst_visible_piano > 1) {
+                z = (g_inst_visible_piano - 1) * 0.5 + 1.0;
+                glScalef(1.0, 1.0, z);
+            }
+            g_pianoShadow_ms3d->RenderModel();
+            glPopMatrix();
+        }
         // // -- XYLOPHONE SHADOW --
         // if ( g_inst_visible_xylophone > 0 )
         // {
@@ -537,14 +537,14 @@ BOOL UpdateMidiJam() {
         // }
         // if ( g_ds_musicBox )
         //   I_MusicBox();
-        // if ( g_ds_piano )
-        // {
-        //   glPushMatrix();
-        //   glTranslatef(-50.0, 0.0, -20.0);
-        //   glRotatef(45.0, 0.0, 1.0, 0.0);
-        //   I_Piano();
-        //   glPopMatrix();
-        // }
+        if ( g_ds_piano )
+        {
+          glPushMatrix();
+          glTranslatef(-50.0, 0.0, -20.0);
+          glRotatef(45.0, 0.0, 1.0, 0.0);
+          I_Piano();
+          glPopMatrix();
+        }
         // if ( g_show_percussion == 1 )
         // {
         //   glPushMatrix();
@@ -601,7 +601,7 @@ BOOL UpdateMidiJam() {
             glPushMatrix();
             glLoadIdentity();
             gluLookAt(0.0, 0.0, 50.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-            // RenderFadeout();
+            RenderFadeout();
             glPopMatrix();
         }
         glFlush();
@@ -711,16 +711,14 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //     recoil_scale_factor = RECOIL_SCALE_FACTOR * 0.25;
         prtNow = 0;
         pmtNow = 0;
-        //     if ( DirectMusicSegmentWrapper::IsPlaying(g_DirectMusicSegmentWrapper) )
-        //     {
-        //       (g_DirectMusicPerformance->vtable->GetTime)(g_DirectMusicPerformance, &prtNow, &pmtNow);
-        //       if ( g_songFillbarScale < 1.0 )
-        //       {
-        //         g_songFillbarScale = (pmtNow - g_mtStart) / g_midiFile_duration;
-        //         if ( g_songFillbarScale > 1.0 )
-        //           g_songFillbarScale = 1.0;             // limit scale to 100%
-        //       }
-        //     }
+        if (g_DirectMusicSegmentWrapper->IsPlaying()) {
+            g_DirectMusicPerformance->GetTime(&prtNow, &pmtNow);
+            if (g_songFillbarScale < 1.0) {
+                g_songFillbarScale = static_cast<double>(pmtNow - g_mtStart) / static_cast<double>(g_midiFile_duration);
+                if (g_songFillbarScale > 1.0)
+                    g_songFillbarScale = 1.0; // limit scale to 100%
+            }
+        }
         //     if ( ++g_isEvenFrame > 1 )
         //     {
         //       g_isEvenFrame = 0;
@@ -728,16 +726,16 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //         g_vibratingString_frameIndex = 0;
         //       g_vibratingString_frame = VIBRATING_STRING_ANIM_SEQUENCE[g_vibratingString_frameIndex];
         //     }
-        //     if ( !g_time_global_current )
-        //       g_time_global_current = pmtNow;
+        if ( !g_time_global_current )
+          g_time_global_current = pmtNow;
         //     if ( g_isShuttingDown == 1 )
         //       pmtNow = g_time_global_current;
         anyInstrumentActive = 0;
         //     I_Accordion_MM(pmtNow);
         //     if ( g_ds_harp && I_Harp_MM(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_ds_piano && I_Piano_MM(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_ds_piano && I_Piano_MM(pmtNow) )
+          anyInstrumentActive = 1;
         //     if ( g_ds_xylophone && I_Xylophone_MM(pmtNow) )
         //       anyInstrumentActive = 1;
         //     if ( g_ds_violin && I_Violin_MM(pmtNow) == 1 )

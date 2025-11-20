@@ -11,6 +11,7 @@
 #include "midi.h"
 #include "MidiJam.h"
 #include "Ms3dBundle.h"
+#include "instrument/Piano.h"
 
 int main() {
     extern char ** __argv;
@@ -89,32 +90,32 @@ int main() {
     g_pianoXylophoneOffset = g_pianoXylophoneOffset * 0.5;
 
     // WTF?
-    dword_464BFC = -1101703851;
-    dword_464F68 = 1058362709;
-    dword_464C00 = 0;
-    dword_464F6C = 1056964608;
-    dword_464C04 = 1045779797;
-    dword_464F70 = 1058362709;
-    dword_464C08 = -1098907648;
-    dword_464F74 = 1056964608;
-    dword_464C0C = -1112888661;
-    dword_464F78 = 1056964608;
-    dword_464C10 = 1034594987;
-    dword_464F7C = 1056964608;
-    dword_464C14 = 1048576000;
-    dword_464F80 = 1056964608;
-    dword_464C18 = 0;
-    dword_464F84 = 1065353216;
-    dword_464C1C = -1107296256;
-    dword_464F88 = 1065353216;
-    dword_464C20 = 1040187392;
-    dword_464F8C = 1065353216;
-    dword_464C24 = -1098907648;
-    dword_464F90 = 1065353216;
-    dword_464C28 = 0;
-    dword_464F94 = 1065353216;
-    dword_464C2C = 1048576000;
-    dword_464F98 = 1065353216;
+    g_pianokey_translation_x[1] = -0.20833333;
+    g_pianokey_scale[1] = 0.58333331;
+    g_pianokey_translation_x[2] = 0.0;
+    g_pianokey_scale[2] = 0.5;
+    g_pianokey_translation_x[3] = 0.20833333;
+    g_pianokey_scale[3] = 0.58333331;
+    g_pianokey_translation_x[4] = -0.25;
+    g_pianokey_scale[4] = 0.5;
+    g_pianokey_translation_x[5] = -0.083333336;
+    g_pianokey_scale[5] = 0.5;
+    g_pianokey_translation_x[6] = 0.083333336;
+    g_pianokey_scale[6] = 0.5;
+    g_pianokey_translation_x[7] = 0.25;
+    g_pianokey_scale[7] = 0.5;
+    g_pianokey_translation_x[8] = 0.0;
+    g_pianokey_scale[8] = 1.0;
+    g_pianokey_translation_x[9] = -0.125;
+    g_pianokey_scale[9] = 1.0;
+    g_pianokey_translation_x[10] = 0.125;
+    g_pianokey_scale[10] = 1.0;
+    g_pianokey_translation_x[11] = -0.25;
+    g_pianokey_scale[11] = 1.0;
+    g_pianokey_translation_x[12] = 0.0;
+    g_pianokey_scale[12] = 1.0;
+    g_pianokey_translation_x[13] = 0.25;
+    g_pianokey_scale[13] = 1.0;
 
     g_windowCenterX = 0;
     g_windowCenterY = 0;
@@ -132,7 +133,6 @@ int main() {
     if (strlen(g_workingDirectory) > 0 && g_workingDirectory[strlen(g_workingDirectory) - 1] == '\\') {
         g_workingDirectory[strlen(g_workingDirectory) - 1] = '\0';
     }
-
 
 
     g_lastUnixEpochTime = GetUnixEpochTime(nullptr);
@@ -197,6 +197,47 @@ int main() {
     g_songFillbarBox_ms3d = new Ms3dBundle();
     g_songFillbarBox_ms3d->LoadFromHWF("SongFillbarBox.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
     g_songFillbarBox_ms3d->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+
+    g_pianoShadow_ms3d = new Ms3dBundle();
+    g_pianoShadow_ms3d->LoadFromHWF("PianoShadow.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+    g_pianoShadow_ms3d->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+
+    g_pianoStand_ms3d = new Ms3dBundle();
+    g_pianoStand_ms3d->LoadFromHWF("PianoStand.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+    g_pianoStand_ms3d->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+
+    // Initialize the array of PianoModels pointers
+    g_pianoModels_ms3d_arr = new PianoModels*[4];
+    for (i = 0; i < 4; ++i) {
+        g_pianoModels_ms3d_arr[i] = new PianoModels();
+        g_pianoModels_ms3d_arr[i]->pianoCase = new Ms3dBundle();
+        g_pianoModels_ms3d_arr[i]->pianoCase->LoadFromHWF("PianoCase.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+        g_pianoModels_ms3d_arr[i]->pianoCase->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+
+        g_pianoModels_ms3d_arr[i]->pianoKeyBlack = new Ms3dBundle();
+        g_pianoModels_ms3d_arr[i]->pianoKeyBlack->LoadFromHWF("PianoKeyBlack.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+        g_pianoModels_ms3d_arr[i]->pianoKeyBlack->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+
+        g_pianoModels_ms3d_arr[i]->pianoKeyBlackDown = new Ms3dBundle();
+        g_pianoModels_ms3d_arr[i]->pianoKeyBlackDown->LoadFromHWF("PianoKeyBlackDown.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+        g_pianoModels_ms3d_arr[i]->pianoKeyBlackDown->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFront = new Ms3dBundle();
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFront->LoadFromHWF("PianoKeyWhiteFront.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFront->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBack = new Ms3dBundle();
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBack->LoadFromHWF("PianoKeyWhiteBack.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBack->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFrontDown = new Ms3dBundle();
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFrontDown->LoadFromHWF("PianoKeyWhiteFrontDown.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFrontDown->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBackDown = new Ms3dBundle();
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBackDown->LoadFromHWF("PianoKeyWhiteBackDown.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBackDown->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+    }
 
     MidiJamInitialize();
 

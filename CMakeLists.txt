@@ -37,6 +37,11 @@ add_executable(MidiJam src/main.cpp
         src/hwf.h
         src/midi.cpp
         src/midi.h
+        src/instrument/Piano.cpp
+        src/instrument/Piano.h
+        src/instrument/instrument.h
+        src/glhelp.h
+        src/instrument/instrument.cpp
 )
 
 target_include_directories(MidiJam PRIVATE "${CMAKE_SOURCE_DIR}/include")

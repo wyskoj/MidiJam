@@ -9,6 +9,8 @@
 #include <GL/GL.h>
 
 #include "dmusici.h"
+#include "instrument/instrument.h"
+#include "instrument/Piano.h"
 
 class Ms3dBundle;
 
@@ -25,6 +27,11 @@ extern int g_time_global_current;
 extern __int16 g_framesAlive;
 extern REFERENCE_TIME g_prtStart;
 extern MUSIC_TIME g_mtStart;
+extern MidiJamInstrumentId g_midiJamInstrumentIds[300];
+extern double g_currentTempo;
+extern double g_currentTempo_scaleFactor0_5 ;
+extern double g_currentTempo_scaleFactor0_9 ;
+extern double g_currentTempo_scaleFactor1_15;
 
 // HWF
 extern FILE *g_hwfStream;
@@ -33,6 +40,7 @@ extern unsigned int g_nHwfAppendixItems;
 
 // World
 extern float RECOIL_SCALE_FACTOR;
+extern GLfloat g_pianokey_translation_x[14];
 
 // Models
 extern Ms3dBundle *g_accordionFold_ms3d;
@@ -96,13 +104,15 @@ extern Ms3dBundle *g_mutedTriangle_ms3d;
 extern Ms3dBundle *g_ocarinaHandX_ms3d;
 extern Ms3dBundle *g_ocarina_ms3d;
 extern Ms3dBundle *g_panPipe_ms3d;
-extern Ms3dBundle *g_pianoCase_X_ms3d;
+extern Ms3dBundle **g_pianoCase_X_ms3d;  // Array of 28 pointers
 extern Ms3dBundle *g_pianoKeyBlackDown_X_ms3d;
 extern Ms3dBundle *g_pianoKeyBlack_X_ms3d;
-extern Ms3dBundle *g_pianoKeyWhiteBackDown_X_ms3d;
-extern Ms3dBundle *g_pianoKeyWhiteBack_X_ms3d;
-extern Ms3dBundle *g_pianoKeyWhiteFrontDown_X_ms3d;
+extern Ms3dBundle **g_pianoKeyWhiteBackDown_X_ms3d;  // Array of 28 pointers
+extern Ms3dBundle **g_pianoKeyWhiteBack_X_ms3d;  // Array of 28 pointers
+extern Ms3dBundle **g_pianoKeyWhiteFrontDown_X_ms3d;  // Array of 28 pointers
 extern Ms3dBundle *g_pianoKeyWhiteFront_X_ms3d;
+extern Ms3dBundle *g_pianoShadow_ms3d;
+extern Ms3dBundle *g_pianoStand_ms3d;
 extern Ms3dBundle *g_piccolo_ms3d;
 extern Ms3dBundle *g_pizzicatoStringHolder_ms3d;
 extern Ms3dBundle *g_popBottleMiddle_ms3d;
@@ -182,6 +192,8 @@ extern Ms3dBundle *g_xylophoneWhiteBar_ms3d;
 extern Ms3dBundle *g_xylophoneWhiteBar_vibes_ms3d;
 extern Ms3dBundle *g_zapperLaser_ms3d;
 extern Ms3dBundle *g_zapper_ms3d;
+
+extern PianoModels **g_pianoModels_ms3d_arr;
 
 // Camera
 
