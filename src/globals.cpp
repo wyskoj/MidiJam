@@ -28,6 +28,7 @@ double g_currentTempo;
 double g_currentTempo_scaleFactor0_5;
 double g_currentTempo_scaleFactor0_9;
 double g_currentTempo_scaleFactor1_15;
+float g_playbackSpeed;
 
 // HWF
 FILE *g_hwfStream;

@@ -11,6 +11,7 @@
 #include "fade.h"
 #include "fonts.h"
 #include "globals.h"
+#include "input.h"
 #include "midi.h"
 #include "Ms3dBundle.h"
 #include "text.h"
@@ -1138,7 +1139,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         }
         g_time_global_current = pmtNow;
         ++g_framesAlive;
-        // HandleKeyPresses();
+        HandleKeyPresses();
         globalTimeMs = timeGetTime();
         currentTimeMs = (globalTimeMs - g_applicationStartTime);
         recoil_scale_factor = currentTimeMs / RECOIL_SCALE_FACTOR; // wtf?

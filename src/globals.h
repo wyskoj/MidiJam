@@ -32,6 +32,7 @@ extern double g_currentTempo;
 extern double g_currentTempo_scaleFactor0_5 ;
 extern double g_currentTempo_scaleFactor0_9 ;
 extern double g_currentTempo_scaleFactor1_15;
+extern float g_playbackSpeed;
 
 // HWF
 extern FILE *g_hwfStream;
