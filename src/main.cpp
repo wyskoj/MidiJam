@@ -13,6 +13,16 @@
 #include "Ms3dBundle.h"
 #include "instrument/Piano.h"
 
+#define LOAD_MS3D_BUNDLE(varName, fileName) \
+varName = new Ms3dBundle(); \
+if (!varName->LoadFromHWF(fileName, g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems)) { \
+MessageBoxA(0, "Couldn't load the model data\\model.ms3d", "Error", 0x10u); \
+return 0; \
+}
+
+#define MS3D_APPLY_TEXTURES(varName) \
+varName->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+
 int main() {
     extern char ** __argv;
     int i;
@@ -178,68 +188,66 @@ int main() {
     g_windowCenterX = g_windowCenter_X;
     g_windowCenterY = g_windowCenter_Y;
 
-    g_drumSet_Stick_ms3d = new Ms3dBundle();
-    g_drumSet_Stick_ms3d->LoadFromHWF("DrumSet_Stick.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-    g_drumSet_Stick_ms3d->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+    LOAD_MS3D_BUNDLE(g_drumSet_Stick_ms3d, "DrumSet_Stick.ms3d");
+    LOAD_MS3D_BUNDLE(g_screenGradient_ms3d, "ScreenGradient.ms3d");
+    LOAD_MS3D_BUNDLE(g_stage_ms3d, "Stage.ms3d");
+    LOAD_MS3D_BUNDLE(g_songFillbar_ms3d, "SongFillbar.ms3d");
+    LOAD_MS3D_BUNDLE(g_songFillbarBox_ms3d, "SongFillbarBox.ms3d");
+    LOAD_MS3D_BUNDLE(g_pianoShadow_ms3d, "PianoShadow.ms3d");
+    LOAD_MS3D_BUNDLE(g_pianoStand_ms3d, "PianoStand.ms3d");
 
-    g_screenGradient_ms3d = new Ms3dBundle();
-    g_screenGradient_ms3d->LoadFromHWF("ScreenGradient.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-    g_screenGradient_ms3d->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-
-    g_stage_ms3d = new Ms3dBundle();
-    g_stage_ms3d->LoadFromHWF("Stage.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-    g_stage_ms3d->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-
-    g_songFillbar_ms3d = new Ms3dBundle();
-    g_songFillbar_ms3d->LoadFromHWF("SongFillbar.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-    g_songFillbar_ms3d->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-
-    g_songFillbarBox_ms3d = new Ms3dBundle();
-    g_songFillbarBox_ms3d->LoadFromHWF("SongFillbarBox.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-    g_songFillbarBox_ms3d->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-
-    g_pianoShadow_ms3d = new Ms3dBundle();
-    g_pianoShadow_ms3d->LoadFromHWF("PianoShadow.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-    g_pianoShadow_ms3d->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-
-    g_pianoStand_ms3d = new Ms3dBundle();
-    g_pianoStand_ms3d->LoadFromHWF("PianoStand.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-    g_pianoStand_ms3d->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-
-    // Initialize the array of PianoModels pointers
-    g_pianoModels_ms3d_arr = new PianoModels*[4];
+    g_pianoModels_ms3d_arr = new PianoModels *[4];
     for (i = 0; i < 4; ++i) {
         g_pianoModels_ms3d_arr[i] = new PianoModels();
-        g_pianoModels_ms3d_arr[i]->pianoCase = new Ms3dBundle();
-        g_pianoModels_ms3d_arr[i]->pianoCase->LoadFromHWF("PianoCase.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-        g_pianoModels_ms3d_arr[i]->pianoCase->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+        LOAD_MS3D_BUNDLE(g_pianoModels_ms3d_arr[i]->pianoCase, "PianoCase.ms3d");
+        LOAD_MS3D_BUNDLE(g_pianoModels_ms3d_arr[i]->pianoKeyBlack, "PianoKeyBlack.ms3d");
+        LOAD_MS3D_BUNDLE(g_pianoModels_ms3d_arr[i]->pianoKeyBlackDown, "PianoKeyBlackDown.ms3d");
+        LOAD_MS3D_BUNDLE(g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFront, "PianoKeyWhiteFront.ms3d");
+        LOAD_MS3D_BUNDLE(g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBack, "PianoKeyWhiteBack.ms3d");
+        LOAD_MS3D_BUNDLE(g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFrontDown, "PianoKeyWhiteFrontDown.ms3d");
+        LOAD_MS3D_BUNDLE(g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBackDown, "PianoKeyWhiteBackDown.ms3d");
+    }
+    g_pianoModels_ms3d_arr[1]->pianoCase->ReplaceTexture("PianoSkin.bmp", "PianoSkin_Wood.bmp");
+    g_pianoModels_ms3d_arr[1]->pianoKeyBlack->ReplaceTexture("PianoSkin.bmp", "PianoSkin_Wood.bmp");
+    g_pianoModels_ms3d_arr[1]->pianoKeyBlackDown->ReplaceTexture("PianoSkin.bmp", "PianoSkin_Wood.bmp");
+    g_pianoModels_ms3d_arr[1]->pianoKeyWhiteFront->ReplaceTexture("PianoSkin.bmp", "PianoSkin_Wood.bmp");
+    g_pianoModels_ms3d_arr[1]->pianoKeyWhiteBack->ReplaceTexture("PianoSkin.bmp", "PianoSkin_Wood.bmp");
+    g_pianoModels_ms3d_arr[1]->pianoKeyWhiteFrontDown->ReplaceTexture("PianoSkin.bmp", "PianoSkin_Wood.bmp");
+    g_pianoModels_ms3d_arr[1]->pianoKeyWhiteBackDown->ReplaceTexture("PianoSkin.bmp", "PianoSkin_Wood.bmp");
+    g_pianoModels_ms3d_arr[2]->pianoCase->ReplaceTexture("PianoSkin.bmp", "SynthSkin.bmp");
+    g_pianoModels_ms3d_arr[2]->pianoKeyBlack->ReplaceTexture("PianoSkin.bmp", "SynthSkin.bmp");
+    g_pianoModels_ms3d_arr[2]->pianoKeyBlackDown->ReplaceTexture("PianoSkin.bmp", "SynthSkin.bmp");
+    g_pianoModels_ms3d_arr[2]->pianoKeyWhiteFront->ReplaceTexture("PianoSkin.bmp", "SynthSkin.bmp");
+    g_pianoModels_ms3d_arr[2]->pianoKeyWhiteBack->ReplaceTexture("PianoSkin.bmp", "SynthSkin.bmp");
+    g_pianoModels_ms3d_arr[2]->pianoKeyWhiteFrontDown->ReplaceTexture("PianoSkin.bmp", "SynthSkin.bmp");
+    g_pianoModels_ms3d_arr[2]->pianoKeyWhiteBackDown->ReplaceTexture("PianoSkin.bmp", "SynthSkin.bmp");
+    g_pianoModels_ms3d_arr[3]->pianoCase->ReplaceTexture("PianoSkin.bmp", "HarpsichordSkin.bmp");
+    g_pianoModels_ms3d_arr[3]->pianoKeyBlack->ReplaceTexture("PianoSkin.bmp", "HarpsichordSkin.bmp");
+    g_pianoModels_ms3d_arr[3]->pianoKeyBlackDown->ReplaceTexture("PianoSkin.bmp", "HarpsichordSkin.bmp");
+    g_pianoModels_ms3d_arr[3]->pianoKeyWhiteFront->ReplaceTexture("PianoSkin.bmp", "HarpsichordSkin.bmp");
+    g_pianoModels_ms3d_arr[3]->pianoKeyWhiteBack->ReplaceTexture("PianoSkin.bmp", "HarpsichordSkin.bmp");
+    g_pianoModels_ms3d_arr[3]->pianoKeyWhiteFrontDown->ReplaceTexture("PianoSkin.bmp", "HarpsichordSkin.bmp");
+    g_pianoModels_ms3d_arr[3]->pianoKeyWhiteBackDown->ReplaceTexture("PianoSkin.bmp", "HarpsichordSkin.bmp");
+    // TODO UnixEpochTime
+    MidiJamInitialize();
+    MS3D_APPLY_TEXTURES(g_drumSet_Stick_ms3d);
+    MS3D_APPLY_TEXTURES(g_screenGradient_ms3d);
+    MS3D_APPLY_TEXTURES(g_stage_ms3d);
+    MS3D_APPLY_TEXTURES(g_songFillbar_ms3d);
+    MS3D_APPLY_TEXTURES(g_songFillbarBox_ms3d);
+    MS3D_APPLY_TEXTURES(g_pianoShadow_ms3d);
+    MS3D_APPLY_TEXTURES(g_pianoStand_ms3d);
 
-        g_pianoModels_ms3d_arr[i]->pianoKeyBlack = new Ms3dBundle();
-        g_pianoModels_ms3d_arr[i]->pianoKeyBlack->LoadFromHWF("PianoKeyBlack.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-        g_pianoModels_ms3d_arr[i]->pianoKeyBlack->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-
-        g_pianoModels_ms3d_arr[i]->pianoKeyBlackDown = new Ms3dBundle();
-        g_pianoModels_ms3d_arr[i]->pianoKeyBlackDown->LoadFromHWF("PianoKeyBlackDown.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-        g_pianoModels_ms3d_arr[i]->pianoKeyBlackDown->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFront = new Ms3dBundle();
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFront->LoadFromHWF("PianoKeyWhiteFront.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFront->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBack = new Ms3dBundle();
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBack->LoadFromHWF("PianoKeyWhiteBack.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBack->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFrontDown = new Ms3dBundle();
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFrontDown->LoadFromHWF("PianoKeyWhiteFrontDown.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFrontDown->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBackDown = new Ms3dBundle();
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBackDown->LoadFromHWF("PianoKeyWhiteBackDown.ms3d", g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
-        g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBackDown->ApplyTextures(g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems);
+    for (i = 0; i < 4; ++i) {
+        MS3D_APPLY_TEXTURES(g_pianoModels_ms3d_arr[i]->pianoCase);
+        MS3D_APPLY_TEXTURES(g_pianoModels_ms3d_arr[i]->pianoKeyBlack);
+        MS3D_APPLY_TEXTURES(g_pianoModels_ms3d_arr[i]->pianoKeyBlackDown);
+        MS3D_APPLY_TEXTURES(g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFront);
+        MS3D_APPLY_TEXTURES(g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBack);
+        MS3D_APPLY_TEXTURES(g_pianoModels_ms3d_arr[i]->pianoKeyWhiteFrontDown);
+        MS3D_APPLY_TEXTURES(g_pianoModels_ms3d_arr[i]->pianoKeyWhiteBackDown);
     }
 
-    MidiJamInitialize();
 
     int v613 = 0;
     g_timerEventId = timeSetEvent(5u, 0, UpdateMidiJamMM, 0, TIME_PERIODIC);
@@ -253,9 +261,9 @@ int main() {
         // Copy MIDI file name up to but not including ".MID" or ".RMI"
         for (m = 0;
              m < (int) (len - 4) &&
-             !((lpCmdLine[m] == '.' &&
-                ((lpCmdLine[m + 1] == 'M' && lpCmdLine[m + 2] == 'I' && lpCmdLine[m + 3] == 'D') ||
-                 (lpCmdLine[m + 1] == 'R' && lpCmdLine[m + 2] == 'M' && lpCmdLine[m + 3] == 'I'))));
+             !(lpCmdLine[m] == '.' &&
+               ((lpCmdLine[m + 1] == 'M' && lpCmdLine[m + 2] == 'I' && lpCmdLine[m + 3] == 'D') ||
+                (lpCmdLine[m + 1] == 'R' && lpCmdLine[m + 2] == 'M' && lpCmdLine[m + 3] == 'I')));
              m++) {
             g_midiFileName[m] = lpCmdLine[m];
         }
