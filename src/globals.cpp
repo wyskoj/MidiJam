@@ -241,7 +241,7 @@ GLfloat g_cymbal_rot_y[7];
 float g_cymbalRestingAngle[7];
 
 // Unknown
-GLfloat dword_45EBDC[14] = {
+GLfloat KEY_WIDTHS[14] = {
     0.5, 0.5, 0.5, 1.0, 0.5, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, 0.5, 0.5, 0.5
 };
 __int16 word_45EB30[88] = {

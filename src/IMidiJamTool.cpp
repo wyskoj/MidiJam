@@ -4,7 +4,10 @@
 
 #include "IMidiJamTool.h"
 
+#include <iostream>
+
 #include "globals.h"
+#include "instrument/Accordion.h"
 #include "instrument/Piano.h"
 
 HRESULT IMidiJamTool::QueryInterface(const IID &riid, void **ppv) {
@@ -57,9 +60,13 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
     LPVOID *QueryInterfaceResult = nullptr;
     unsigned __int16 keyboardKeyIndex;
     __int16 slot;
+    __int16 slot_a;
     BYTE v165[12];
     REFERENCE_TIME rtNow;
     MUSIC_TIME mtNow;
+    REFERENCE_TIME rtNow_1;
+    MUSIC_TIME mtNow_1;
+    unsigned __int16 wrappedNoteValue;
 
     if (!pPMSG->pGraph || pPMSG->pGraph->StampPMsg(pPMSG) < 0)
         return DMUS_S_FREE;
@@ -104,6 +111,37 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                 }
                             }
                             break;
+                        case ACCORDION:
+                            wrappedNoteValue = (msg->wMusicValue + 12) % 24 + 1;
+                            for (slot_a = 0;
+                                 g_ds_accordion[g_accordion_assignment[msg->dwPChannel]].queueDurations[
+                                     wrappedNoteValue][slot_a]
+                                 && slot_a < 16;
+                                 ++slot_a) {
+                                ;
+                            }
+                            if (slot_a < 16) {
+                                g_ds_accordion[g_accordion_assignment[msg->dwPChannel]].queueDurations[
+                                    wrappedNoteValue][slot_a] = msg->mtDuration;
+                                g_ds_accordion[g_accordion_assignment[msg->dwPChannel]].queueDurations[
+                                            wrappedNoteValue][slot_a] =
+                                        g_ds_accordion[g_accordion_assignment[msg->dwPChannel]].queueDurations[
+                                            wrappedNoteValue][slot_a] - g_currentTempo_scaleFactor0_5;
+                                if (g_ds_accordion[g_accordion_assignment[msg->dwPChannel]].queueDurations[
+                                        wrappedNoteValue][slot_a] < 0)
+                                    g_ds_accordion[g_accordion_assignment[msg->dwPChannel]].queueDurations[
+                                        wrappedNoteValue][slot_a] = 10;
+                                pPerf->GetTime(&rtNow_1, &mtNow_1);
+                                g_ds_accordion[g_accordion_assignment[msg->dwPChannel]].timeDeltas[
+                                    wrappedNoteValue][slot_a] = msg->mtTime - mtNow_1;
+                                g_ds_accordion[g_accordion_assignment[msg->dwPChannel]].timeDeltas[
+                                    wrappedNoteValue][slot_a] -= g_currentTempo_scaleFactor0_9;
+                                if (g_ds_accordion[g_accordion_assignment[msg->dwPChannel]].timeDeltas[
+                                        wrappedNoteValue][slot_a] <= 0)
+                                    g_ds_accordion[g_accordion_assignment[msg->dwPChannel]].timeDeltas[
+                                        wrappedNoteValue][slot_a] = 1;
+                            }
+                            break;
                     }
                 }
                 break;
@@ -136,6 +174,19 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                         break;
                                 }
                                 g_piano_assignment[pPMSG->dwPChannel] = g_ialloc_piano++;
+                                break;
+                            case ACCORDION:
+                                if (g_ds_accordion) {
+                                    g_ds_accordion = static_cast<I_DS_Accordion *>(realloc(
+                                        g_ds_accordion, sizeof(I_DS_Accordion) * (g_ialloc_accordion + 1)));
+                                    memset(&g_ds_accordion[g_ialloc_accordion], 0, sizeof(I_DS_Accordion));
+                                    g_ds_accordion[g_ialloc_accordion].squeezeAngle = 4.0;
+                                } else {
+                                    g_ds_accordion = static_cast<I_DS_Accordion *>(malloc(sizeof(I_DS_Accordion)));
+                                    memset(g_ds_accordion, 0, sizeof(I_DS_Accordion));
+                                    g_ds_accordion->squeezeAngle = 4.0;
+                                }
+                                g_accordion_assignment[pPMSG->dwPChannel] = g_ialloc_accordion++;
                                 break;
                         }
                     }

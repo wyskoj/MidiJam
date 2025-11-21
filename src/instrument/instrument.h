@@ -6,6 +6,7 @@
 #define MIDIJAM_INSTRUMENT_H
 
 enum MidiJamInstrumentId : __int16 {
+    UNDEFINED = 0x0,
     PIANO = 0x1,
     PERCUSSION = 0x2,
     BASS = 0x3,

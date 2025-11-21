@@ -94,7 +94,7 @@ int main() {
 
 
     for (i = 0; i < 88; ++i) {
-        g_pianoXylophoneOffset = g_pianoXylophoneOffset + dword_45EBDC[PIANO_KEY_SHAPE[i]];
+        g_pianoXylophoneOffset = g_pianoXylophoneOffset + KEY_WIDTHS[PIANO_KEY_SHAPE[i]];
     }
     g_pianoXylophoneOffset = g_pianoXylophoneOffset * 0.5;
 
@@ -195,6 +195,20 @@ int main() {
     LOAD_MS3D_BUNDLE(g_pianoShadow_ms3d, "PianoShadow.ms3d");
     LOAD_MS3D_BUNDLE(g_pianoStand_ms3d, "PianoStand.ms3d");
 
+    LOAD_MS3D_BUNDLE(g_accordionKeyWhiteBack_ms3d, "AccordianKeyWhiteBack.ms3d");
+    LOAD_MS3D_BUNDLE(g_accordionKeyWhiteFront_ms3d, "AccordianKeyWhiteFront.ms3d");
+    LOAD_MS3D_BUNDLE(g_accordionKeyWhiteBack_Down_ms3d, "AccordianKeyWhiteBack.ms3d");
+    g_accordionKeyWhiteBack_Down_ms3d->ReplaceTexture("AccordianKey.bmp", "AccordianKeyDown.bmp");
+    LOAD_MS3D_BUNDLE(g_accordionKeyWhiteFront_Down_ms3d, "AccordianKeyWhiteFront.ms3d");
+    g_accordionKeyWhiteFront_Down_ms3d->ReplaceTexture("AccordianKey.bmp", "AccordianKeyDown.bmp");
+    LOAD_MS3D_BUNDLE(g_accordionKeyBlack_ms3d, "AccordianKeyBlack.ms3d");
+    LOAD_MS3D_BUNDLE(g_accordionKeyBlack_Down_ms3d, "AccordianKeyBlack.ms3d");
+    g_accordionKeyBlack_Down_ms3d->ReplaceTexture("AccordianKeyBlack.bmp", "AccordianKeyBlackDown.bmp");
+    LOAD_MS3D_BUNDLE(g_accordionFold_ms3d, "AccordianFold.ms3d");
+    LOAD_MS3D_BUNDLE(g_accordionLeftHand_ms3d, "AccordianLeftHand.ms3d");
+    LOAD_MS3D_BUNDLE(g_accordionRightHand_ms3d, "AccordianRightHand.ms3d");
+
+
     g_pianoModels_ms3d_arr = new PianoModels *[4];
     for (i = 0; i < 4; ++i) {
         g_pianoModels_ms3d_arr[i] = new PianoModels();
@@ -227,8 +241,10 @@ int main() {
     g_pianoModels_ms3d_arr[3]->pianoKeyWhiteBack->ReplaceTexture("PianoSkin.bmp", "HarpsichordSkin.bmp");
     g_pianoModels_ms3d_arr[3]->pianoKeyWhiteFrontDown->ReplaceTexture("PianoSkin.bmp", "HarpsichordSkin.bmp");
     g_pianoModels_ms3d_arr[3]->pianoKeyWhiteBackDown->ReplaceTexture("PianoSkin.bmp", "HarpsichordSkin.bmp");
+
     // TODO UnixEpochTime
     MidiJamInitialize();
+
     MS3D_APPLY_TEXTURES(g_drumSet_Stick_ms3d);
     MS3D_APPLY_TEXTURES(g_screenGradient_ms3d);
     MS3D_APPLY_TEXTURES(g_stage_ms3d);
@@ -236,6 +252,16 @@ int main() {
     MS3D_APPLY_TEXTURES(g_songFillbarBox_ms3d);
     MS3D_APPLY_TEXTURES(g_pianoShadow_ms3d);
     MS3D_APPLY_TEXTURES(g_pianoStand_ms3d);
+
+    MS3D_APPLY_TEXTURES(g_accordionKeyWhiteBack_ms3d);
+    MS3D_APPLY_TEXTURES(g_accordionKeyWhiteFront_ms3d);
+    MS3D_APPLY_TEXTURES(g_accordionKeyWhiteBack_Down_ms3d);
+    MS3D_APPLY_TEXTURES(g_accordionKeyWhiteFront_Down_ms3d);
+    MS3D_APPLY_TEXTURES(g_accordionKeyBlack_ms3d);
+    MS3D_APPLY_TEXTURES(g_accordionKeyBlack_Down_ms3d);
+    MS3D_APPLY_TEXTURES(g_accordionFold_ms3d);
+    MS3D_APPLY_TEXTURES(g_accordionLeftHand_ms3d);
+    MS3D_APPLY_TEXTURES(g_accordionRightHand_ms3d);
 
     for (i = 0; i < 4; ++i) {
         MS3D_APPLY_TEXTURES(g_pianoModels_ms3d_arr[i]->pianoCase);

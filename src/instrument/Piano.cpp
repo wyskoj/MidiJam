@@ -82,7 +82,7 @@ void I_Piano() {
                         g_pianoModels_ms3d_arr[g_ds_piano[i].materialIndex]->pianoKeyWhiteBackDown->Render();
                 }
                 glPopMatrix();
-                glTranslatef(dword_45EBDC[PIANO_KEY_SHAPE[key]], 0.0, 0.0);
+                glTranslatef(KEY_WIDTHS[PIANO_KEY_SHAPE[key]], 0.0, 0.0);
             }
             glPopMatrix();
             ++v6;

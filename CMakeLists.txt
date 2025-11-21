@@ -45,6 +45,8 @@ add_executable(MidiJam src/main.cpp
         src/camera.cpp
         src/input.cpp
         src/input.h
+        src/instrument/Accordion.cpp
+        src/instrument/Accordion.h
 )
 
 target_include_directories(MidiJam PRIVATE "${CMAKE_SOURCE_DIR}/include")

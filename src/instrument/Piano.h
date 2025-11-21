@@ -14,9 +14,9 @@ class Ms3dBundle;
 
 extern __int16 g_inst_visible_piano;
 extern __int16 g_ialloc_piano;
+extern __int16 g_piano_assignment[300];
 extern __int16 PIANO_KEY_SHAPE[88];
 extern GLfloat g_pianokey_whiteBack_scale[14];
-extern __int16 g_piano_assignment[300];
 
 struct I_DS_Piano // sizeof=0x2958
 {

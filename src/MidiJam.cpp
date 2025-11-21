@@ -15,6 +15,7 @@
 #include "midi.h"
 #include "Ms3dBundle.h"
 #include "text.h"
+#include "instrument/Accordion.h"
 #include "instrument/Piano.h"
 
 bool CreateMidijamWindow(LPCSTR lpWindowName, HINSTANCE hInstance, GLsizei windowWidth, GLsizei windowHeight,
@@ -519,8 +520,8 @@ BOOL UpdateMidiJam() {
         //   I_Woodblock();
         // if ( g_ds_stageChoir )
         //   I_StageChoir();
-        // if ( g_ds_accordion )
-        //   I_Accordion();
+        if ( g_ds_accordion )
+          I_Accordion();
         // if ( g_ds_stageStrings )
         //   I_StageStrings();
         // if ( g_ds_pizzicatoStrings )
@@ -732,7 +733,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         if ( g_isShuttingDown == 1 )
           pmtNow = g_time_global_current;
         anyInstrumentActive = 0;
-        //     I_Accordion_MM(pmtNow);
+        I_Accordion_MM(pmtNow);
         //     if ( g_ds_harp && I_Harp_MM(pmtNow) )
         //       anyInstrumentActive = 1;
         if (g_ds_piano && I_Piano_MM(pmtNow))

@@ -229,7 +229,7 @@ extern GLfloat g_cymbal_rot_y[7];
 extern float g_cymbalRestingAngle[7];
 
 // Unknown
-extern GLfloat dword_45EBDC[14];
+extern GLfloat KEY_WIDTHS[14];
 extern __int16 word_45EB30[88];
 extern DWORD dword_46E6A8;
 extern __int16 word_46B5D8[92];
