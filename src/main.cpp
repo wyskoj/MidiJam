@@ -94,38 +94,37 @@ int main() {
 
 
     for (i = 0; i < 88; ++i) {
-        // TODO There may be a bad array access here (out of bounds)
-        g_pianoXylophoneOffset = g_pianoXylophoneOffset + dword_45EBDC[word_45EB30[i]];
+        g_pianoXylophoneOffset = g_pianoXylophoneOffset + dword_45EBDC[PIANO_KEY_SHAPE[i]];
     }
     g_pianoXylophoneOffset = g_pianoXylophoneOffset * 0.5;
 
     // WTF?
     g_pianokey_translation_x[1] = -0.20833333;
-    g_pianokey_scale[1] = 0.58333331;
+    g_pianokey_whiteBack_scale[1] = 0.58333331;
     g_pianokey_translation_x[2] = 0.0;
-    g_pianokey_scale[2] = 0.5;
+    g_pianokey_whiteBack_scale[2] = 0.5;
     g_pianokey_translation_x[3] = 0.20833333;
-    g_pianokey_scale[3] = 0.58333331;
+    g_pianokey_whiteBack_scale[3] = 0.58333331;
     g_pianokey_translation_x[4] = -0.25;
-    g_pianokey_scale[4] = 0.5;
+    g_pianokey_whiteBack_scale[4] = 0.5;
     g_pianokey_translation_x[5] = -0.083333336;
-    g_pianokey_scale[5] = 0.5;
+    g_pianokey_whiteBack_scale[5] = 0.5;
     g_pianokey_translation_x[6] = 0.083333336;
-    g_pianokey_scale[6] = 0.5;
+    g_pianokey_whiteBack_scale[6] = 0.5;
     g_pianokey_translation_x[7] = 0.25;
-    g_pianokey_scale[7] = 0.5;
+    g_pianokey_whiteBack_scale[7] = 0.5;
     g_pianokey_translation_x[8] = 0.0;
-    g_pianokey_scale[8] = 1.0;
+    g_pianokey_whiteBack_scale[8] = 1.0;
     g_pianokey_translation_x[9] = -0.125;
-    g_pianokey_scale[9] = 1.0;
+    g_pianokey_whiteBack_scale[9] = 1.0;
     g_pianokey_translation_x[10] = 0.125;
-    g_pianokey_scale[10] = 1.0;
+    g_pianokey_whiteBack_scale[10] = 1.0;
     g_pianokey_translation_x[11] = -0.25;
-    g_pianokey_scale[11] = 1.0;
+    g_pianokey_whiteBack_scale[11] = 1.0;
     g_pianokey_translation_x[12] = 0.0;
-    g_pianokey_scale[12] = 1.0;
+    g_pianokey_whiteBack_scale[12] = 1.0;
     g_pianokey_translation_x[13] = 0.25;
-    g_pianokey_scale[13] = 1.0;
+    g_pianokey_whiteBack_scale[13] = 1.0;
 
     g_windowCenterX = 0;
     g_windowCenterY = 0;

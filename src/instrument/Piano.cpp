@@ -12,7 +12,7 @@
 
 __int16 g_inst_visible_piano = 0;
 __int16 g_ialloc_piano = 0;
-__int16 PIANO_KEY_PATTERN[88] = {
+__int16 PIANO_KEY_SHAPE[88] = {
     1, 12, 3,
     1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7,
     1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7,
@@ -24,7 +24,7 @@ __int16 PIANO_KEY_PATTERN[88] = {
     8,
 };
 I_DS_Piano *g_ds_piano = nullptr;
-GLfloat g_pianokey_scale[14];
+GLfloat g_pianokey_whiteBack_scale[14];
 __int16 g_piano_assignment[300];
 
 void I_Piano() {
@@ -50,8 +50,9 @@ void I_Piano() {
             for (key = 0; key < 88; ++key) {
                 glPushMatrix();
                 glRotatef(g_ds_piano[i].keyAngles[key], 1.0, 0.0, 0.0);
-                if (PIANO_KEY_PATTERN[key] < 1 || PIANO_KEY_PATTERN[key] > 7) {
-                    if (PIANO_KEY_PATTERN[key] == 8) {
+                if (PIANO_KEY_SHAPE[key] < 1 || PIANO_KEY_SHAPE[key] > 7) {
+                    if (PIANO_KEY_SHAPE[key] == 8) {
+                        // Full-width key (only the last key)
                         if (g_ds_piano[i].keyAngles[key] <= 0.0) {
                             g_pianoModels_ms3d_arr[g_ds_piano[i].materialIndex]->pianoKeyWhiteFront->Render();
                             g_pianoModels_ms3d_arr[g_ds_piano[i].materialIndex]->pianoKeyWhiteBack->Render();
@@ -59,27 +60,29 @@ void I_Piano() {
                             g_pianoModels_ms3d_arr[g_ds_piano[i].materialIndex]->pianoKeyWhiteFrontDown->Render();
                             g_pianoModels_ms3d_arr[g_ds_piano[i].materialIndex]->pianoKeyWhiteBackDown->Render();
                         }
-                    } else if (PIANO_KEY_PATTERN[key] >= 9 && PIANO_KEY_PATTERN[key] <= 13) {
-                        glTranslatef(g_pianokey_translation_x[PIANO_KEY_PATTERN[key]], 0.0, 0.0);
+                    } else if (PIANO_KEY_SHAPE[key] >= 9 && PIANO_KEY_SHAPE[key] <= 13) {
+                        // Black key
+                        glTranslatef(g_pianokey_translation_x[PIANO_KEY_SHAPE[key]], 0.0, 0.0);
                         if (g_ds_piano[i].keyAngles[key] <= 0.0)
                             g_pianoModels_ms3d_arr[g_ds_piano[i].materialIndex]->pianoKeyBlack->Render();
                         else
                             g_pianoModels_ms3d_arr[g_ds_piano[i].materialIndex]->pianoKeyBlackDown->Render();
                     }
                 } else {
+                    // White key
                     if (g_ds_piano[i].keyAngles[key] <= 0.0)
                         g_pianoModels_ms3d_arr[g_ds_piano[i].materialIndex]->pianoKeyWhiteFront->Render();
                     else
                         g_pianoModels_ms3d_arr[g_ds_piano[i].materialIndex]->pianoKeyWhiteFrontDown->Render();
-                    glTranslatef(g_pianokey_translation_x[PIANO_KEY_PATTERN[key]], 0.0, 0.0);
-                    glScalef(g_pianokey_scale[PIANO_KEY_PATTERN[key]], 1.0, 1.0);
+                    glTranslatef(g_pianokey_translation_x[PIANO_KEY_SHAPE[key]], 0.0, 0.0);
+                    glScalef(g_pianokey_whiteBack_scale[PIANO_KEY_SHAPE[key]], 1.0, 1.0);
                     if (g_ds_piano[i].keyAngles[key] <= 0.0)
                         g_pianoModels_ms3d_arr[g_ds_piano[i].materialIndex]->pianoKeyWhiteBack->Render();
                     else
                         g_pianoModels_ms3d_arr[g_ds_piano[i].materialIndex]->pianoKeyWhiteBackDown->Render();
                 }
                 glPopMatrix();
-                glTranslatef(dword_45EBDC[PIANO_KEY_PATTERN[key]], 0.0, 0.0);
+                glTranslatef(dword_45EBDC[PIANO_KEY_SHAPE[key]], 0.0, 0.0);
             }
             glPopMatrix();
             ++v6;
