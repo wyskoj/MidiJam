@@ -10,6 +10,7 @@
 #include "instrument/Accordion.h"
 #include "instrument/Bass.h"
 #include "instrument/Piano.h"
+#include "instrument/StageHorn.h"
 
 HRESULT IMidiJamTool::QueryInterface(const IID &riid, void **ppv) {
     if (IsEqualGUID(riid, IID_IUnknown) || IsEqualGUID(riid, IID_IDirectMusicTool)) {
@@ -70,8 +71,10 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
     unsigned __int16 wrappedNoteValue;
     unsigned __int16 v140;
     unsigned __int16 v148;
+    unsigned __int16 v135;
     __int16 n;
     __int16 ii;
+    __int16 jj;
 
     if (!pPMSG->pGraph || pPMSG->pGraph->StampPMsg(pPMSG) < 0)
         return DMUS_S_FREE;
@@ -166,6 +169,23 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                     if (g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].queue[v140][ii] <= 0)
                                         g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].queue[v140][ii] = 1;
                                 }
+                            }
+                            break;
+                        case STAGE_HORN:
+                            v135 = (msg->wMusicValue + 3) % 12;
+                            for ( jj = 0; g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_64[v135][jj] && jj < 16; ++jj )
+                                ;
+                            if ( jj < 16 )
+                            {
+                                g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_64[v135][jj] = msg->mtDuration;
+                                if ( g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_64[v135][jj] < 0 )
+                                    g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_64[v135][jj] = 10;
+                                (pPerf->GetTime)(&rtNow, &mtNow);
+                                g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_364[v135][jj] = msg->mtTime
+                                                                                                                 - mtNow;
+                                g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_364[v135][jj] -= g_currentTempo_scaleFactor0_9;
+                                if ( g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_364[v135][jj] <= 0 )
+                                    g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_364[v135][jj] = 1;
                             }
                             break;
                         case ACCORDION:
@@ -267,6 +287,19 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                         break;
                                 }
                                 ++g_ialloc_xylophone;
+                                break;
+                            case STAGE_HORN:
+                                if ( g_ds_stageHorn )
+                                {
+                                    g_ds_stageHorn = static_cast<I_DS_StageHorn *>(realloc(g_ds_stageHorn, sizeof(I_DS_StageHorn) * (g_ialloc_stageHorn + 1)));
+                                    memset(&g_ds_stageHorn[g_ialloc_stageHorn], 0, sizeof(I_DS_StageHorn));
+                                }
+                                else
+                                {
+                                    g_ds_stageHorn = static_cast<I_DS_StageHorn *>(malloc(sizeof(I_DS_StageHorn)));
+                                    memset(g_ds_stageHorn, 0, sizeof(I_DS_StageHorn));
+                                }
+                                g_stageHorn_assignment[pPMSG->dwPChannel] = g_ialloc_stageHorn++;
                                 break;
                             case ACCORDION:
                                 if (g_ds_accordion) {

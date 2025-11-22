@@ -208,6 +208,9 @@ int main() {
     LOAD_MS3D_BUNDLE(g_bassStringBottomX_ms3d[4], "BassStringBottom4.ms3d");
     LOAD_MS3D_BUNDLE(g_bassNoteFinger_ms3d, "BassNoteFinger.ms3d");
 
+    // Stage Horn
+    LOAD_MS3D_BUNDLE(g_stageHorn_ms3d, "StageHorn.ms3d");
+
     // Accordion
     LOAD_MS3D_BUNDLE(g_accordionKeyWhiteBack_ms3d, "AccordianKeyWhiteBack.ms3d");
     LOAD_MS3D_BUNDLE(g_accordionKeyWhiteFront_ms3d, "AccordianKeyWhiteFront.ms3d");
@@ -303,6 +306,9 @@ int main() {
     MS3D_APPLY_TEXTURES(g_bassStringBottomX_ms3d[3]);
     MS3D_APPLY_TEXTURES(g_bassStringBottomX_ms3d[4]);
     MS3D_APPLY_TEXTURES(g_bassNoteFinger_ms3d);
+
+    // Stage Horn
+    MS3D_APPLY_TEXTURES(g_stageHorn_ms3d);
 
     MS3D_APPLY_TEXTURES(g_accordionKeyWhiteBack_ms3d);
     MS3D_APPLY_TEXTURES(g_accordionKeyWhiteFront_ms3d);

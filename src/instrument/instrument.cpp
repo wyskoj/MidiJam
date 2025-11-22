@@ -66,9 +66,9 @@ MidiJamInstrumentId MIDIJAM_INSTRUMENT_IDS[128] = {
     UNDEFINED,  // 59 - Tuba
     UNDEFINED,  // 60 - Muted Trumpet
     UNDEFINED,  // 61 - French Horn
-    UNDEFINED,  // 62 - Brass Section
-    UNDEFINED,  // 63 - SynthBrass 1
-    UNDEFINED,  // 64 - SynthBrass 2
+    STAGE_HORN,  // 62 - Brass Section
+    STAGE_HORN,  // 63 - SynthBrass 1
+    STAGE_HORN,  // 64 - SynthBrass 2
     UNDEFINED,  // 65 - Soprano Sax
     UNDEFINED,  // 66 - Alto Sax
     UNDEFINED,  // 67 - Tenor Sax

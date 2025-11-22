@@ -44,6 +44,7 @@ extern unsigned int g_nHwfAppendixItems;
 // World
 extern float RECOIL_SCALE_FACTOR;
 extern GLfloat g_pianokey_translation_x[14];
+extern GLfloat STAGE_BASE_Z;
 
 // Models
 extern Ms3dBundle *g_accordionFold_ms3d;

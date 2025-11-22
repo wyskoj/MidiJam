@@ -18,6 +18,7 @@
 #include "instrument/Accordion.h"
 #include "instrument/Bass.h"
 #include "instrument/Piano.h"
+#include "instrument/StageHorn.h"
 
 bool CreateMidijamWindow(LPCSTR lpWindowName, HINSTANCE hInstance, GLsizei windowWidth, GLsizei windowHeight,
                          int bitDepth, DWORD refreshRate, bool isFullscreen, FILE *hwfStream, char *hwfAppendix_ptr,
@@ -494,8 +495,8 @@ BOOL UpdateMidiJam() {
         //   I_Flute();
         // if ( g_ds_tuba )
         //   I_Tuba();
-        // if ( g_ds_stageHorn )
-        //   I_StageHorn();
+        if ( g_ds_stageHorn )
+          I_StageHorn();
         // if ( g_ds_whistles )
         //   I_Whistles();
         // if ( g_ds_panPipe )
@@ -747,8 +748,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         //     if ( g_ds_guitar && I_Guitar_MM(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_ds_stageHorn && I_StageHorn_MM(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_ds_stageHorn && I_StageHorn_MM(pmtNow) )
+          anyInstrumentActive = 1;
         //     if ( g_ds_whistles && I_Whistles_MM(pmtNow) )
         //       anyInstrumentActive = 1;
         //     UpdateSteamPuffers();
@@ -1367,51 +1368,51 @@ void MidiJamInitialize() {
     //         g_percussion_velocity_queue[patch][queue] = 0;
     //     }
     // }
-    // for (slot = 0; slot < 300; ++slot) {
-    //     g_violin_assignment[slot] = 0;
-    //     g_viola_assignment[slot] = 0;
-    //     g_cello_assignment[slot] = 0;
-    //     g_doubleBass_assignment[slot] = 0;
-    //     g_doubleBass_playingStyle[slot] = -1;
-    //     g_midiJamInstrumentIds[slot] = 0;
-    //     g_xylophone_types[slot] = 0;
-    //     g_piano_assignment[slot] = -1;
-    //     g_bass_assignment[slot] = -1;
-    //     g_guitar_assignment[slot] = -1;
-    //     g_xylophone_assignment[slot] = -1;
-    //     g_stateChoir_assignment[slot] = -1;
-    //     g_stageHorn_assignment[slot] = -1;
-    //     g_whistles_assignment[slot] = -1;
-    //     g_panPipe_assignment[slot] = -1;
-    //     g_isPanPipeCalliope[slot] = -1;
-    //     g_harmonica_assignment[slot] = -1;
-    //     g_popBottle_assignment[slot] = -1;
-    //     g_agogos_assignment[slot] = -1;
-    //     g_woodblocks_assignment[slot] = -1;
-    //     g_stageStrings_assignment[slot] = -1;
-    //     g_pizzicatoStrings_assignment[slot] = -1;
-    //     g_musicBox_assignment[slot] = -1;
-    //     g_melodicTom_assignment[slot] = -1;
-    //     g_synthDrum_assignment[slot] = -1;
-    //     g_steelDrum_assignment[slot] = -1;
-    //     g_timpani_assignment[slot] = -1;
-    //     g_taiko_assignment[slot] = -1;
-    //     g_tubularBells_assignment[slot] = -1;
-    //     g_telephone_assignment[slot] = -1;
-    //     g_trombone_assignment[slot] = -1;
-    //     g_tuba_assignment[slot] = -1;
-    //     g_ocarina_assignment[slot] = -1;
-    //     g_frenchHorn_assignment[slot] = -1;
-    //     g_baritoneSax_assignment[slot] = -1;
-    //     g_tenorSax_assignment[slot] = -1;
-    //     g_sapranoSax_assignment[slot] = -1;
-    //     g_altoSax_assignment[slot] = -1;
-    //     g_recorder_assignment[slot] = -1;
-    //     g_piccolo_assignment[slot] = -1;
-    //     g_flute_assignment[slot] = -1;
-    //     g_trumpet_assignment[slot] = -1;
-    //     g_harp_assignment[slot] = -1;
-    // }
+    for (slot = 0; slot < 300; ++slot) {
+        // g_violin_assignment[slot] = 0;
+        // g_viola_assignment[slot] = 0;
+        // g_cello_assignment[slot] = 0;
+        // g_doubleBass_assignment[slot] = 0;
+        // g_doubleBass_playingStyle[slot] = -1;
+        g_midiJamInstrumentIds[slot] = UNDEFINED;
+        g_xylophone_types[slot] = 0;
+        g_piano_assignment[slot] = -1;
+        g_bass_assignment[slot] = -1;
+        // g_guitar_assignment[slot] = -1;
+        g_xylophone_assignment[slot] = -1;
+        // g_stateChoir_assignment[slot] = -1;
+        g_stageHorn_assignment[slot] = -1;
+        // g_whistles_assignment[slot] = -1;
+        // g_panPipe_assignment[slot] = -1;
+        // g_isPanPipeCalliope[slot] = -1;
+        // g_harmonica_assignment[slot] = -1;
+        // g_popBottle_assignment[slot] = -1;
+        // g_agogos_assignment[slot] = -1;
+        // g_woodblocks_assignment[slot] = -1;
+        // g_stageStrings_assignment[slot] = -1;
+        // g_pizzicatoStrings_assignment[slot] = -1;
+        // g_musicBox_assignment[slot] = -1;
+        // g_melodicTom_assignment[slot] = -1;
+        // g_synthDrum_assignment[slot] = -1;
+        // g_steelDrum_assignment[slot] = -1;
+        // g_timpani_assignment[slot] = -1;
+        // g_taiko_assignment[slot] = -1;
+        // g_tubularBells_assignment[slot] = -1;
+        // g_telephone_assignment[slot] = -1;
+        // g_trombone_assignment[slot] = -1;
+        // g_tuba_assignment[slot] = -1;
+        // g_ocarina_assignment[slot] = -1;
+        // g_frenchHorn_assignment[slot] = -1;
+        // g_baritoneSax_assignment[slot] = -1;
+        // g_tenorSax_assignment[slot] = -1;
+        // g_sapranoSax_assignment[slot] = -1;
+        // g_altoSax_assignment[slot] = -1;
+        // g_recorder_assignment[slot] = -1;
+        // g_piccolo_assignment[slot] = -1;
+        // g_flute_assignment[slot] = -1;
+        // g_trumpet_assignment[slot] = -1;
+        // g_harp_assignment[slot] = -1;
+    }
     // g_framesKeyLeftPressed = 0;
     // g_framesKeyRightPressed = 0;
     // g_framesKeyUpPressed = 0;

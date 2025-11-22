@@ -39,6 +39,7 @@ unsigned int g_nHwfAppendixItems;
 // World
 float RECOIL_SCALE_FACTOR;
 GLfloat g_pianokey_translation_x[14];
+GLfloat STAGE_BASE_Z = -150.0;
 
 // Models
 Ms3dBundle *g_accordionFold_ms3d;
