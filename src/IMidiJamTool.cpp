@@ -11,6 +11,7 @@
 #include "instrument/Bass.h"
 #include "instrument/Piano.h"
 #include "instrument/StageHorn.h"
+#include "instrument/StageString.h"
 
 HRESULT IMidiJamTool::QueryInterface(const IID &riid, void **ppv) {
     if (IsEqualGUID(riid, IID_IUnknown) || IsEqualGUID(riid, IID_IDirectMusicTool)) {
@@ -69,11 +70,13 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
     REFERENCE_TIME rtNow_1;
     MUSIC_TIME mtNow_1;
     unsigned __int16 wrappedNoteValue;
+    unsigned __int16 v99;
     unsigned __int16 v140;
     unsigned __int16 v148;
     unsigned __int16 v135;
     __int16 n;
     __int16 ii;
+    __int16 i5;
     __int16 jj;
 
     if (!pPMSG->pGraph || pPMSG->pGraph->StampPMsg(pPMSG) < 0)
@@ -219,6 +222,26 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                         wrappedNoteValue][slot_a] = 1;
                             }
                             break;
+                        case STAGE_STRINGS:
+                            v99 = (msg->wMusicValue + 3) % 12;
+                            for ( i5 = 0;
+                                  g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_64[v99][i5] && i5 < 16;
+                                  ++i5 )
+                            {
+                                ;
+                            }
+                            if ( i5 < 16 )
+                            {
+                                g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_64[v99][i5] = msg->mtDuration;
+                                if ( g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_64[v99][i5] < 0 )
+                                    g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_64[v99][i5] = 10;
+                                pPerf->GetTime(&rtNow, &mtNow);
+                                g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_364[v99][i5] = msg->mtTime - mtNow;
+                                g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_364[v99][i5] -= g_currentTempo_scaleFactor0_9;
+                                if ( g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_364[v99][i5] <= 0 )
+                                    g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_364[v99][i5] = 1;
+                            }
+                            break;
                     }
                 }
                 break;
@@ -313,6 +336,19 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                     g_ds_accordion->squeezeAngle = 4.0;
                                 }
                                 g_accordion_assignment[pPMSG->dwPChannel] = g_ialloc_accordion++;
+                                break;
+                            case STAGE_STRINGS:
+                                if ( g_ds_stageString )
+                                {
+                                    g_ds_stageString = static_cast<I_DS_StageString *>(realloc(g_ds_stageString, sizeof(I_DS_StageString) * (g_ialloc_stageString + 1)));
+                                    memset(&g_ds_stageString[g_ialloc_stageString], 0, sizeof(I_DS_StageString));
+                                }
+                                else
+                                {
+                                    g_ds_stageString = static_cast<I_DS_StageString *>(malloc(sizeof(I_DS_StageString)));
+                                    memset(g_ds_stageString, 0, sizeof(I_DS_StageString));
+                                }
+                                g_stageString_assignment[pPMSG->dwPChannel] = g_ialloc_stageString++;
                                 break;
                         }
                     }

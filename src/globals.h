@@ -132,7 +132,7 @@ extern Ms3dBundle *g_songFillbar_ms3d;
 extern Ms3dBundle *g_squareShaker_ms3d;
 extern Ms3dBundle *g_stageChoir_ms3d;
 extern Ms3dBundle *g_stageHorn_ms3d;
-extern Ms3dBundle *g_stageStringBottomX_ms3d;
+extern Ms3dBundle *g_stageStringBottomX_ms3d[5];
 extern Ms3dBundle *g_stageStringBow_ms3d;
 extern Ms3dBundle *g_stageStringHolder_ms3d;
 extern Ms3dBundle *g_stageString_ms3d;

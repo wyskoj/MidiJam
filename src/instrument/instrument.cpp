@@ -53,10 +53,10 @@ MidiJamInstrumentId MIDIJAM_INSTRUMENT_IDS[128] = {
     UNDEFINED,  // 46 - Pizzicato Strings
     UNDEFINED,  // 47 - Orchestral Harp
     UNDEFINED,  // 48 - Timpani
-    UNDEFINED,  // 49 - String Ensemble 1
-    UNDEFINED,  // 50 - String Ensemble 2
-    UNDEFINED,  // 51 - SynthStrings 1
-    UNDEFINED,  // 52 - SynthStrings 2
+    STAGE_STRINGS,  // 49 - String Ensemble 1
+    STAGE_STRINGS,  // 50 - String Ensemble 2
+    STAGE_STRINGS,  // 51 - SynthStrings 1
+    STAGE_STRINGS,  // 52 - SynthStrings 2
     UNDEFINED,  // 53 - Choir Aahs
     UNDEFINED,  // 54 - Voice Oohs
     UNDEFINED,  // 55 - Synth Voice

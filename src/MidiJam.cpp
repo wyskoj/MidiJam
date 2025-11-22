@@ -19,6 +19,7 @@
 #include "instrument/Bass.h"
 #include "instrument/Piano.h"
 #include "instrument/StageHorn.h"
+#include "instrument/StageString.h"
 
 bool CreateMidijamWindow(LPCSTR lpWindowName, HINSTANCE hInstance, GLsizei windowWidth, GLsizei windowHeight,
                          int bitDepth, DWORD refreshRate, bool isFullscreen, FILE *hwfStream, char *hwfAppendix_ptr,
@@ -521,8 +522,8 @@ BOOL UpdateMidiJam() {
         //   I_StageChoir();
         if (g_ds_accordion)
             I_Accordion();
-        // if ( g_ds_stageStrings )
-        //   I_StageStrings();
+        if ( g_ds_stageString )
+          I_StageString();
         // if ( g_ds_pizzicatoStrings )
         //   I_PizzicatoStrings();
         // if ( g_ds_ocarina )
@@ -805,8 +806,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_ds_tubularBells && I_TubularBells_MM(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_ds_stageStrings && I_StageStrings_MM(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_ds_stageString && I_StageString_MM(pmtNow) )
+          anyInstrumentActive = 1;
         //     if ( g_ds_pizzicatoStrings && I_PizzicatoStrings_MM(pmtNow) )
         //       anyInstrumentActive = 1;
         //     UpdateAllRecoils(recoil_scale_factor);
@@ -1280,22 +1281,22 @@ void MidiJamInitialize() {
     // }
     // g_lastRideCymbal = 1;
     // g_show_percussion = 0;
-    // g_ialloc_piano = 0;
-    // g_ialloc_bass = 0;
+    g_ialloc_piano = 0;
+    g_ialloc_bass = 0;
     // g_ialloc_guitar = 0;
     // dword_464700 = 0;
     // dword_468EC0 = 0;
     // g_ialloc_harp = 0;
-    // g_ialloc_xylophone = 0;
+    g_ialloc_xylophone = 0;
     // g_ialloc_stageChoir = 0;
-    // g_ialloc_stageHorn = 0;
+    g_ialloc_stageHorn = 0;
     // g_ialloc_whistles = 0;
     // g_ialloc_panPipe = 0;
     // g_ialloc_harmonica = 0;
     // g_ialloc_popBottle = 0;
     // g_ialloc_agogo = 0;
     // g_ialloc_woodblocks = 0;
-    // g_ialloc_stageStrings = 0;
+    g_ialloc_stageString = 0;
     // g_ialloc_pizzicatoStrings = 0;
     // g_ialloc_musicBox = 0;
     // g_ialloc_melodicTom = 0;
@@ -1389,7 +1390,7 @@ void MidiJamInitialize() {
         // g_popBottle_assignment[slot] = -1;
         // g_agogos_assignment[slot] = -1;
         // g_woodblocks_assignment[slot] = -1;
-        // g_stageStrings_assignment[slot] = -1;
+        g_stageString_assignment[slot] = -1;
         // g_pizzicatoStrings_assignment[slot] = -1;
         // g_musicBox_assignment[slot] = -1;
         // g_melodicTom_assignment[slot] = -1;

@@ -211,6 +211,16 @@ int main() {
     // Stage Horn
     LOAD_MS3D_BUNDLE(g_stageHorn_ms3d, "StageHorn.ms3d");
 
+    // Stage String
+    LOAD_MS3D_BUNDLE(g_stageString_ms3d, "StageString.ms3d");
+    LOAD_MS3D_BUNDLE(g_stageStringHolder_ms3d, "StageStringHolder.ms3d");
+    LOAD_MS3D_BUNDLE(g_stageStringBow_ms3d, "StageStringBow.ms3d");
+    LOAD_MS3D_BUNDLE(g_stageStringBottomX_ms3d[0], "StageStringBottom0.ms3d");
+    LOAD_MS3D_BUNDLE(g_stageStringBottomX_ms3d[1], "StageStringBottom1.ms3d");
+    LOAD_MS3D_BUNDLE(g_stageStringBottomX_ms3d[2], "StageStringBottom2.ms3d");
+    LOAD_MS3D_BUNDLE(g_stageStringBottomX_ms3d[3], "StageStringBottom3.ms3d");
+    LOAD_MS3D_BUNDLE(g_stageStringBottomX_ms3d[4], "StageStringBottom4.ms3d");
+
     // Accordion
     LOAD_MS3D_BUNDLE(g_accordionKeyWhiteBack_ms3d, "AccordianKeyWhiteBack.ms3d");
     LOAD_MS3D_BUNDLE(g_accordionKeyWhiteFront_ms3d, "AccordianKeyWhiteFront.ms3d");
@@ -309,6 +319,16 @@ int main() {
 
     // Stage Horn
     MS3D_APPLY_TEXTURES(g_stageHorn_ms3d);
+
+    // Stage String
+    MS3D_APPLY_TEXTURES(g_stageString_ms3d);
+    MS3D_APPLY_TEXTURES(g_stageStringHolder_ms3d);
+    MS3D_APPLY_TEXTURES(g_stageStringBow_ms3d);
+    MS3D_APPLY_TEXTURES(g_stageStringBottomX_ms3d[0]);
+    MS3D_APPLY_TEXTURES(g_stageStringBottomX_ms3d[1]);
+    MS3D_APPLY_TEXTURES(g_stageStringBottomX_ms3d[2]);
+    MS3D_APPLY_TEXTURES(g_stageStringBottomX_ms3d[3]);
+    MS3D_APPLY_TEXTURES(g_stageStringBottomX_ms3d[4]);
 
     MS3D_APPLY_TEXTURES(g_accordionKeyWhiteBack_ms3d);
     MS3D_APPLY_TEXTURES(g_accordionKeyWhiteFront_ms3d);
