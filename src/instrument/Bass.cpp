@@ -10,7 +10,6 @@
 #include "../textures.h"
 
 DEF_INST(bass, I_DS_Bass)
-__int16 g_bass_assignment[300];
 
 GLfloat BASS_FRET_HEIGHTS[24] = {
     0.0,

@@ -8,10 +8,7 @@
 #include "../globals.h"
 #include "../Ms3dBundle.h"
 
-I_DS_Accordion *g_ds_accordion;
-__int16 g_inst_visible_accordion;
-__int16 g_ialloc_accordion;
-__int16 g_accordion_assignment[300];
+DEF_INST(accordion, I_DS_Accordion);
 
 __int16 ACCORDION_KEY_SHAPE[26] = {
     8,

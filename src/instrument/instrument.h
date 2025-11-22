@@ -13,7 +13,8 @@ extern __int16 g_##name##_assignment[300];
 #define DEF_INST(name, type) \
 __int16 g_inst_visible_##name = 0; \
 __int16 g_ialloc_##name = 0; \
-type *g_ds_##name = nullptr;
+type *g_ds_##name = nullptr; \
+__int16 g_##name##_assignment[300] = {0};
 
 enum MidiJamInstrumentId : __int16 {
     UNDEFINED = 0x0,

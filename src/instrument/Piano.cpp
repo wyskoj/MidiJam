@@ -24,7 +24,6 @@ __int16 PIANO_KEY_SHAPE[88] = {
     8,
 };
 GLfloat g_pianokey_whiteBack_scale[14];
-__int16 g_piano_assignment[300];
 
 void I_Piano() {
     GLfloat x; // [esp+0h] [ebp-24h]
