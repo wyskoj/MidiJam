@@ -399,25 +399,22 @@ BOOL UpdateMidiJam() {
             g_pianoShadow_ms3d->RenderModel();
             glPopMatrix();
         }
-        // // -- XYLOPHONE SHADOW --
-        // if ( g_inst_visible_xylophone > 0 )
-        // {
-        //   glPushMatrix();
-        //   glTranslatef(-22.0, -32.0, 10.0);
-        //   glRotatef(32.0, 0.0, 1.0, 0.0);
-        //   glScalef(0.64999998, 0.64999998, 0.64999998);
-        //   for ( i = 0; i < g_inst_visible_xylophone; ++i )
-        //   {
-        //     if ( i > 0 )
-        //     {
-        //       glTranslatef(-2.0, 0.0, 0.0);
-        //       glRotatef(-18.0, 0.0, 1.0, 0.0);
-        //       glTranslatef(0.0, 3.0, -23.0);
-        //     }
-        //     Ms3dBundle::RenderModel(g_xylophoneShadow_ms3d);
-        //   }
-        //   glPopMatrix();
-        // }
+        // -- XYLOPHONE SHADOW --
+        if (g_inst_visible_xylophone > 0) {
+            glPushMatrix();
+            glTranslatef(-22.0, -32.0, 10.0);
+            glRotatef(32.0, 0.0, 1.0, 0.0);
+            glScalef(0.64999998, 0.64999998, 0.64999998);
+            for (i = 0; i < g_inst_visible_xylophone; ++i) {
+                if (i > 0) {
+                    glTranslatef(-2.0, 0.0, 0.0);
+                    glRotatef(-18.0, 0.0, 1.0, 0.0);
+                    glTranslatef(0.0, 3.0, -23.0);
+                }
+                g_xylophoneShadow_ms3d->RenderModel();
+            }
+            glPopMatrix();
+        }
         // // -- BASS SHADOW --
         // if ( g_inst_visible_bass > 0 )
         // {
@@ -521,32 +518,31 @@ BOOL UpdateMidiJam() {
         //   I_Woodblock();
         // if ( g_ds_stageChoir )
         //   I_StageChoir();
-        if ( g_ds_accordion )
-          I_Accordion();
+        if (g_ds_accordion)
+            I_Accordion();
         // if ( g_ds_stageStrings )
         //   I_StageStrings();
         // if ( g_ds_pizzicatoStrings )
         //   I_PizzicatoStrings();
         // if ( g_ds_ocarina )
         //   I_Ocarina();
-        // if ( g_ds_xylophone )
-        // {
-        //   glPushMatrix();
-        //   glTranslatef(-22.0, -10.0, 10.0);
-        //   glRotatef(32.0, 0.0, 1.0, 0.0);
-        //   glScalef(0.64999998, 0.64999998, 0.64999998);
-        //   I_Xylophone();
-        //   glPopMatrix();
-        // }
-        // if ( g_ds_musicBox )
-        //   I_MusicBox();
-        if ( g_ds_piano )
+        if ( g_ds_xylophone )
         {
           glPushMatrix();
-          glTranslatef(-50.0, 0.0, -20.0);
-          glRotatef(45.0, 0.0, 1.0, 0.0);
-          I_Piano();
+          glTranslatef(-22.0, -10.0, 10.0);
+          glRotatef(32.0, 0.0, 1.0, 0.0);
+          glScalef(0.64999998, 0.64999998, 0.64999998);
+          I_Xylophone();
           glPopMatrix();
+        }
+        // if ( g_ds_musicBox )
+        //   I_MusicBox();
+        if (g_ds_piano) {
+            glPushMatrix();
+            glTranslatef(-50.0, 0.0, -20.0);
+            glRotatef(45.0, 0.0, 1.0, 0.0);
+            I_Piano();
+            glPopMatrix();
         }
         // if ( g_show_percussion == 1 )
         // {
@@ -578,14 +574,13 @@ BOOL UpdateMidiJam() {
         //   I_Guitar();
         //   glPopMatrix();
         // }
-        if ( g_ds_bass )
-        {
-          glPushMatrix();
-          glTranslatef(50.0, 24.0, -25.0);
-          glRotatef(-45.0, 0.0, 1.0, 0.0);
-          glRotatef(-30.0, 0.0, 0.0, 1.0);
-          I_Bass();
-          glPopMatrix();
+        if (g_ds_bass) {
+            glPushMatrix();
+            glTranslatef(50.0, 24.0, -25.0);
+            glRotatef(-45.0, 0.0, 1.0, 0.0);
+            glRotatef(-30.0, 0.0, 0.0, 1.0);
+            I_Bass();
+            glPopMatrix();
         }
         //  -- HEADS UP DISPLAY --
         sprintf_s(headsUpDisplayText, "%s fps:%0.2f", g_midiFileNameDisp, g_framesPerSecond);
@@ -722,25 +717,24 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
                     g_songFillbarScale = 1.0; // limit scale to 100%
             }
         }
-        if ( ++g_isEvenFrame > 1 )
-        {
-          g_isEvenFrame = 0;
-          if ( ++g_vibratingString_frameIndex >= 8 )
-            g_vibratingString_frameIndex = 0;
-          g_vibratingString_frame = VIBRATING_STRING_ANIM_SEQUENCE[g_vibratingString_frameIndex];
+        if (++g_isEvenFrame > 1) {
+            g_isEvenFrame = 0;
+            if (++g_vibratingString_frameIndex >= 8)
+                g_vibratingString_frameIndex = 0;
+            g_vibratingString_frame = VIBRATING_STRING_ANIM_SEQUENCE[g_vibratingString_frameIndex];
         }
-        if ( !g_time_global_current )
-          g_time_global_current = pmtNow;
-        if ( g_isShuttingDown == 1 )
-          pmtNow = g_time_global_current;
+        if (!g_time_global_current)
+            g_time_global_current = pmtNow;
+        if (g_isShuttingDown == 1)
+            pmtNow = g_time_global_current;
         anyInstrumentActive = 0;
         I_Accordion_MM(pmtNow);
         //     if ( g_ds_harp && I_Harp_MM(pmtNow) )
         //       anyInstrumentActive = 1;
         if (g_ds_piano && I_Piano_MM(pmtNow))
             anyInstrumentActive = 1;
-        //     if ( g_ds_xylophone && I_Xylophone_MM(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_ds_xylophone && I_Xylophone_MM(pmtNow) )
+          anyInstrumentActive = 1;
         //     if ( g_ds_violin && I_Violin_MM(pmtNow) == 1 )
         //       anyInstrumentActive = 1;
         //     if ( g_ds_viola && I_Viola_MM(pmtNow) == 1 )
@@ -749,8 +743,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_ds_doubleBass && I_DoubleBass_MM(pmtNow) == 1 )
         //       anyInstrumentActive = 1;
-        if ( g_ds_bass && I_Bass_MM(pmtNow) )
-          anyInstrumentActive = 1;
+        if (g_ds_bass && I_Bass_MM(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_ds_guitar && I_Guitar_MM(pmtNow) )
         //       anyInstrumentActive = 1;
         //     if ( g_ds_stageHorn && I_StageHorn_MM(pmtNow) )

@@ -194,8 +194,10 @@ int main() {
     LOAD_MS3D_BUNDLE(g_songFillbar_ms3d, "SongFillbar.ms3d");
     LOAD_MS3D_BUNDLE(g_songFillbarBox_ms3d, "SongFillbarBox.ms3d");
     LOAD_MS3D_BUNDLE(g_pianoShadow_ms3d, "PianoShadow.ms3d");
+    LOAD_MS3D_BUNDLE(g_xylophoneShadow_ms3d, "XylophoneShadow.ms3d");
     LOAD_MS3D_BUNDLE(g_pianoStand_ms3d, "PianoStand.ms3d");
 
+    // Bass
     LOAD_MS3D_BUNDLE(g_bass_ms3d, "Bass.ms3d");
     LOAD_MS3D_BUNDLE(g_bassString_ms3d, "BassString.ms3d");
     g_bassStringBottomX_ms3d = new Ms3dBundle *[5];
@@ -206,6 +208,7 @@ int main() {
     LOAD_MS3D_BUNDLE(g_bassStringBottomX_ms3d[4], "BassStringBottom4.ms3d");
     LOAD_MS3D_BUNDLE(g_bassNoteFinger_ms3d, "BassNoteFinger.ms3d");
 
+    // Accordion
     LOAD_MS3D_BUNDLE(g_accordionKeyWhiteBack_ms3d, "AccordianKeyWhiteBack.ms3d");
     LOAD_MS3D_BUNDLE(g_accordionKeyWhiteFront_ms3d, "AccordianKeyWhiteFront.ms3d");
     LOAD_MS3D_BUNDLE(g_accordionKeyWhiteBack_Down_ms3d, "AccordianKeyWhiteBack.ms3d");
@@ -219,7 +222,34 @@ int main() {
     LOAD_MS3D_BUNDLE(g_accordionLeftHand_ms3d, "AccordianLeftHand.ms3d");
     LOAD_MS3D_BUNDLE(g_accordionRightHand_ms3d, "AccordianRightHand.ms3d");
 
+    // Xylophone
+    LOAD_MS3D_BUNDLE(g_xylophoneMalletWhite_ms3d, "XylophoneMalletWhite.ms3d");
+    LOAD_MS3D_BUNDLE(g_malletHitShadow_ms3d, "MalletHitShadow.ms3d");
+    LOAD_MS3D_BUNDLE(g_xylophoneLegs_ms3d, "XylophoneLegs.ms3d");
+    LOAD_MS3D_BUNDLE(g_xylophoneCase_ms3d, "XylophoneCase.ms3d");
+    g_xylophoneModels_ms3d_arr = new XylophoneModels *[4];
+    for (i = 0; i < 4; ++i) {
+        g_xylophoneModels_ms3d_arr[i] = new XylophoneModels();
+        LOAD_MS3D_BUNDLE(g_xylophoneModels_ms3d_arr[i]->xylophoneWhiteBar, "XylophoneWhiteBar.ms3d");
+        LOAD_MS3D_BUNDLE(g_xylophoneModels_ms3d_arr[i]->xylophoneWhiteBarDown, "XylophoneWhiteBarDown.ms3d");
+        LOAD_MS3D_BUNDLE(g_xylophoneModels_ms3d_arr[i]->xylophoneBlackBar, "XylophoneBlackBar.ms3d");
+        LOAD_MS3D_BUNDLE(g_xylophoneModels_ms3d_arr[i]->xylophoneBlackBarDown, "XylophoneBlackBarDown.ms3d");
+    }
+    g_xylophoneModels_ms3d_arr[1]->xylophoneWhiteBar->ReplaceTexture("XylophoneBar.bmp", "GlockenspielBar.bmp");
+    g_xylophoneModels_ms3d_arr[1]->xylophoneWhiteBarDown->ReplaceTexture("XylophoneBar.bmp", "GlockenspielBar.bmp");
+    g_xylophoneModels_ms3d_arr[1]->xylophoneBlackBar->ReplaceTexture("XylophoneBar.bmp", "GlockenspielBar.bmp");
+    g_xylophoneModels_ms3d_arr[1]->xylophoneBlackBarDown->ReplaceTexture("XylophoneBar.bmp", "GlockenspielBar.bmp");
+    g_xylophoneModels_ms3d_arr[2]->xylophoneWhiteBar->ReplaceTexture("XylophoneBar.bmp", "VibesBar.bmp");
+    g_xylophoneModels_ms3d_arr[2]->xylophoneWhiteBarDown->ReplaceTexture("XylophoneBar.bmp", "VibesBar.bmp");
+    g_xylophoneModels_ms3d_arr[2]->xylophoneBlackBar->ReplaceTexture("XylophoneBar.bmp", "VibesBar.bmp");
+    g_xylophoneModels_ms3d_arr[2]->xylophoneBlackBarDown->ReplaceTexture("XylophoneBar.bmp", "VibesBar.bmp");
+    g_xylophoneModels_ms3d_arr[3]->xylophoneWhiteBar->ReplaceTexture("XylophoneBar.bmp", "MarimbaBar.bmp");
+    g_xylophoneModels_ms3d_arr[3]->xylophoneWhiteBarDown->ReplaceTexture("XylophoneBar.bmp", "MarimbaBar.bmp");
+    g_xylophoneModels_ms3d_arr[3]->xylophoneBlackBar->ReplaceTexture("XylophoneBar.bmp", "MarimbaBar.bmp");
+    g_xylophoneModels_ms3d_arr[3]->xylophoneBlackBarDown->ReplaceTexture("XylophoneBar.bmp", "MarimbaBar.bmp");
 
+
+    // Piano
     g_pianoModels_ms3d_arr = new PianoModels *[4];
     for (i = 0; i < 4; ++i) {
         g_pianoModels_ms3d_arr[i] = new PianoModels();
@@ -262,6 +292,7 @@ int main() {
     MS3D_APPLY_TEXTURES(g_songFillbar_ms3d);
     MS3D_APPLY_TEXTURES(g_songFillbarBox_ms3d);
     MS3D_APPLY_TEXTURES(g_pianoShadow_ms3d);
+    MS3D_APPLY_TEXTURES(g_xylophoneShadow_ms3d);
     MS3D_APPLY_TEXTURES(g_pianoStand_ms3d);
 
     MS3D_APPLY_TEXTURES(g_bass_ms3d);
@@ -282,6 +313,18 @@ int main() {
     MS3D_APPLY_TEXTURES(g_accordionFold_ms3d);
     MS3D_APPLY_TEXTURES(g_accordionLeftHand_ms3d);
     MS3D_APPLY_TEXTURES(g_accordionRightHand_ms3d);
+
+    // Xylophone
+    MS3D_APPLY_TEXTURES(g_xylophoneMalletWhite_ms3d);
+    MS3D_APPLY_TEXTURES(g_malletHitShadow_ms3d);
+    MS3D_APPLY_TEXTURES(g_xylophoneLegs_ms3d);
+    MS3D_APPLY_TEXTURES(g_xylophoneCase_ms3d);
+    for (i = 0; i < 4; ++i) {
+        MS3D_APPLY_TEXTURES(g_xylophoneModels_ms3d_arr[i]->xylophoneWhiteBar);
+        MS3D_APPLY_TEXTURES(g_xylophoneModels_ms3d_arr[i]->xylophoneWhiteBarDown);
+        MS3D_APPLY_TEXTURES(g_xylophoneModels_ms3d_arr[i]->xylophoneBlackBar);
+        MS3D_APPLY_TEXTURES(g_xylophoneModels_ms3d_arr[i]->xylophoneBlackBarDown);
+    }
 
     for (i = 0; i < 4; ++i) {
         MS3D_APPLY_TEXTURES(g_pianoModels_ms3d_arr[i]->pianoCase);

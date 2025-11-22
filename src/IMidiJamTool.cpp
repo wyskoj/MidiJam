@@ -68,8 +68,10 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
     REFERENCE_TIME rtNow_1;
     MUSIC_TIME mtNow_1;
     unsigned __int16 wrappedNoteValue;
+    unsigned __int16 v140;
     unsigned __int16 v148;
     __int16 n;
+    __int16 ii;
 
     if (!pPMSG->pGraph || pPMSG->pGraph->StampPMsg(pPMSG) < 0)
         return DMUS_S_FREE;
@@ -133,6 +135,36 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                             g_currentTempo_scaleFactor0_9;
                                     if (g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_18CC[v148][n] <= 0)
                                         g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_18CC[v148][n] = 1;
+                                }
+                            }
+                            break;
+                        case XYLOPHONE:
+                            v140 = msg->wMusicValue - 21;
+                            if (v140 < 0x58u) {
+                                for (ii = 0;
+                                     g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].field_2C6[v140][ii] && ii <
+                                     16;
+                                     ++ii) {
+                                    ;
+                                }
+                                if (ii < 16) {
+                                    g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].field_2C6[v140][ii] = msg->
+                                            mtDuration;
+                                    g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].field_18C6[v140][ii] = msg->
+                                            bVelocity;
+                                    g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].field_2C6[v140][ii] =
+                                            g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].field_2C6[v140][ii]
+                                            - g_currentTempo_scaleFactor0_5;
+                                    if (g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].field_2C6[v140][ii] < 0)
+                                        g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].field_2C6[v140][ii] =
+                                                10;
+                                    (pPerf->GetTime)(&rtNow, &mtNow);
+                                    g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].queue[v140][ii] =
+                                            msg->mtTime - mtNow;
+                                    g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].queue[v140][ii] -=
+                                            g_currentTempo_scaleFactor0_9;
+                                    if (g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].queue[v140][ii] <= 0)
+                                        g_ds_xylophone[g_xylophone_assignment[msg->dwPChannel]].queue[v140][ii] = 1;
                                 }
                             }
                             break;
@@ -201,17 +233,40 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                 g_piano_assignment[pPMSG->dwPChannel] = g_ialloc_piano++;
                                 break;
                             case BASS:
-                                if ( g_ds_bass )
-                                {
-                                    g_ds_bass = static_cast<I_DS_Bass *>(realloc(g_ds_bass, sizeof(I_DS_Bass) * (g_ialloc_bass + 1)));
+                                if (g_ds_bass) {
+                                    g_ds_bass = static_cast<I_DS_Bass *>(realloc(
+                                        g_ds_bass, sizeof(I_DS_Bass) * (g_ialloc_bass + 1)));
                                     memset(&g_ds_bass[g_ialloc_bass], 0, sizeof(I_DS_Bass));
-                                }
-                                else
-                                {
+                                } else {
                                     g_ds_bass = static_cast<I_DS_Bass *>(malloc(sizeof(I_DS_Bass)));
                                     memset(g_ds_bass, 0, sizeof(I_DS_Bass));
                                 }
                                 g_bass_assignment[pPMSG->dwPChannel] = g_ialloc_bass++;
+                                break;
+                            case XYLOPHONE:
+                                if (g_ds_xylophone) {
+                                    g_ds_xylophone = static_cast<I_DS_Xylophone *>(realloc(g_ds_xylophone, sizeof(I_DS_Xylophone) * (g_ialloc_xylophone + 1)));
+                                    memset(&g_ds_xylophone[g_ialloc_xylophone], 0, sizeof(I_DS_Xylophone));
+                                } else {
+                                    g_ds_xylophone = static_cast<I_DS_Xylophone *>(malloc(sizeof(I_DS_Xylophone)));
+                                    memset(g_ds_xylophone, 0, sizeof(I_DS_Xylophone));
+                                }
+                                g_xylophone_assignment[pPMSG->dwPChannel] = g_ialloc_xylophone;
+                                switch (reinterpret_cast<DMUS_PATCH_PMSG *>(pPMSG)->byInstrument) {
+                                    case 9:
+                                        g_xylophone_types[g_ialloc_xylophone] = 1;
+                                        break;
+                                    case 11:
+                                        g_xylophone_types[g_ialloc_xylophone] = 2;
+                                        break;
+                                    case 12:
+                                        g_xylophone_types[g_ialloc_xylophone] = 3;
+                                        break;
+                                    default:
+                                        g_xylophone_types[g_ialloc_xylophone] = 0;
+                                        break;
+                                }
+                                ++g_ialloc_xylophone;
                                 break;
                             case ACCORDION:
                                 if (g_ds_accordion) {

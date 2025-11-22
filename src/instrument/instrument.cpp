@@ -14,11 +14,11 @@ MidiJamInstrumentId MIDIJAM_INSTRUMENT_IDS[128] = {
     PIANO, // 7  - Harpsichord
     PIANO, // 8  - Clavinet
     PIANO, // 9  - Celesta
-    UNDEFINED,  // 10 - Glockenspiel
+    XYLOPHONE,  // 10 - Glockenspiel
     UNDEFINED,  // 11 - Music Box
-    UNDEFINED,  // 12 - Vibraphone
-    UNDEFINED,  // 13 - Marimba
-    UNDEFINED,  // 14 - Xylophone
+    XYLOPHONE,  // 12 - Vibraphone
+    XYLOPHONE,  // 13 - Marimba
+    XYLOPHONE,  // 14 - Xylophone
     UNDEFINED,  // 15 - Tubular Bells
     UNDEFINED,  // 16 - Dulcimer
     UNDEFINED,  // 17 - Drawbar Organ

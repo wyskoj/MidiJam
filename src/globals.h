@@ -11,6 +11,7 @@
 #include "dmusici.h"
 #include "instrument/instrument.h"
 #include "instrument/Piano.h"
+#include "instrument/Xylophone.h"
 
 class Ms3dBundle;
 
@@ -174,29 +175,15 @@ extern Ms3dBundle *g_violinString_ms3d;
 extern Ms3dBundle *g_violin_ms3d;
 extern Ms3dBundle *g_woodBlockHigh_ms3d;
 extern Ms3dBundle *g_woodBlockLow_ms3d;
-extern Ms3dBundle *g_xylophoneBlackBarDown_glockenspiel_ms3d;
-extern Ms3dBundle *g_xylophoneBlackBarDown_marimba_ms3d;
-extern Ms3dBundle *g_xylophoneBlackBarDown_ms3d;
-extern Ms3dBundle *g_xylophoneBlackBarDown_vibes_ms3d;
-extern Ms3dBundle *g_xylophoneBlackBar_glockenspiel_ms3d;
-extern Ms3dBundle *g_xylophoneBlackBar_marimba_ms3d;
-extern Ms3dBundle *g_xylophoneBlackBar_ms3d;
-extern Ms3dBundle *g_xylophoneBlackBar_vibes_ms3d;
 extern Ms3dBundle *g_xylophoneCase_ms3d;
 extern Ms3dBundle *g_xylophoneLegs_ms3d;
 extern Ms3dBundle *g_xylophoneMalletWhite_ms3d;
-extern Ms3dBundle *g_xylophoneWhiteBarDown_glockenspiel_ms3d;
-extern Ms3dBundle *g_xylophoneWhiteBarDown_marimba_ms3d;
-extern Ms3dBundle *g_xylophoneWhiteBarDown_ms3d;
-extern Ms3dBundle *g_xylophoneWhiteBarDown_vibes_ms3d;
-extern Ms3dBundle *g_xylophoneWhiteBar_glockenspiel_ms3d;
-extern Ms3dBundle *g_xylophoneWhiteBar_marimba_ms3d;
-extern Ms3dBundle *g_xylophoneWhiteBar_ms3d;
-extern Ms3dBundle *g_xylophoneWhiteBar_vibes_ms3d;
+extern Ms3dBundle *g_xylophoneShadow_ms3d;
 extern Ms3dBundle *g_zapperLaser_ms3d;
 extern Ms3dBundle *g_zapper_ms3d;
 
 extern PianoModels **g_pianoModels_ms3d_arr;
+extern XylophoneModels **g_xylophoneModels_ms3d_arr;
 
 // Camera
 

@@ -51,6 +51,8 @@ add_executable(MidiJam src/main.cpp
         src/instrument/Percussion.h
         src/instrument/Bass.cpp
         src/instrument/Bass.h
+        src/instrument/Xylophone.cpp
+        src/instrument/Xylophone.h
 )
 
 target_include_directories(MidiJam PRIVATE "${CMAKE_SOURCE_DIR}/include")
