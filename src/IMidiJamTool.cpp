@@ -8,6 +8,7 @@
 
 #include "globals.h"
 #include "instrument/Accordion.h"
+#include "instrument/Bass.h"
 #include "instrument/Piano.h"
 
 HRESULT IMidiJamTool::QueryInterface(const IID &riid, void **ppv) {
@@ -67,6 +68,8 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
     REFERENCE_TIME rtNow_1;
     MUSIC_TIME mtNow_1;
     unsigned __int16 wrappedNoteValue;
+    unsigned __int16 v148;
+    __int16 n;
 
     if (!pPMSG->pGraph || pPMSG->pGraph->StampPMsg(pPMSG) < 0)
         return DMUS_S_FREE;
@@ -108,6 +111,28 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                             keyboardKeyIndex][slot] <= 0)
                                         g_ds_piano[g_piano_assignment[msg->dwPChannel]].timeDeltas[
                                             keyboardKeyIndex][slot] = 1;
+                                }
+                            }
+                            break;
+                        case BASS:
+                            v148 = msg->wMusicValue - 21;
+                            if (v148 < 0x58u) {
+                                for (n = 0; g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_2CC[v148][n] && n <
+                                            16; ++n);
+                                if (n < 16) {
+                                    g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_2CC[v148][n] = msg->mtDuration;
+                                    g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_2CC[v148][n] =
+                                            g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_2CC[v148][n]
+                                            - g_currentTempo_scaleFactor0_5;
+                                    if (g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_2CC[v148][n] < 0)
+                                        g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_2CC[v148][n] = 10;
+                                    pPerf->GetTime(&rtNow, &mtNow);
+                                    g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_18CC[v148][n] =
+                                            msg->mtTime - mtNow;
+                                    g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_18CC[v148][n] -=
+                                            g_currentTempo_scaleFactor0_9;
+                                    if (g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_18CC[v148][n] <= 0)
+                                        g_ds_bass[g_bass_assignment[msg->dwPChannel]].field_18CC[v148][n] = 1;
                                 }
                             }
                             break;
@@ -174,6 +199,19 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                         break;
                                 }
                                 g_piano_assignment[pPMSG->dwPChannel] = g_ialloc_piano++;
+                                break;
+                            case BASS:
+                                if ( g_ds_bass )
+                                {
+                                    g_ds_bass = static_cast<I_DS_Bass *>(realloc(g_ds_bass, sizeof(I_DS_Bass) * (g_ialloc_bass + 1)));
+                                    memset(&g_ds_bass[g_ialloc_bass], 0, sizeof(I_DS_Bass));
+                                }
+                                else
+                                {
+                                    g_ds_bass = static_cast<I_DS_Bass *>(malloc(sizeof(I_DS_Bass)));
+                                    memset(g_ds_bass, 0, sizeof(I_DS_Bass));
+                                }
+                                g_bass_assignment[pPMSG->dwPChannel] = g_ialloc_bass++;
                                 break;
                             case ACCORDION:
                                 if (g_ds_accordion) {

@@ -11,6 +11,7 @@
 #include "midi.h"
 #include "MidiJam.h"
 #include "Ms3dBundle.h"
+#include "instrument/Bass.h"
 #include "instrument/Piano.h"
 
 #define LOAD_MS3D_BUNDLE(varName, fileName) \
@@ -46,11 +47,11 @@ int main() {
     }
 
     for (i = 0; i < 23; ++i) {
-        word_46B5D8[4 * i] = i + 7;
-        word_46B5DA[4 * i] = i + 12;
-        word_46B5DC[4 * i] = i + 17;
-        word_46B5DE[4 * i] = i + 22;
-        flt_468BF8[i] = flt_45EA70[i] / -46.081;
+        BASS_NOTES[i][0] = i + 7;
+        BASS_NOTES[i][1] = i + 12;
+        BASS_NOTES[i][2] = i + 17;
+        BASS_NOTES[i][3] = i + 22;
+        flt_468BF4[i + 1] = BASS_FRET_HEIGHTS[i + 1] / -46.081001;
         word_46CEE0[6 * i] = i + 19;
         word_46CEE2[6 * i] = i + 24;
         word_46CEE4[6 * i] = i + 29;
@@ -195,6 +196,16 @@ int main() {
     LOAD_MS3D_BUNDLE(g_pianoShadow_ms3d, "PianoShadow.ms3d");
     LOAD_MS3D_BUNDLE(g_pianoStand_ms3d, "PianoStand.ms3d");
 
+    LOAD_MS3D_BUNDLE(g_bass_ms3d, "Bass.ms3d");
+    LOAD_MS3D_BUNDLE(g_bassString_ms3d, "BassString.ms3d");
+    g_bassStringBottomX_ms3d = new Ms3dBundle *[5];
+    LOAD_MS3D_BUNDLE(g_bassStringBottomX_ms3d[0], "BassStringBottom0.ms3d");
+    LOAD_MS3D_BUNDLE(g_bassStringBottomX_ms3d[1], "BassStringBottom1.ms3d");
+    LOAD_MS3D_BUNDLE(g_bassStringBottomX_ms3d[2], "BassStringBottom2.ms3d");
+    LOAD_MS3D_BUNDLE(g_bassStringBottomX_ms3d[3], "BassStringBottom3.ms3d");
+    LOAD_MS3D_BUNDLE(g_bassStringBottomX_ms3d[4], "BassStringBottom4.ms3d");
+    LOAD_MS3D_BUNDLE(g_bassNoteFinger_ms3d, "BassNoteFinger.ms3d");
+
     LOAD_MS3D_BUNDLE(g_accordionKeyWhiteBack_ms3d, "AccordianKeyWhiteBack.ms3d");
     LOAD_MS3D_BUNDLE(g_accordionKeyWhiteFront_ms3d, "AccordianKeyWhiteFront.ms3d");
     LOAD_MS3D_BUNDLE(g_accordionKeyWhiteBack_Down_ms3d, "AccordianKeyWhiteBack.ms3d");
@@ -252,6 +263,15 @@ int main() {
     MS3D_APPLY_TEXTURES(g_songFillbarBox_ms3d);
     MS3D_APPLY_TEXTURES(g_pianoShadow_ms3d);
     MS3D_APPLY_TEXTURES(g_pianoStand_ms3d);
+
+    MS3D_APPLY_TEXTURES(g_bass_ms3d);
+    MS3D_APPLY_TEXTURES(g_bassString_ms3d);
+    MS3D_APPLY_TEXTURES(g_bassStringBottomX_ms3d[0]);
+    MS3D_APPLY_TEXTURES(g_bassStringBottomX_ms3d[1]);
+    MS3D_APPLY_TEXTURES(g_bassStringBottomX_ms3d[2]);
+    MS3D_APPLY_TEXTURES(g_bassStringBottomX_ms3d[3]);
+    MS3D_APPLY_TEXTURES(g_bassStringBottomX_ms3d[4]);
+    MS3D_APPLY_TEXTURES(g_bassNoteFinger_ms3d);
 
     MS3D_APPLY_TEXTURES(g_accordionKeyWhiteBack_ms3d);
     MS3D_APPLY_TEXTURES(g_accordionKeyWhiteFront_ms3d);

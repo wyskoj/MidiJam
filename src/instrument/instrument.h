@@ -5,6 +5,16 @@
 #ifndef MIDIJAM_INSTRUMENT_H
 #define MIDIJAM_INSTRUMENT_H
 
+#define DECL_INST(name) \
+extern __int16 g_inst_visible_##name; \
+extern __int16 g_ialloc_##name; \
+extern __int16 g_##name##_assignment[300];
+
+#define DEF_INST(name, type) \
+__int16 g_inst_visible_##name = 0; \
+__int16 g_ialloc_##name = 0; \
+type *g_ds_##name = nullptr;
+
 enum MidiJamInstrumentId : __int16 {
     UNDEFINED = 0x0,
     PIANO = 0x1,

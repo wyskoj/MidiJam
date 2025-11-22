@@ -37,14 +37,14 @@ MidiJamInstrumentId MIDIJAM_INSTRUMENT_IDS[128] = {
     UNDEFINED,  // 30 - Overdriven Guitar
     UNDEFINED,  // 31 - Distortion Guitar
     UNDEFINED,  // 32 - Guitar harmonics
-    UNDEFINED,  // 33 - Acoustic Bass
-    UNDEFINED,  // 34 - Electric Bass (finger)
-    UNDEFINED,  // 35 - Electric Bass (pick)
-    UNDEFINED,  // 36 - Fretless Bass
-    UNDEFINED,  // 37 - Slap Bass 1
-    UNDEFINED,  // 38 - Slap Bass 2
-    UNDEFINED,  // 39 - Synth Bass 1
-    UNDEFINED,  // 40 - Synth Bass 2
+    BASS,  // 33 - Acoustic Bass
+    BASS,  // 34 - Electric Bass (finger)
+    BASS,  // 35 - Electric Bass (pick)
+    BASS,  // 36 - Fretless Bass
+    BASS,  // 37 - Slap Bass 1
+    BASS,  // 38 - Slap Bass 2
+    BASS,  // 39 - Synth Bass 1
+    BASS,  // 40 - Synth Bass 2
     UNDEFINED,  // 41 - Violin
     UNDEFINED,  // 42 - Viola
     UNDEFINED,  // 43 - Cello

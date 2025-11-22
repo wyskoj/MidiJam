@@ -33,6 +33,7 @@ extern double g_currentTempo_scaleFactor0_5 ;
 extern double g_currentTempo_scaleFactor0_9 ;
 extern double g_currentTempo_scaleFactor1_15;
 extern float g_playbackSpeed;
+extern __int16 g_isEvenFrame;
 
 // HWF
 extern FILE *g_hwfStream;
@@ -60,8 +61,9 @@ extern Ms3dBundle *g_altoSaxHorn_ms3d;
 extern Ms3dBundle *g_altoSaxKeyX_ms3d;
 extern Ms3dBundle *g_baritoneSaxBody_ms3d;
 extern Ms3dBundle *g_baritoneSaxHorn_ms3d;
+extern Ms3dBundle *g_bass_ms3d;
 extern Ms3dBundle *g_bassNoteFinger_ms3d;
-extern Ms3dBundle *g_bassStringBottomX_ms3d;
+extern Ms3dBundle **g_bassStringBottomX_ms3d;
 extern Ms3dBundle *g_bassString_ms3d;
 extern Ms3dBundle *g_cabasa_ms3d;
 extern Ms3dBundle *g_calliope_ms3d;

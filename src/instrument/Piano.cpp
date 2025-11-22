@@ -10,8 +10,8 @@
 #include "../Ms3dBundle.h"
 #include "../textures.h"
 
-__int16 g_inst_visible_piano = 0;
-__int16 g_ialloc_piano = 0;
+DEF_INST(piano, I_DS_Piano)
+
 __int16 PIANO_KEY_SHAPE[88] = {
     1, 12, 3,
     1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7,
@@ -23,7 +23,6 @@ __int16 PIANO_KEY_SHAPE[88] = {
     1, 9, 2, 10, 3, 4, 11, 5, 12, 6, 13, 7,
     8,
 };
-I_DS_Piano *g_ds_piano = nullptr;
 GLfloat g_pianokey_whiteBack_scale[14];
 __int16 g_piano_assignment[300];
 

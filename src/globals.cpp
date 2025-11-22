@@ -29,6 +29,7 @@ double g_currentTempo_scaleFactor0_5;
 double g_currentTempo_scaleFactor0_9;
 double g_currentTempo_scaleFactor1_15;
 float g_playbackSpeed;
+__int16 g_isEvenFrame;
 
 // HWF
 FILE *g_hwfStream;
@@ -56,8 +57,9 @@ Ms3dBundle *g_altoSaxHorn_ms3d;
 Ms3dBundle *g_altoSaxKeyX_ms3d;
 Ms3dBundle *g_baritoneSaxBody_ms3d;
 Ms3dBundle *g_baritoneSaxHorn_ms3d;
+Ms3dBundle *g_bass_ms3d;
 Ms3dBundle *g_bassNoteFinger_ms3d;
-Ms3dBundle *g_bassStringBottomX_ms3d;
+Ms3dBundle **g_bassStringBottomX_ms3d;
 Ms3dBundle *g_bassString_ms3d;
 Ms3dBundle *g_cabasa_ms3d;
 Ms3dBundle *g_calliope_ms3d;
@@ -256,10 +258,6 @@ __int16 word_45EB30[88] = {
     1,
 };
 DWORD dword_46E6A8;
-__int16 word_46B5D8[92];
-__int16 word_46B5DA[92];
-__int16 word_46B5DC[92];
-__int16 word_46B5DE[92];
 float flt_468BF8[23];
 float flt_45EA70[23];
 __int16 word_46CEE0[138];

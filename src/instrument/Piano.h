@@ -9,12 +9,12 @@
 #include <GL/gl.h>
 
 #include "dmplugin.h"
+#include "instrument.h"
 
 class Ms3dBundle;
 
-extern __int16 g_inst_visible_piano;
-extern __int16 g_ialloc_piano;
-extern __int16 g_piano_assignment[300];
+DECL_INST(piano)
+
 extern __int16 PIANO_KEY_SHAPE[88];
 extern GLfloat g_pianokey_whiteBack_scale[14];
 
@@ -33,16 +33,16 @@ struct I_DS_Piano // sizeof=0x2958
 };
 
 struct PianoModels {
-    Ms3dBundle* pianoCase;                    // "PianoCase.ms3d"
-    Ms3dBundle* pianoKeyBlack;               // "PianoKeyBlack.ms3d"
-    Ms3dBundle* pianoKeyBlackDown;           // "PianoKeyBlackDown.ms3d"
-    Ms3dBundle* pianoKeyWhiteFront;          // "PianoKeyWhiteFront.ms3d"
-    Ms3dBundle* pianoKeyWhiteBack;           // "PianoKeyWhiteBack.ms3d"
-    Ms3dBundle* pianoKeyWhiteFrontDown;      // "PianoKeyWhiteFrontDown.ms3d"
-    Ms3dBundle* pianoKeyWhiteBackDown;       // "PianoKeyWhiteBackDown.ms3d"
+    Ms3dBundle *pianoCase; // "PianoCase.ms3d"
+    Ms3dBundle *pianoKeyBlack; // "PianoKeyBlack.ms3d"
+    Ms3dBundle *pianoKeyBlackDown; // "PianoKeyBlackDown.ms3d"
+    Ms3dBundle *pianoKeyWhiteFront; // "PianoKeyWhiteFront.ms3d"
+    Ms3dBundle *pianoKeyWhiteBack; // "PianoKeyWhiteBack.ms3d"
+    Ms3dBundle *pianoKeyWhiteFrontDown; // "PianoKeyWhiteFrontDown.ms3d"
+    Ms3dBundle *pianoKeyWhiteBackDown; // "PianoKeyWhiteBackDown.ms3d"
 };
 
-extern I_DS_Piano* g_ds_piano;
+extern I_DS_Piano *g_ds_piano;
 
 void I_Piano();
 

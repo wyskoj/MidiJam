@@ -16,6 +16,7 @@
 #include "Ms3dBundle.h"
 #include "text.h"
 #include "instrument/Accordion.h"
+#include "instrument/Bass.h"
 #include "instrument/Piano.h"
 
 bool CreateMidijamWindow(LPCSTR lpWindowName, HINSTANCE hInstance, GLsizei windowWidth, GLsizei windowHeight,
@@ -577,15 +578,15 @@ BOOL UpdateMidiJam() {
         //   I_Guitar();
         //   glPopMatrix();
         // }
-        // if ( g_ds_bass )
-        // {
-        //   glPushMatrix();
-        //   glTranslatef(50.0, 24.0, -25.0);
-        //   glRotatef(-45.0, 0.0, 1.0, 0.0);
-        //   glRotatef(-30.0, 0.0, 0.0, 1.0);
-        //   I_Bass();
-        //   glPopMatrix();
-        // }
+        if ( g_ds_bass )
+        {
+          glPushMatrix();
+          glTranslatef(50.0, 24.0, -25.0);
+          glRotatef(-45.0, 0.0, 1.0, 0.0);
+          glRotatef(-30.0, 0.0, 0.0, 1.0);
+          I_Bass();
+          glPopMatrix();
+        }
         //  -- HEADS UP DISPLAY --
         sprintf_s(headsUpDisplayText, "%s fps:%0.2f", g_midiFileNameDisp, g_framesPerSecond);
         // -- SONG FILLBAR BOX --
@@ -721,13 +722,13 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
                     g_songFillbarScale = 1.0; // limit scale to 100%
             }
         }
-        //     if ( ++g_isEvenFrame > 1 )
-        //     {
-        //       g_isEvenFrame = 0;
-        //       if ( ++g_vibratingString_frameIndex >= 8 )
-        //         g_vibratingString_frameIndex = 0;
-        //       g_vibratingString_frame = VIBRATING_STRING_ANIM_SEQUENCE[g_vibratingString_frameIndex];
-        //     }
+        if ( ++g_isEvenFrame > 1 )
+        {
+          g_isEvenFrame = 0;
+          if ( ++g_vibratingString_frameIndex >= 8 )
+            g_vibratingString_frameIndex = 0;
+          g_vibratingString_frame = VIBRATING_STRING_ANIM_SEQUENCE[g_vibratingString_frameIndex];
+        }
         if ( !g_time_global_current )
           g_time_global_current = pmtNow;
         if ( g_isShuttingDown == 1 )
@@ -748,8 +749,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_ds_doubleBass && I_DoubleBass_MM(pmtNow) == 1 )
         //       anyInstrumentActive = 1;
-        //     if ( g_ds_bass && I_Bass_MM(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_ds_bass && I_Bass_MM(pmtNow) )
+          anyInstrumentActive = 1;
         //     if ( g_ds_guitar && I_Guitar_MM(pmtNow) )
         //       anyInstrumentActive = 1;
         //     if ( g_ds_stageHorn && I_StageHorn_MM(pmtNow) )
