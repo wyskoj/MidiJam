@@ -17,6 +17,7 @@
 #include "text.h"
 #include "instrument/Accordion.h"
 #include "instrument/Bass.h"
+#include "instrument/Harp.h"
 #include "instrument/Piano.h"
 #include "instrument/StageHorn.h"
 #include "instrument/StageString.h"
@@ -453,27 +454,24 @@ BOOL UpdateMidiJam() {
         //   Ms3dBundle::RenderModel(g_drumShadow_ms3d);
         //   glPopMatrix();
         // }
-        // // -- HARP SHADOW --
-        // if ( g_inst_visible_harp > 0 )
-        // {
-        //   for ( m = 0; m < g_inst_visible_harp; ++m )
-        //   {
-        //     glPushMatrix();
-        //     x_harpShadow = m * 16.0 + 7.0;
-        //     glTranslatef(x_harpShadow, -32.0, 5.0);
-        //     glRotatef(-33.0, 0.0, 1.0, 0.0);
-        //     Ms3dBundle::RenderModel(g_harpShadow_ms3d);
-        //     glPopMatrix();
-        //   }
-        // }
-        // if ( g_ds_harp )
-        // {
-        //   glPushMatrix();
-        //   glTranslatef(7.0, -28.4, 5.0);
-        //   glRotatef(-33.0, 0.0, 1.0, 0.0);
-        //   I_Harp();
-        //   glPopMatrix();
-        // }
+        // -- HARP SHADOW --
+        if (g_inst_visible_harp > 0) {
+            for (m = 0; m < g_inst_visible_harp; ++m) {
+                glPushMatrix();
+                x_harpShadow = m * 16.0 + 7.0;
+                glTranslatef(x_harpShadow, -32.0, 5.0);
+                glRotatef(-33.0, 0.0, 1.0, 0.0);
+                g_harpShadow_ms3d->RenderModel();
+                glPopMatrix();
+            }
+        }
+        if (g_ds_harp) {
+            glPushMatrix();
+            glTranslatef(7.0, -28.4, 5.0);
+            glRotatef(-33.0, 0.0, 1.0, 0.0);
+            I_Harp();
+            glPopMatrix();
+        }
         // if ( g_ds_trombone )
         //   I_Trombone();
         // if ( g_ds_trumpet )
@@ -496,8 +494,8 @@ BOOL UpdateMidiJam() {
         //   I_Flute();
         // if ( g_ds_tuba )
         //   I_Tuba();
-        if ( g_ds_stageHorn )
-          I_StageHorn();
+        if (g_ds_stageHorn)
+            I_StageHorn();
         // if ( g_ds_whistles )
         //   I_Whistles();
         // if ( g_ds_panPipe )
@@ -522,20 +520,19 @@ BOOL UpdateMidiJam() {
         //   I_StageChoir();
         if (g_ds_accordion)
             I_Accordion();
-        if ( g_ds_stageString )
-          I_StageString();
+        if (g_ds_stageString)
+            I_StageString();
         // if ( g_ds_pizzicatoStrings )
         //   I_PizzicatoStrings();
         // if ( g_ds_ocarina )
         //   I_Ocarina();
-        if ( g_ds_xylophone )
-        {
-          glPushMatrix();
-          glTranslatef(-22.0, -10.0, 10.0);
-          glRotatef(32.0, 0.0, 1.0, 0.0);
-          glScalef(0.64999998, 0.64999998, 0.64999998);
-          I_Xylophone();
-          glPopMatrix();
+        if (g_ds_xylophone) {
+            glPushMatrix();
+            glTranslatef(-22.0, -10.0, 10.0);
+            glRotatef(32.0, 0.0, 1.0, 0.0);
+            glScalef(0.64999998, 0.64999998, 0.64999998);
+            I_Xylophone();
+            glPopMatrix();
         }
         // if ( g_ds_musicBox )
         //   I_MusicBox();
@@ -731,12 +728,12 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             pmtNow = g_time_global_current;
         anyInstrumentActive = 0;
         I_Accordion_MM(pmtNow);
-        //     if ( g_ds_harp && I_Harp_MM(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if (g_ds_harp && I_Harp_MM(pmtNow))
+            anyInstrumentActive = 1;
         if (g_ds_piano && I_Piano_MM(pmtNow))
             anyInstrumentActive = 1;
-        if ( g_ds_xylophone && I_Xylophone_MM(pmtNow) )
-          anyInstrumentActive = 1;
+        if (g_ds_xylophone && I_Xylophone_MM(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_ds_violin && I_Violin_MM(pmtNow) == 1 )
         //       anyInstrumentActive = 1;
         //     if ( g_ds_viola && I_Viola_MM(pmtNow) == 1 )
@@ -749,8 +746,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         //     if ( g_ds_guitar && I_Guitar_MM(pmtNow) )
         //       anyInstrumentActive = 1;
-        if ( g_ds_stageHorn && I_StageHorn_MM(pmtNow) )
-          anyInstrumentActive = 1;
+        if (g_ds_stageHorn && I_StageHorn_MM(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_ds_whistles && I_Whistles_MM(pmtNow) )
         //       anyInstrumentActive = 1;
         //     UpdateSteamPuffers();
@@ -806,8 +803,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_ds_tubularBells && I_TubularBells_MM(pmtNow) )
         //       anyInstrumentActive = 1;
-        if ( g_ds_stageString && I_StageString_MM(pmtNow) )
-          anyInstrumentActive = 1;
+        if (g_ds_stageString && I_StageString_MM(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_ds_pizzicatoStrings && I_PizzicatoStrings_MM(pmtNow) )
         //       anyInstrumentActive = 1;
         //     UpdateAllRecoils(recoil_scale_factor);
@@ -1240,7 +1237,7 @@ void MidiJamInitialize() {
     __int16 queue; // [esp+10h] [ebp-8h]
     __int16 i; // [esp+14h] [ebp-4h]
     __int16 j; // [esp+14h] [ebp-4h]
-    __int16 k; // [esp+14h] [ebp-4h]
+    // [esp+14h] [ebp-4h]
     __int16 m; // [esp+14h] [ebp-4h]
     __int16 n; // [esp+14h] [ebp-4h]
     __int16 patch; // [esp+14h] [ebp-4h]
@@ -1253,24 +1250,22 @@ void MidiJamInitialize() {
     for (i = 0; i < 6; ++i)
         g_cameraLocation[i] = *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + i);
     // g_percussion_framesWithEmptyQueue = 0;
-    // // define harp string colors
-    // for (j = 0; j < 47; ++j) {
-    //     if (j % 7) {
-    //         if (j % 7 == 3)
-    //             g_harpStringColors[j] = Blue;
-    //         else
-    //             g_harpStringColors[j] = White;
-    //     } else {
-    //         g_harpStringColors[j] = Red;
-    //     }
-    // }
-    // // define harp string scales
-    // for (k = 0; k < 47; ++k) {
-    //     HARP_STRING_SCALE[k] = HARP_STRING_SCALE[k] - (k / 47.0 * 4.5 + 1.0);
-    //     *&g_harp_string_y[k] = k / 47.0 * 42.0 + 4.7379999;
-    //     g_harp_string_z[k] = -k * 0.75 - 4.0;
-    //     g_harp_string_scale[k] = ((1.0 - k / 47.0) * 42.0 + HARP_STRING_SCALE[k] - 42.0) / 72.0;
-    // }
+    for (j = 0; j < 47; ++j) {
+        if (j % 7) {
+            if (j % 7 == 3)
+                g_harpStringColors[j] = BLUE;
+            else
+                g_harpStringColors[j] = WHITE;
+        } else {
+            g_harpStringColors[j] = RED;
+        }
+    }
+    for (__int16 k = 0; k < 47; ++k) {
+        HARP_STRING_SCALE[k] = HARP_STRING_SCALE[k] - (k / 47.0 * 4.5 + 1.0);
+        g_harp_string_y[k] = k / 47.0 * 42.0 + 4.7379999;
+        g_harp_string_z[k] = -k * 0.75 - 4.0;
+        g_harp_string_scale[k] = ((1.0 - k / 47.0) * 42.0 + HARP_STRING_SCALE[k] - 42.0) / 72.0;
+    }
     // for (m = 0; m < 7; ++m) {
     //     cymbalScale = CYMBAL_SCALE[m];
     //     g_cymbalMassFactor[m] = cymbalScale + cymbalScale + 16.75;
@@ -1286,7 +1281,7 @@ void MidiJamInitialize() {
     // g_ialloc_guitar = 0;
     // dword_464700 = 0;
     // dword_468EC0 = 0;
-    // g_ialloc_harp = 0;
+    g_ialloc_harp = 0;
     g_ialloc_xylophone = 0;
     // g_ialloc_stageChoir = 0;
     g_ialloc_stageHorn = 0;
@@ -1412,7 +1407,7 @@ void MidiJamInitialize() {
         // g_piccolo_assignment[slot] = -1;
         // g_flute_assignment[slot] = -1;
         // g_trumpet_assignment[slot] = -1;
-        // g_harp_assignment[slot] = -1;
+        g_harp_assignment[slot] = -1;
     }
     // g_framesKeyLeftPressed = 0;
     // g_framesKeyRightPressed = 0;

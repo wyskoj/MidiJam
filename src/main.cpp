@@ -99,7 +99,6 @@ int main() {
     }
     g_pianoXylophoneOffset = g_pianoXylophoneOffset * 0.5;
 
-    // WTF?
     g_pianokey_translation_x[1] = -0.20833333;
     g_pianokey_whiteBack_scale[1] = 0.58333331;
     g_pianokey_translation_x[2] = 0.0;
@@ -188,6 +187,44 @@ int main() {
     g_windowCenterX = g_windowCenter_X;
     g_windowCenterY = g_windowCenter_Y;
 
+    // Harp
+    LOAD_MS3D_BUNDLE(g_harp_ms3d, "Harp.ms3d");
+    LOAD_MS3D_BUNDLE(g_harpString_ms3d[0], "HarpString.ms3d");
+    LOAD_MS3D_BUNDLE(g_harpString_ms3d[1], "HarpString.ms3d");
+    g_harpString_ms3d[1]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringRed.bmp");
+    LOAD_MS3D_BUNDLE(g_harpString_ms3d[2], "HarpString.ms3d");
+    g_harpString_ms3d[2]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringBlue.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[0][0], "HarpStringPlaying0.ms3d");
+    g_harpStringPlayingX_ms3d[0][0]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringWhitePlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[1][0], "HarpStringPlaying0.ms3d");
+    g_harpStringPlayingX_ms3d[1][0]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringRedPlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[2][0], "HarpStringPlaying0.ms3d");
+    g_harpStringPlayingX_ms3d[2][0]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringBluePlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[0][1], "HarpStringPlaying1.ms3d");
+    g_harpStringPlayingX_ms3d[0][1]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringWhitePlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[1][1], "HarpStringPlaying1.ms3d");
+    g_harpStringPlayingX_ms3d[1][1]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringRedPlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[2][1], "HarpStringPlaying1.ms3d");
+    g_harpStringPlayingX_ms3d[2][1]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringBluePlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[0][2], "HarpStringPlaying2.ms3d");
+    g_harpStringPlayingX_ms3d[0][2]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringWhitePlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[1][2], "HarpStringPlaying2.ms3d");
+    g_harpStringPlayingX_ms3d[1][2]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringRedPlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[2][2], "HarpStringPlaying2.ms3d");
+    g_harpStringPlayingX_ms3d[2][2]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringBluePlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[0][3], "HarpStringPlaying3.ms3d");
+    g_harpStringPlayingX_ms3d[0][3]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringWhitePlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[1][3], "HarpStringPlaying3.ms3d");
+    g_harpStringPlayingX_ms3d[1][3]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringRedPlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[2][3], "HarpStringPlaying3.ms3d");
+    g_harpStringPlayingX_ms3d[2][3]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringBluePlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[0][4], "HarpStringPlaying4.ms3d");
+    g_harpStringPlayingX_ms3d[0][4]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringWhitePlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[1][4], "HarpStringPlaying4.ms3d");
+    g_harpStringPlayingX_ms3d[1][4]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringRedPlaying.bmp");
+    LOAD_MS3D_BUNDLE(g_harpStringPlayingX_ms3d[2][4], "HarpStringPlaying4.ms3d");
+    g_harpStringPlayingX_ms3d[2][4]->ReplaceTexture("HarpStringWhite.bmp", "HarpStringBluePlaying.bmp");
+
     LOAD_MS3D_BUNDLE(g_drumSet_Stick_ms3d, "DrumSet_Stick.ms3d");
     LOAD_MS3D_BUNDLE(g_screenGradient_ms3d, "ScreenGradient.ms3d");
     LOAD_MS3D_BUNDLE(g_stage_ms3d, "Stage.ms3d");
@@ -195,6 +232,7 @@ int main() {
     LOAD_MS3D_BUNDLE(g_songFillbarBox_ms3d, "SongFillbarBox.ms3d");
     LOAD_MS3D_BUNDLE(g_pianoShadow_ms3d, "PianoShadow.ms3d");
     LOAD_MS3D_BUNDLE(g_xylophoneShadow_ms3d, "XylophoneShadow.ms3d");
+    LOAD_MS3D_BUNDLE(g_harpShadow_ms3d, "HarpShadow.ms3d");
     LOAD_MS3D_BUNDLE(g_pianoStand_ms3d, "PianoStand.ms3d");
 
     // Bass
@@ -306,7 +344,16 @@ int main() {
     MS3D_APPLY_TEXTURES(g_songFillbarBox_ms3d);
     MS3D_APPLY_TEXTURES(g_pianoShadow_ms3d);
     MS3D_APPLY_TEXTURES(g_xylophoneShadow_ms3d);
+    MS3D_APPLY_TEXTURES(g_harpShadow_ms3d);
     MS3D_APPLY_TEXTURES(g_pianoStand_ms3d);
+
+    MS3D_APPLY_TEXTURES(g_harp_ms3d);
+    for (int i = 0; i < 3; ++i) {
+        MS3D_APPLY_TEXTURES(g_harpString_ms3d[i]);
+        for (int j = 0; j < 5; ++j) {
+            MS3D_APPLY_TEXTURES(g_harpStringPlayingX_ms3d[i][j]);
+        }
+    }
 
     MS3D_APPLY_TEXTURES(g_bass_ms3d);
     MS3D_APPLY_TEXTURES(g_bassString_ms3d);

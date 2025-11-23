@@ -51,7 +51,7 @@ MidiJamInstrumentId MIDIJAM_INSTRUMENT_IDS[128] = {
     UNDEFINED,  // 44 - Contrabass
     UNDEFINED,  // 45 - Tremolo Strings
     UNDEFINED,  // 46 - Pizzicato Strings
-    UNDEFINED,  // 47 - Orchestral Harp
+    HARP,  // 47 - Orchestral Harp
     UNDEFINED,  // 48 - Timpani
     STAGE_STRINGS,  // 49 - String Ensemble 1
     STAGE_STRINGS,  // 50 - String Ensemble 2

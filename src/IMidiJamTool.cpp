@@ -9,6 +9,7 @@
 #include "globals.h"
 #include "instrument/Accordion.h"
 #include "instrument/Bass.h"
+#include "instrument/Harp.h"
 #include "instrument/Piano.h"
 #include "instrument/StageHorn.h"
 #include "instrument/StageString.h"
@@ -74,10 +75,13 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
     unsigned __int16 v140;
     unsigned __int16 v148;
     unsigned __int16 v135;
+    unsigned __int16 v60;
+    unsigned __int16 v59;
     __int16 n;
     __int16 ii;
     __int16 i5;
     __int16 jj;
+    __int16 i15;
 
     if (!pPMSG->pGraph || pPMSG->pGraph->StampPMsg(pPMSG) < 0)
         return DMUS_S_FREE;
@@ -176,18 +180,20 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                             break;
                         case STAGE_HORN:
                             v135 = (msg->wMusicValue + 3) % 12;
-                            for ( jj = 0; g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_64[v135][jj] && jj < 16; ++jj )
-                                ;
-                            if ( jj < 16 )
-                            {
-                                g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_64[v135][jj] = msg->mtDuration;
-                                if ( g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_64[v135][jj] < 0 )
+                            for (jj = 0; g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_64[v135][jj] &&
+                                         jj < 16; ++jj);
+                            if (jj < 16) {
+                                g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_64[v135][jj] = msg->
+                                        mtDuration;
+                                if (g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_64[v135][jj] < 0)
                                     g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_64[v135][jj] = 10;
                                 (pPerf->GetTime)(&rtNow, &mtNow);
-                                g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_364[v135][jj] = msg->mtTime
-                                                                                                                 - mtNow;
-                                g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_364[v135][jj] -= g_currentTempo_scaleFactor0_9;
-                                if ( g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_364[v135][jj] <= 0 )
+                                g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_364[v135][jj] =
+                                        msg->mtTime
+                                        - mtNow;
+                                g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_364[v135][jj] -=
+                                        g_currentTempo_scaleFactor0_9;
+                                if (g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_364[v135][jj] <= 0)
                                     g_ds_stageHorn[g_stageHorn_assignment[msg->dwPChannel]].field_364[v135][jj] = 1;
                             }
                             break;
@@ -224,22 +230,50 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                             break;
                         case STAGE_STRINGS:
                             v99 = (msg->wMusicValue + 3) % 12;
-                            for ( i5 = 0;
-                                  g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_64[v99][i5] && i5 < 16;
-                                  ++i5 )
-                            {
+                            for (i5 = 0;
+                                 g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_64[v99][i5] && i5 <
+                                 16;
+                                 ++i5) {
                                 ;
                             }
-                            if ( i5 < 16 )
-                            {
-                                g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_64[v99][i5] = msg->mtDuration;
-                                if ( g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_64[v99][i5] < 0 )
+                            if (i5 < 16) {
+                                g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_64[v99][i5] = msg->
+                                        mtDuration;
+                                if (g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_64[v99][i5] < 0)
                                     g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_64[v99][i5] = 10;
                                 pPerf->GetTime(&rtNow, &mtNow);
-                                g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_364[v99][i5] = msg->mtTime - mtNow;
-                                g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_364[v99][i5] -= g_currentTempo_scaleFactor0_9;
-                                if ( g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_364[v99][i5] <= 0 )
+                                g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_364[v99][i5] =
+                                        msg->mtTime - mtNow;
+                                g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_364[v99][i5] -=
+                                        g_currentTempo_scaleFactor0_9;
+                                if (g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_364[v99][i5] <= 0)
                                     g_ds_stageString[g_stageString_assignment[msg->dwPChannel]].field_364[v99][i5] = 1;
+                            }
+                            break;
+                        case HARP:
+                            v60 = msg->wMusicValue - 24;
+                            if (v60 < 0x50u) {
+                                v59 = word_45EC60[v60 % 12] + 7 * (v60 / 12);
+                                if (v59 < 0x2Fu) {
+                                    for (i15 = 0; g_ds_harp[g_harp_assignment[msg->dwPChannel]].field_17C[v59][i15] &&
+                                                  i15 < 16; ++i15);
+                                    if (i15 < 16) {
+                                        g_ds_harp[g_harp_assignment[msg->dwPChannel]].field_17C[v59][i15] = msg->
+                                                mtDuration;
+                                        g_ds_harp[g_harp_assignment[msg->dwPChannel]].field_17C[v59][i15] =
+                                                g_ds_harp[g_harp_assignment[msg->dwPChannel]].field_17C[v59][i15]
+                                                - g_currentTempo_scaleFactor0_5;
+                                        if (g_ds_harp[g_harp_assignment[msg->dwPChannel]].field_17C[v59][i15] < 0)
+                                            g_ds_harp[g_harp_assignment[msg->dwPChannel]].field_17C[v59][i15] = 10;
+                                        (pPerf->GetTime)(&rtNow, &mtNow);
+                                        g_ds_harp[g_harp_assignment[msg->dwPChannel]].field_D3C[v59][i15] =
+                                                msg->mtTime - mtNow;
+                                        g_ds_harp[g_harp_assignment[msg->dwPChannel]].field_D3C[v59][i15] -=
+                                                g_currentTempo_scaleFactor0_9;
+                                        if (g_ds_harp[g_harp_assignment[msg->dwPChannel]].field_D3C[v59][i15] <= 0)
+                                            g_ds_harp[g_harp_assignment[msg->dwPChannel]].field_D3C[v59][i15] = 1;
+                                    }
+                                }
                             }
                             break;
                     }
@@ -288,7 +322,8 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                 break;
                             case XYLOPHONE:
                                 if (g_ds_xylophone) {
-                                    g_ds_xylophone = static_cast<I_DS_Xylophone *>(realloc(g_ds_xylophone, sizeof(I_DS_Xylophone) * (g_ialloc_xylophone + 1)));
+                                    g_ds_xylophone = static_cast<I_DS_Xylophone *>(realloc(
+                                        g_ds_xylophone, sizeof(I_DS_Xylophone) * (g_ialloc_xylophone + 1)));
                                     memset(&g_ds_xylophone[g_ialloc_xylophone], 0, sizeof(I_DS_Xylophone));
                                 } else {
                                     g_ds_xylophone = static_cast<I_DS_Xylophone *>(malloc(sizeof(I_DS_Xylophone)));
@@ -312,13 +347,11 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                 ++g_ialloc_xylophone;
                                 break;
                             case STAGE_HORN:
-                                if ( g_ds_stageHorn )
-                                {
-                                    g_ds_stageHorn = static_cast<I_DS_StageHorn *>(realloc(g_ds_stageHorn, sizeof(I_DS_StageHorn) * (g_ialloc_stageHorn + 1)));
+                                if (g_ds_stageHorn) {
+                                    g_ds_stageHorn = static_cast<I_DS_StageHorn *>(realloc(
+                                        g_ds_stageHorn, sizeof(I_DS_StageHorn) * (g_ialloc_stageHorn + 1)));
                                     memset(&g_ds_stageHorn[g_ialloc_stageHorn], 0, sizeof(I_DS_StageHorn));
-                                }
-                                else
-                                {
+                                } else {
                                     g_ds_stageHorn = static_cast<I_DS_StageHorn *>(malloc(sizeof(I_DS_StageHorn)));
                                     memset(g_ds_stageHorn, 0, sizeof(I_DS_StageHorn));
                                 }
@@ -338,18 +371,31 @@ HRESULT IMidiJamTool::ProcessPMsg(IDirectMusicPerformance *pPerf, DMUS_PMSG *pPM
                                 g_accordion_assignment[pPMSG->dwPChannel] = g_ialloc_accordion++;
                                 break;
                             case STAGE_STRINGS:
-                                if ( g_ds_stageString )
-                                {
-                                    g_ds_stageString = static_cast<I_DS_StageString *>(realloc(g_ds_stageString, sizeof(I_DS_StageString) * (g_ialloc_stageString + 1)));
+                                if (g_ds_stageString) {
+                                    g_ds_stageString = static_cast<I_DS_StageString *>(realloc(
+                                        g_ds_stageString, sizeof(I_DS_StageString) * (g_ialloc_stageString + 1)));
                                     memset(&g_ds_stageString[g_ialloc_stageString], 0, sizeof(I_DS_StageString));
-                                }
-                                else
-                                {
-                                    g_ds_stageString = static_cast<I_DS_StageString *>(malloc(sizeof(I_DS_StageString)));
+                                } else {
+                                    g_ds_stageString = static_cast<I_DS_StageString *>(
+                                        malloc(sizeof(I_DS_StageString)));
                                     memset(g_ds_stageString, 0, sizeof(I_DS_StageString));
                                 }
                                 g_stageString_assignment[pPMSG->dwPChannel] = g_ialloc_stageString++;
                                 break;
+                            case HARP:
+                                if ( g_ds_harp )
+                                {
+                                    g_ds_harp = static_cast<I_DS_Harp *>(realloc(g_ds_harp, sizeof(I_DS_Harp) * (g_ialloc_harp + 1)));
+                                    memset(&g_ds_harp[g_ialloc_harp], 0, sizeof(I_DS_Harp));
+                                }
+                                else
+                                {
+                                    g_ds_harp = static_cast<I_DS_Harp *>(malloc(sizeof(I_DS_Harp)));
+                                    memset(g_ds_harp, 0, sizeof(I_DS_Harp));
+                                }
+                                g_harp_assignment[pPMSG->dwPChannel] = g_ialloc_harp++;
+                                break;
+
                         }
                     }
                 }
