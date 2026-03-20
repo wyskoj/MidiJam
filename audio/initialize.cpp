@@ -6,7 +6,7 @@
 
 #include "DirectMusicSystem.h"
 #include "MidiJamTool.h"
-#include "../audio/instrument_ids.h"
+#include "../instruments/instrument_ids.h"
 #include "../render/window.h"
 #include "scene/camera.h"
 
@@ -17,7 +17,9 @@
 #include <cstdlib>
 #include <GL/gl.h>
 
+#include "instruments/Bass.h"
 #include "instruments/Harp.h"
+#include "instruments/Piano.h"
 #include "scene/update.h"
 
 
@@ -122,7 +124,6 @@ extern float            g_recoil_hihat;
 extern GLfloat          g_pianoKeyOffsetX[14];
 
 // --- Allocation counters ---
-extern short            g_ialloc_bass;
 extern short            g_ialloc_guitar;
 extern short            g_ialloc_harp;
 extern short            g_ialloc_xylophone;
@@ -164,7 +165,6 @@ extern short            g_cello_assignment[300];
 extern short            g_doubleBass_assignment[300];
 extern short            g_doubleBass_playingStyle[300];
 extern short            g_xylophone_types[300];
-extern short            g_bass_assignment[300];
 extern short            g_guitar_assignment[300];
 extern short            g_xylophone_assignment[300];
 extern short            g_stateChoir_assignment[300];
@@ -199,10 +199,7 @@ extern short            g_piccolo_assignment[300];
 extern short            g_flute_assignment[300];
 extern short            g_trumpet_assignment[300];
 extern short            g_harp_assignment[300];
-extern MidiJamInstrumentId g_midiJamInstrumentIds[1000];
-
-// --- BASS_NOTES_REV ---
-extern __int16          BASS_NOTES_REV[22][4];
+extern MidiJamInstrumentId g_midiJamInstrumentIds[300];
 
 // --- Unnamed ---
 extern int              dword_464700;
@@ -476,7 +473,7 @@ void MidiJamInitialize()
 
     // --- Allocation counters ---
     g_pianoCount          = 0;
-    g_ialloc_bass           = 0;
+    g_bassCount           = 0;
     g_ialloc_guitar         = 0;
     dword_464700            = 0;
     dword_468EC0            = 0;
@@ -520,7 +517,6 @@ void MidiJamInitialize()
     g_recoil_tambourine      = 0.0f;
     g_recoil_tambourine_hand = 0.0f;
     g_recoil_sticks_1        = 0.0f;
-    BASS_NOTES_REV[0][0]     = 0;   // zeroes first element; rest zeroed at startup
     g_recoil_clave_l         = 0.0f;
     g_pianoKeyOffsetX[0] = 0.0f;
     g_recoil_castanets       = 0.0f;
@@ -580,7 +576,7 @@ void MidiJamInitialize()
         g_midiJamInstrumentIds[slot]     = static_cast<MidiJamInstrumentId>(0);
         g_xylophone_types[slot]          = 0;
         g_pianoChannel[slot]         = -1;
-        g_bass_assignment[slot]          = -1;
+        g_bassChannel[slot]          = -1;
         g_guitar_assignment[slot]        = -1;
         g_xylophone_assignment[slot]     = -1;
         g_stateChoir_assignment[slot]    = -1;

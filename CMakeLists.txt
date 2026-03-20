@@ -18,57 +18,58 @@ endif()
 
 add_executable(MidiJam WIN32
         main.cpp
-        math/MatrixMath.cpp
-        math/scalar.cpp
-        math/Quaternion.cpp
-        math/QuaternionD.cpp
-        util/string.cpp
-        util/guid.cpp
-        util/time.cpp
-        audio/DirectMusicSystem.cpp
+        globals.cpp
+        macros.h
         audio/DirectMusicSegmentWrapper.cpp
         audio/DirectMusicSegmentWrapper.h
+        audio/DirectMusicSystem.cpp
         audio/DlsCollectionWrapper.cpp
         audio/DlsCollectionWrapper.h
-        audio/playback.cpp
-        audio/playback.h
-        globals.cpp
-        model/Ms3dJoint.cpp
-        model/Ms3dJoint.h
-        model/Ms3dBundle.cpp
-        model/Ms3dBundle.h
-        model/ms3d_format.h
-        model/animation/AnimationController.cpp
-        model/animation/AnimationController.h
-        render/texture.cpp
-        render/texture.h
-        render/gl.cpp
-        render/gl.h
-        render/text.h
-        render/text.cpp
-        render/window.cpp
-        render/window.h
-        instruments/Piano.cpp
-        instruments/Piano.h
-        scene/fadeout.cpp
-        scene/fadeout.h
-        audio/instrument_ids.h
-        audio/instrument_structs.h
         audio/MidiJamTool.cpp
         audio/MidiJamTool.h
-        macros.h
-        scene/update.h
-        scene/camera.h
-        scene/update.cpp
         audio/initialize.cpp
         audio/initialize.h
-        util/time.h
+        audio/playback.cpp
+        audio/playback.h
         instruments/Harp.h
+        instruments/Piano.cpp
+        instruments/Piano.h
         instruments/instrument.h
-        instruments/keys.h
+        instruments/instrument_ids.h
         instruments/keys.cpp
-        scene/scene.h
+        instruments/keys.h
+        math/MatrixMath.cpp
+        math/Quaternion.cpp
+        math/QuaternionD.cpp
+        math/scalar.cpp
+        model/Ms3dBundle.cpp
+        model/Ms3dBundle.h
+        model/Ms3dJoint.cpp
+        model/Ms3dJoint.h
+        model/animation/AnimationController.cpp
+        model/animation/AnimationController.h
+        model/ms3d_format.h
+        render/gl.cpp
+        render/gl.h
+        render/text.cpp
+        render/text.h
+        render/texture.cpp
+        render/texture.h
+        render/window.cpp
+        render/window.h
+        scene/camera.h
+        scene/fadeout.cpp
+        scene/fadeout.h
         scene/scene.cpp
+        scene/scene.h
+        scene/update.cpp
+        scene/update.h
+        util/guid.cpp
+        util/string.cpp
+        util/time.cpp
+        util/time.h
+        instruments/Bass.cpp
+        instruments/Bass.h
 )
 
 target_link_libraries(MidiJam PRIVATE opengl32.lib glu32.lib)

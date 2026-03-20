@@ -5,9 +5,7 @@
 #include "audio/DirectMusicSystem.h"
 #include "audio/DirectMusicSegmentWrapper.h"
 #include "model/animation/AnimationController.h"
-#include "audio/instrument_ids.h"
-#include "audio/instrument_structs.h"
-#include "instruments/Piano.h"
+#include "instruments/instrument_ids.h"
 #include "model/Ms3dBundle.h"
 #include "scene/camera.h"
 
@@ -61,7 +59,7 @@ HWND g_hWnd;
 IDirectMusicPerformance8* g_DirectMusicPerformance;
 IDirectMusicGraph8* g_DirectMusicGraph;
 MidiJamTool* g_midiJamTool;
-MidiJamInstrumentId g_midiJamInstrumentIds[1000] = {};
+MidiJamInstrumentId g_midiJamInstrumentIds[300] = {};
 int g_currentTempo_scaleFactor0_5 = 0;
 int g_currentTempo_scaleFactor0_9 = 0;
 int g_currentTempo_scaleFactor1_15 = 0;
@@ -129,7 +127,6 @@ int g_vibratingString_frame = 0;
 int g_show_percussion = 0;
 short g_inst_visible_drumset = 0;
 short g_inst_visible_xylophone = 0;
-short g_inst_visible_bass = 0;
 short g_inst_visible_guitar = 0;
 short g_inst_visible_harp = 0;
 int g_percussion_time_queue[88][32] = {};
@@ -198,25 +195,17 @@ float g_recoil_conga_high_open = 0.0f;
 float g_recoil_conga_low = 0.0f;
 float g_recoil_hihat = 0.0f;
 
-// STICKS recoil — IDA referenced this as BASS_NOTES_REV;
-// points into the bass note table. Zeroed here; populated when bass is transcribed.
-float g_bassNotesRev_storage = 0.0f;
-__int16 BASS_NOTES_REV[22][4] = {};
-
 // ---------------------------------------------------------------------------
 // Instrument data tables (sized from binary analysis; zeroed for now)
 // TODO: populate from binary when each instrument is transcribed
 // ---------------------------------------------------------------------------
 int g_latinSquare[36] = {};
 int VIBRATING_STRING_ANIM_SEQUENCE[8] = {};
-int BASS_NOTES[23][4] = {};
-float BASS_FRET_HEIGHTS[24] = {}; // [0] unused, [1..23]
 short word_46CEE0[23 * 6] = {};
 short word_46B2D0[18 * 4] = {};
 short word_4688C0[18 * 4] = {};
 short word_46BBB0[28 * 4] = {};
 short word_468258[49 * 4] = {};
-float flt_468BF4[24] = {};
 float flt_4654A0[23] = {};
 float flt_45EAD0[23] = {};
 float flt_4679E0[49] = {};
@@ -295,7 +284,6 @@ void* g_ds_taiko = nullptr;
 void* g_ds_telephone = nullptr;
 void* g_ds_tubularBells = nullptr;
 void* g_ds_guitar = nullptr;
-void* g_ds_bass = nullptr;
 
 // ---------------------------------------------------------------------------
 // Scene models — shadow and stage
@@ -306,7 +294,6 @@ Ms3dBundle* g_songFillbar_ms3d = nullptr;
 Ms3dBundle* g_stage_ms3d = nullptr;
 Ms3dBundle* g_pianoShadow_ms3d = nullptr;
 Ms3dBundle* g_xylophoneShadow_ms3d = nullptr;
-Ms3dBundle* g_bassShadow_ms3d = nullptr;
 Ms3dBundle* g_guitarShadow_ms3d = nullptr;
 Ms3dBundle* g_drumShadow_ms3d = nullptr;
 Ms3dBundle* g_harpShadow_ms3d = nullptr;
@@ -485,10 +472,6 @@ Ms3dBundle* g_trombone_ms3d = nullptr;
 Ms3dBundle* g_tromboneSlide_ms3d = nullptr;
 
 // Bass / guitar
-Ms3dBundle* g_bass_ms3d = nullptr;
-Ms3dBundle* g_bassString_ms3d = nullptr;
-Ms3dBundle* g_bassStringBottomX_ms3d[5] = {};
-Ms3dBundle* g_bassNoteFinger_ms3d = nullptr;
 Ms3dBundle* guitar_ms3d = nullptr;
 Ms3dBundle* dword_462FA8 = nullptr;
 Ms3dBundle* guitarStringLow_ms3d = nullptr;
@@ -563,7 +546,6 @@ short g_stick_visible[37] = {};
 // Per-instrument allocation counters
 // ---------------------------------------------------------------------------
 
-short g_ialloc_bass = 0;
 short g_ialloc_guitar = 0;
 short g_ialloc_harp = 0;
 short g_ialloc_xylophone = 0;
@@ -608,7 +590,6 @@ short g_cello_assignment[300] = {};
 short g_doubleBass_assignment[300] = {};
 short g_doubleBass_playingStyle[300] = {};
 short g_xylophone_types[300] = {};
-short g_bass_assignment[300] = {};
 short g_guitar_assignment[300] = {};
 short g_xylophone_assignment[300] = {};
 short g_stateChoir_assignment[300] = {};

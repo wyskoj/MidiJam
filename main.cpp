@@ -11,17 +11,18 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include "util/time.h"
-#include "macros.h"
-#include "model/Ms3dBundle.h"
 #include "audio/initialize.h"
 #include "audio/playback.h"
-#include "instruments/keys.h"
-#include "render/window.h"
-#include "render/texture.h"
-#include "scene/update.h"
+#include "instruments/Bass.h"
 #include "instruments/Piano.h"
+#include "instruments/keys.h"
+#include "macros.h"
+#include "model/Ms3dBundle.h"
+#include "render/texture.h"
+#include "render/window.h"
 #include "scene/camera.h"
+#include "scene/update.h"
+#include "util/time.h"
 
 // ---------------------------------------------------------------------------
 // Forward declarations for functions not yet transcribed
@@ -96,8 +97,6 @@ extern float flt_468BF4[];
 extern float flt_4654A0[];
 extern float flt_45EAD0[];
 extern float flt_4679E0[];
-extern int BASS_NOTES[23][4];
-extern float BASS_FRET_HEIGHTS[];
 extern int unk_464F68;
 extern int unk_464F6C;
 extern int unk_464F70;
@@ -121,7 +120,7 @@ extern Ms3dBundle* g_songFillbar_ms3d;
 extern Ms3dBundle* g_stage_ms3d;
 extern Ms3dBundle* g_pianoShadow_ms3d;
 extern Ms3dBundle* g_xylophoneShadow_ms3d;
-extern Ms3dBundle* g_bassShadow_ms3d;
+
 extern Ms3dBundle* g_guitarShadow_ms3d;
 extern Ms3dBundle* g_drumShadow_ms3d;
 extern Ms3dBundle* g_harpShadow_ms3d;
@@ -307,12 +306,6 @@ extern Ms3dBundle* g_trumpetKey3_ms3d;
 extern Ms3dBundle* g_trombone_ms3d;
 extern Ms3dBundle* g_tromboneSlide_ms3d;
 
-// Bass
-extern Ms3dBundle* g_bass_ms3d;
-extern Ms3dBundle* g_bassString_ms3d;
-extern Ms3dBundle* g_bassStringBottomX_ms3d[5];
-extern Ms3dBundle* g_bassNoteFinger_ms3d;
-
 // Guitar
 extern Ms3dBundle* guitar_ms3d;
 extern Ms3dBundle* dword_462FA8; // GuitarStringHigh — TODO: name
@@ -330,8 +323,7 @@ extern void* g_ds_particles; // TODO: type when transcribed
 // ---------------------------------------------------------------------------
 // FUNCTION: MIDIJAM 0x421610
 // ---------------------------------------------------------------------------
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
-{
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
     g_killApplication_0 = 0;
     g_worldReady = 0;
     g_applicationStartTime = timeGetTime();
@@ -344,20 +336,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     g_keysOffset = 0.0f;
 
     // --- Cymbal azimuth precompute ---
-    for (short i = 0; i < 7; ++i)
-    {
+    for (short i = 0; i < 7; ++i) {
         float cymbalAzimuth = CYMBAL_LOC_X[i] / (CYMBAL_LOC_Z[i] - 24.0f);
         g_cymbal_rot_y[i] = arctan(cymbalAzimuth) * 57.29578f;
         g_cymbalRestingAngle[i] = 20.0f;
     }
 
-    // --- Bass note table init ---
-    for (short i = 0; i < 23; ++i)
-    {
-        BASS_NOTES[i][0] = i + 7;
-        BASS_NOTES[i][1] = i + 12;
-        BASS_NOTES[i][2] = i + 17;
-        BASS_NOTES[i][3] = i + 22;
+    // --- Guitar/Bass note table init ---
+    for (short i = 0; i < 23; ++i) {
+        g_bassNotes[i][0] = i + 7;
+        g_bassNotes[i][1] = i + 12;
+        g_bassNotes[i][2] = i + 17;
+        g_bassNotes[i][3] = i + 22;
         flt_468BF4[i + 1] = BASS_FRET_HEIGHTS[i + 1] / -46.081001f;
         word_46CEE0[6 * i + 0] = i + 19;
         word_46CEE0[6 * i + 1] = i + 24;
@@ -369,8 +359,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     // --- String instrument note table init ---
-    for (short i = 0; i < 18; ++i)
-    {
+    for (short i = 0; i < 18; ++i) {
         word_46B2D0[4 * i + 0] = i + 34;
         word_46B2D0[4 * i + 1] = i + 41;
         word_46B2D0[4 * i + 2] = i + 48;
@@ -382,8 +371,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     // --- Wind instrument note table init ---
-    for (short i = 0; i < 28; ++i)
-    {
+    for (short i = 0; i < 28; ++i) {
         word_46BBB0[4 * i + 0] = i + 15;
         word_46BBB0[4 * i + 1] = i + 22;
         word_46BBB0[4 * i + 2] = i + 29;
@@ -393,8 +381,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // --- Xylophone/vibraphone note table and fret height init ---
     float v603 = 0.0f;
     float v612 = 0.052499998f;
-    for (short i = 0; i < 49; ++i)
-    {
+    for (short i = 0; i < 49; ++i) {
         word_468258[4 * i + 0] = i + 7;
         word_468258[4 * i + 1] = i + 12;
         word_468258[4 * i + 2] = i + 17;
@@ -413,8 +400,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     for (short i = 0; i < 88; ++i)
         g_keysOffset += KEY_WIDTHS[KEY_SHAPE_INDEX[i]];
     g_keysOffset *= 0.5f;
-
-    std::cout << g_keysOffset << std::endl;
 
     // --- Clave / recoil table init ---
     g_pianoKeyOffsetX[1] = -0.20833333;
@@ -455,13 +440,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     g_killApplication = 0;
 
     // --- Working directory ---
-    GetModuleFileNameA(0, g_workingDirectory, 1000u);
+    GetModuleFileNameA(nullptr, g_workingDirectory, 1000u);
     while (strlen(g_workingDirectory) && g_workingDirectory[strlen(g_workingDirectory) - 1] != '\\')
         g_workingDirectory[strlen(g_workingDirectory) - 1] = 0;
     if (g_workingDirectory[strlen(g_workingDirectory) - 1] == '\\')
         g_workingDirectory[strlen(g_workingDirectory) - 1] = 0;
 
-    g_lastUnixEpochTime = GetUnixEpochTime(0);
+    g_lastUnixEpochTime = GetUnixEpochTime(nullptr);
 
     // --- HWF file ---
     char hwfPath[1000];
@@ -472,9 +457,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // TODO: sizeof when type is known
     // memset(g_ds_particles, 0, sizeof(g_ds_particles));
 
-    if (MidiJamMain("MidiJam", hInstance, g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems) == FAILURE)
-    {
-        MessageBoxA(0, "Video mode not supported, try running CONFIG.EXE first", "SHUTDOWN ERROR", MB_ICONASTERISK);
+    if (MidiJamMain("MidiJam", hInstance, g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems) == FAILURE) {
+        MessageBoxA(nullptr, "Video mode not supported, try running CONFIG.EXE first", "SHUTDOWN ERROR",
+                    MB_ICONASTERISK);
         return 0;
     }
 
@@ -561,8 +546,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         {"HarpStringWhite.bmp", "HarpStringBluePlaying.bmp"},
     };
     for (short c = 0; c < 3; ++c)
-        for (short f = 0; f < 5; ++f)
-        {
+        for (short f = 0; f < 5; ++f) {
             LOAD_MODEL(g_harpStringPlayingX_ms3d[c][f], harpPlayingFiles[f]);
             REPLACE_TEX(g_harpStringPlayingX_ms3d[c][f], harpPlayingTextures[c][0], harpPlayingTextures[c][1]);
         }
@@ -592,8 +576,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         "StageStringBottom0.ms3d", "StageStringBottom1.ms3d", "StageStringBottom2.ms3d",
         "StageStringBottom3.ms3d", "StageStringBottom4.ms3d"
     };
-    for (short i = 0; i < 5; ++i)
-    {
+    for (short i = 0; i < 5; ++i) {
         LOAD_MODEL(g_stageStringBottomX_ms3d[i], stageStringBottomFiles[i]);
     }
 
@@ -627,8 +610,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         "ViolinStringPlayed0.ms3d", "ViolinStringPlayed1.ms3d", "ViolinStringPlayed2.ms3d",
         "ViolinStringPlayed3.ms3d", "ViolinStringPlayed4.ms3d"
     };
-    for (short i = 0; i < 5; ++i)
-    {
+    for (short i = 0; i < 5; ++i) {
         LOAD_MODEL(g_violinStringPlayedX_ms3d[i], violinStringPlayedFiles[i]);
     }
 
@@ -672,8 +654,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     static const char* xyloBarTextures[4] = {
         "XylophoneBar.bmp", "GlockenspielBar.bmp", "VibesBar.bmp", "MarimbaBar.bmp"
     };
-    for (short i = 0; i < 4; ++i)
-    {
+    for (short i = 0; i < 4; ++i) {
         LOAD_MODEL(g_xylophoneWhiteBar_ms3d[i], "XylophoneWhiteBar.ms3d");
         if (i > 0)
             REPLACE_TEX(g_xylophoneWhiteBar_ms3d[i], xyloBarTextures[0], xyloBarTextures[i]);
@@ -700,14 +681,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     LOAD_MODEL(g_flute_ms3d, "Flute.ms3d");
     LOAD_MODEL(g_piccolo_ms3d, "Piccolo.ms3d");
 
-    for (short i = 0; i < 13; ++i)
-    {
+    for (short i = 0; i < 13; ++i) {
         char filename[64];
         sprintf(filename, "Flute_LeftHand%02d.ms3d", i);
         LOAD_MODEL(g_flute_leftHandX_ms3d[i], filename);
     }
-    for (short i = 0; i < 12; ++i)
-    {
+    for (short i = 0; i < 12; ++i) {
         char filename[64];
         sprintf(filename, "Flute_RightHand%02d.ms3d", i);
         LOAD_MODEL(g_flute_rightHandX_ms3d[i], filename);
@@ -742,34 +721,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     LOAD_MODEL(dword_46D264, "TelePhoneKey.ms3d");
     REPLACE_TEX(dword_46D264, "TelePhoneKey.bmp", telephoneKeyFiles[3]);
     // IDA accessed keys 4-19 via pointer arithmetic off g_violinFinger_ms3d [0..19]
-    for (short i = 0; i < 8; ++i)
-    {
+    for (short i = 0; i < 8; ++i) {
         LOAD_MODEL((&g_violinFinger_ms3d)[i], "TelePhoneKey.ms3d");
         REPLACE_TEX((&g_violinFinger_ms3d)[i], "TelePhoneKey.bmp", telephoneKeyFiles[4 + i]);
     }
-    for (short i = 0; i < 12; ++i)
-    {
+    for (short i = 0; i < 12; ++i) {
         LOAD_MODEL((&g_violinFinger_ms3d)[8 + i], "TelePhoneKey.ms3d");
         REPLACE_TEX((&g_violinFinger_ms3d)[8 + i], "TelePhoneKey.bmp", telephoneKeyFilesDark[i]);
     }
 
     LOAD_MODEL(g_recorder_ms3d, "Recorder.ms3d");
-    for (short i = 0; i < 13; ++i)
-    {
+    for (short i = 0; i < 13; ++i) {
         char filename[64];
         sprintf(filename, "RecorderHandLeft%d.ms3d", i);
         LOAD_MODEL(g_recorderLeftHandX_ms3d[i], filename);
     }
-    for (short i = 0; i < 10; ++i)
-    {
+    for (short i = 0; i < 10; ++i) {
         char filename[64];
         sprintf(filename, "RecorderHandRight%d.ms3d", i);
         LOAD_MODEL((&g_recorderRightHandX_ms3d)[i], filename);
     }
     LOAD_MODEL(dword_465230, "RecorderHandRight10.ms3d");
 
-    for (short i = 0; i < 20; ++i)
-    {
+    for (short i = 0; i < 20; ++i) {
         char filename[64];
         sprintf(filename, "AltoSaxKeyUp%d.ms3d", i);
         LOAD_MODEL(g_altoSaxKeyX_ms3d[2 * i], filename);
@@ -778,8 +752,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     LOAD_MODEL(g_ocarina_ms3d, "Ocarina.ms3d");
-    for (short i = 0; i < 12; ++i)
-    {
+    for (short i = 0; i < 12; ++i) {
         char filename[64];
         sprintf(filename, "OcarinaHand%d.ms3d", i);
         LOAD_MODEL((&g_ocarinaHandX_ms3d)[i], filename);
@@ -821,8 +794,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         "BassStringBottom0.ms3d", "BassStringBottom1.ms3d", "BassStringBottom2.ms3d",
         "BassStringBottom3.ms3d", "BassStringBottom4.ms3d"
     };
-    for (short i = 0; i < 5; ++i)
-    {
+    for (short i = 0; i < 5; ++i) {
         LOAD_MODEL(g_bassStringBottomX_ms3d[i], bassStringBottomFiles[i]);
     }
 
@@ -839,16 +811,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         "GuitarHighStringBottom0.ms3d", "GuitarHighStringBottom1.ms3d", "GuitarHighStringBottom2.ms3d",
         "GuitarHighStringBottom3.ms3d", "GuitarHighStringBottom4.ms3d"
     };
-    for (short i = 0; i < 5; ++i)
-    {
+    for (short i = 0; i < 5; ++i) {
         LOAD_MODEL((&guitarLowStringBottomX_ms3d)[i], guitarLowBottomFiles[i]);
         LOAD_MODEL((&guitarHighStringBottomX_ms3d)[i], guitarHighBottomFiles[i]);
     }
     LOAD_MODEL(guitarNoteFinger_ms3d, "GuitarNoteFinger.ms3d");
 
     // Piano models (4 variants: standard, honky-tonk/wood, synth, harpsichord)
-    for (short i = 0; i < 4; ++i)
-    {
+    for (short i = 0; i < 4; ++i) {
         LOAD_MODEL(g_pianoModels[i].pianoCase, "PianoCase.ms3d");
         LOAD_MODEL(g_pianoModels[i].pianoKeyBlack, "PianoKeyBlack.ms3d");
         LOAD_MODEL(g_pianoModels[i].pianoKeyBlackDown, "PianoKeyBlackDown.ms3d");
@@ -868,7 +838,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         REPLACE_TEX(reinterpret_cast<Ms3dBundle**>(&g_pianoModels[3])[m], "PianoSkin.bmp", "HarpsichordSkin.bmp");
 
     // --- Seed RNG and initialize ---
-    setseed(static_cast<long>(GetUnixEpochTime(0)));
+    setseed(static_cast<long>(GetUnixEpochTime(nullptr)));
     MidiJamInitialize();
 
     // --- ApplyTextures pass ---
@@ -904,8 +874,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(g_drumSet_BassDrumBeaterHolder_ms3d);
     APPLY_TEX(g_drumSet_BassDrumPedal_ms3d);
     APPLY_TEX(g_harp_ms3d);
-    for (short i = 0; i < 3; ++i)
-    {
+    for (short i = 0; i < 3; ++i) {
         APPLY_TEX(g_harpString_ms3d[i]);
         for (short k = 0; k < 5; ++k)
             APPLY_TEX(g_harpStringPlayingX_ms3d[i][k]);
@@ -976,8 +945,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(g_malletHitShadow_ms3d);
     APPLY_TEX(g_xylophoneLegs_ms3d);
     APPLY_TEX(g_xylophoneCase_ms3d);
-    for (short i = 0; i < 4; ++i)
-    {
+    for (short i = 0; i < 4; ++i) {
         APPLY_TEX(g_xylophoneWhiteBar_ms3d[i]);
         APPLY_TEX(g_xylophoneWhiteBarDown_ms3d[i]);
         APPLY_TEX(g_xylophoneBlackBar_ms3d[i]);
@@ -1006,8 +974,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         APPLY_TEX(g_recorderLeftHandX_ms3d[i]);
     for (short i = 0; i < 11; ++i)
         APPLY_TEX((&g_recorderRightHandX_ms3d)[i]);
-    for (short i = 0; i < 20; ++i)
-    {
+    for (short i = 0; i < 20; ++i) {
         APPLY_TEX(g_altoSaxKeyX_ms3d[2 * i]);
         APPLY_TEX(g_altoSaxKeyX_ms3d[2 * i + 1]);
     }
@@ -1050,14 +1017,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(guitar_ms3d);
     APPLY_TEX(guitarStringLow_ms3d);
     APPLY_TEX(dword_462FA8);
-    for (short i = 0; i < 5; ++i)
-    {
+    for (short i = 0; i < 5; ++i) {
         APPLY_TEX((&guitarLowStringBottomX_ms3d)[i]);
         APPLY_TEX((&guitarHighStringBottomX_ms3d)[i]);
     }
     APPLY_TEX(guitarNoteFinger_ms3d);
-    for (short i = 0; i < 4; ++i)
-    {
+    for (short i = 0; i < 4; ++i) {
         APPLY_TEX(g_pianoModels[i].pianoCase);
         APPLY_TEX(g_pianoModels[i].pianoKeyBlack);
         APPLY_TEX(g_pianoModels[i].pianoKeyBlackDown);
@@ -1072,13 +1037,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     g_timerEventId = timeSetEvent(5u, 0, UpdateMidiJamMM, 0, TIME_PERIODIC);
 
     // --- MIDI file from command line ---
-    if (strlen(lpCmdLine) > 4)
-    {
+    if (strlen(lpCmdLine) > 4) {
         short m = 0;
         while (m < static_cast<short>(strlen(lpCmdLine) - 4)
             && !(lpCmdLine[m] == '.' && lpCmdLine[m + 1] == 'M' && lpCmdLine[m + 2] == 'I' && lpCmdLine[m + 3] == 'D')
-            && !(lpCmdLine[m] == '.' && lpCmdLine[m + 1] == 'R' && lpCmdLine[m + 2] == 'M' && lpCmdLine[m + 3] == 'I'))
-        {
+            && !(lpCmdLine[m] == '.' && lpCmdLine[m + 1] == 'R' && lpCmdLine[m + 2] == 'M' && lpCmdLine[m + 3] ==
+                'I')) {
             g_midiFileName[m] = lpCmdLine[m];
             ++m;
         }
@@ -1089,11 +1053,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         g_midiFileName[m + 4] = 0;
 
         // Strip leading quote if present
-        if (g_midiFileName[0] == '"')
-        {
+        if (g_midiFileName[0] == '"') {
             short n = 0;
-            while (g_midiFileName[n])
-            {
+            while (g_midiFileName[n]) {
                 g_midiFileName[n] = g_midiFileName[n + 1];
                 ++n;
             }
@@ -1103,13 +1065,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     // --- Load and play ---
-    if (strlen(lpCmdLine) <= 4)
-    {
+    if (strlen(lpCmdLine) <= 4) {
         if (LoadAndPlayMidiFile("rocky_1.mid") == 1)
             g_killApplication_0 = 1;
     }
-    else
-    {
+    else {
         if (LoadAndPlayMidiFile(g_midiFileName) == 1)
             g_killApplication_0 = 1;
     }
@@ -1119,31 +1079,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // --- Main loop ---
     int frameCount = 0;
     MSG Msg = {};
-    while (!g_killApplication_0)
-    {
-        if (PeekMessageA(&Msg, 0, 0, 0, PM_REMOVE))
-        {
+    while (!g_killApplication_0) {
+        if (PeekMessageA(&Msg, nullptr, 0, 0, PM_REMOVE)) {
             if (Msg.message == WM_QUIT)
                 g_killApplication_0 = 1;
-            else
-            {
+            else {
                 TranslateMessage(&Msg);
                 DispatchMessageA(&Msg);
             }
         }
-        else if (!g_isWindowActive || UpdateMidiJam())
-        {
+        else if (!g_isWindowActive || UpdateMidiJam()) {
             SwapBuffers_0();
             ++frameCount;
-            if (GetUnixEpochTime(0) > g_lastUnixEpochTime)
-            {
+            if (GetUnixEpochTime(nullptr) > g_lastUnixEpochTime) {
                 g_framesPerSecond = static_cast<float>(frameCount);
                 frameCount = 0;
-                g_lastUnixEpochTime = GetUnixEpochTime(0);
+                g_lastUnixEpochTime = GetUnixEpochTime(nullptr);
             }
         }
-        else
-        {
+        else {
             g_killApplication_0 = 1;
         }
     }

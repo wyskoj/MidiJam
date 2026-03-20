@@ -6,7 +6,7 @@
 #include "../macros.h"
 #include "../model/Ms3dBundle.h"
 #include "../audio/DirectMusicSegmentWrapper.h"
-#include "../audio/instrument_ids.h"
+#include "../instruments/instrument_ids.h"
 #include "../scene/fadeout.h"
 #include "../render/text.h"
 #include "../instruments/Piano.h"
@@ -18,6 +18,7 @@
 
 #include "camera.h"
 #include "audio/playback.h"
+#include "instruments/Bass.h"
 
 // ---------------------------------------------------------------------------
 // Extern globals
@@ -40,7 +41,6 @@ extern Ms3dBundle* g_harpShadow_ms3d;
 extern Ms3dBundle* g_songFillbarBox_ms3d;
 extern Ms3dBundle* g_songFillbar_ms3d;
 extern short g_inst_visible_xylophone;
-extern short g_inst_visible_bass;
 extern short g_inst_visible_guitar;
 extern short g_inst_visible_drumset;
 extern short g_inst_visible_harp;
@@ -109,7 +109,6 @@ extern void* g_ds_taiko;
 extern void* g_ds_telephone;
 extern void* g_ds_tubularBells;
 extern void* g_ds_guitar;
-extern void* g_ds_bass;
 
 // Percussion globals
 extern int g_percussion_time_queue[88][32];
@@ -195,9 +194,6 @@ extern float g_playbackSpeed;
 extern GUID GUID_PERF_MASTER_TEMPO;
 extern char g_mouseWheelMoved;
 extern short g_mouseWheelDelta;
-
-// Opaque stubs for BASS_NOTES_REV (used in STICKS recoil — instrument-specific)
-extern __int16 BASS_NOTES_REV[22][4];
 
 // Forward declarations for instrument render/update functions — stubbed until transcribed
 void RenderPiano();
@@ -438,12 +434,6 @@ static inline void I_Guitar()
 
 static inline bool I_Guitar_MM(MUSIC_TIME) { return false; }
 
-static inline void I_Bass()
-{
-}
-
-static inline bool I_Bass_MM(MUSIC_TIME) { return false; }
-
 static inline void UpdateSteamPuffers()
 {
 }
@@ -468,6 +458,26 @@ static inline void MoveCameraToAngle(CAMERA_ANGLE, int)
 // ---------------------------------------------------------------------------
 // FUNCTION: MIDIJAM 0x421840
 // ---------------------------------------------------------------------------
+void RenderDebugInstruments()
+{
+    char buf[256];
+    int  y = 50;
+    constexpr int lineHeight = 16;
+
+    auto printLine = [&](char* text)
+    {
+        RenderTextWithShadow(10, y, 2, 2, text, 1, 0.5f, 0.5f);
+        y += lineHeight;
+    };
+
+    sprintf(buf, "INSTRUMENTS [frame %d]", g_framesAlive);
+    printLine(buf);
+
+    if (g_pianoCount   > 0) { sprintf(buf, "  piano      x%d", g_pianoCount);   printLine(buf); }
+    if (g_bassCount    > 0) { sprintf(buf, "  bass       x%d", g_bassCount);     printLine(buf); }
+    // TODO: add remaining instruments as they are transcribed
+}
+
 BOOL UpdateMidiJam()
 {
     GLfloat shadowX;
@@ -565,9 +575,9 @@ BOOL UpdateMidiJam()
         glPopMatrix();
     }
 
-    if (g_inst_visible_bass > 0)
+    if (g_bassVisible > 0)
     {
-        for (j = 0; j < g_inst_visible_bass; ++j)
+        for (j = 0; j < g_bassVisible; ++j)
         {
             glPushMatrix();
             shadowZ = j * -5.0f + -25.0f;
@@ -698,13 +708,13 @@ BOOL UpdateMidiJam()
         glPopMatrix();
     }
 
-    if (g_ds_bass)
+    if (g_bass)
     {
         glPushMatrix();
         glTranslatef(50.0f, 24.0f, -25.0f);
         glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
         glRotatef(-30.0f, 0.0f, 0.0f, 1.0f);
-        I_Bass();
+        RenderBass();
         glPopMatrix();
     }
 
@@ -730,6 +740,8 @@ BOOL UpdateMidiJam()
         RenderFadeout();
         glPopMatrix();
     }
+
+    RenderDebugInstruments();
 
     glFlush();
     return TRUE;
@@ -782,7 +794,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
     if (g_ds_viola && I_Viola_MM(pmtNow) == 1) anyInstrumentActive = 1;
     if (g_ds_cello && I_Cello_MM(pmtNow) == 1) anyInstrumentActive = 1;
     if (g_ds_doubleBass && I_DoubleBass_MM(pmtNow) == 1) anyInstrumentActive = 1;
-    if (g_ds_bass && I_Bass_MM(pmtNow)) anyInstrumentActive = 1;
+    if (g_bass && UpdateBass(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_guitar && I_Guitar_MM(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_stageHorn && I_StageHorn_MM(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_whistles && I_Whistles_MM(pmtNow)) anyInstrumentActive = 1;
@@ -887,7 +899,6 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
                             ADD_RECOIL(g_recoil_tambourine, velocityFactor, MAX_RECOIL);
                             break;
                         case STICKS:
-                            // TODO: BASS_NOTES_REV is __int16[22][4] — recoil target unclear until bass is transcribed
                             ADD_RECOIL(g_recoil_sticks_1, velocityFactor, MAX_RECOIL);
                             break;
                         case CLAVES:

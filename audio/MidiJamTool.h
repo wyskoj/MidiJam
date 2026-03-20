@@ -7,9 +7,7 @@
 
 #include <dmusici.h>
 #include <dmplugin.h>
-#include "instrument_ids.h"
-#include "instrument_structs.h"
-#include "../instruments/Piano.h"
+#include "../instruments/instrument_ids.h"
 
 // ---------------------------------------------------------------------------
 // MidiJamTool — IDirectMusicTool implementation
@@ -22,8 +20,8 @@ struct MidiJamTool : public IDirectMusicTool
 
     // IUnknown
     HRESULT __stdcall QueryInterface(REFIID riid, void** ppv) override;
-    ULONG   __stdcall AddRef()  override;
-    ULONG   __stdcall Release() override;
+    ULONG __stdcall AddRef() override;
+    ULONG __stdcall Release() override;
 
     // IDirectMusicTool
     HRESULT __stdcall Init(IDirectMusicGraph* pGraph) override;

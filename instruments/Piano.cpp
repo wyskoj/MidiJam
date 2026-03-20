@@ -19,8 +19,7 @@ GLfloat g_pianoKeyBackScale[14];
 // FUNCTION: MIDIJAM 0x411CD0
 void RenderPiano()
 {
-    short visibleCount = 0;
-
+    short nVisible = 0;
     for (short i = 0; i < g_pianoCount; ++i)
     {
         const PianoState& piano = g_piano[i];
@@ -33,7 +32,7 @@ void RenderPiano()
         glPushMatrix();
 
         // --- Phase 1: Position and render case ---
-        glTranslatef(0.0f, visibleCount * 3.0f, visibleCount * -5.75f);
+        glTranslatef(0.0f, nVisible * 3.0f, nVisible * -5.75f);
         models.pianoCase->Render();
 
         // --- Phase 2: Render keys ---
@@ -83,11 +82,11 @@ void RenderPiano()
 
         glPopMatrix();
         SetTextureState(prevTextureState);
-        ++visibleCount;
+        ++nVisible;
     }
 
-    g_pianoVisible = visibleCount > 0 ? visibleCount : 0;
-    if (visibleCount > 0)
+    g_pianoVisible = nVisible > 0 ? nVisible : 0;
+    if (nVisible > 0)
         g_pianoStand_ms3d->RenderModel();
 }
 
@@ -118,8 +117,8 @@ bool UpdatePiano(const MUSIC_TIME pmtNow)
                     // Note is ready to trigger — dequeue and apply
                     piano.timeDeltas[key][slot] = 0;
                     piano.keyAngles[key] = piano.velocities[key][slot] * 8.0f / 128.0f + 1.75f;
-                    piano.durations[key] = piano.queueDurations[key][slot];
-                    piano.queueDurations[key][slot] = 0;
+                    piano.durations[key] = piano.queue[key][slot];
+                    piano.queue[key][slot] = 0;
                 }
 
                 piano.isActive = 1;

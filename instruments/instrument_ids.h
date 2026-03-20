@@ -5,8 +5,6 @@
 #ifndef MIDIJAM_INSTRUMENT_IDS_H
 #define MIDIJAM_INSTRUMENT_IDS_H
 
-#include <windows.h>
-
 /**
  * MidiJam instrument identifiers assigned to each MIDI channel.
  * Values are assigned when a DMUS_PMSGT_PATCH message is received.
@@ -57,9 +55,6 @@ enum MidiJamInstrumentId : short
     FLUTE             = 0x29,
     PICCOLO           = 0x2A,
     TELEPHONE         = 0x2B,
-    ELECTRIC_PIANO    = 0x28,  // GM patches 15-20 — piano variant, material index 1
-    HONKY_TONK_PIANO  = 0x2C,  // GM patches 80-81, 83-84, 86-90, 93-97, 99-103 — piano variant, material index 2
-    HARPSICHORD       = 0x2D,  // GM patch 6 — piano variant, material index 3
 };
 
 enum GM_PERCUSSION : short

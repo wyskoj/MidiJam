@@ -19,7 +19,7 @@ struct PianoState
     short materialIndex;
     float keyAngles[88];
     int durations[88];
-    int queueDurations[88][16];
+    int queue[88][16];
     uint8_t velocities[88][16];
     int16_t timeDeltas[88][16];
     uint8_t trailer[16];
