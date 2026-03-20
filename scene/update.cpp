@@ -39,7 +39,6 @@ extern Ms3dBundle* g_drumShadow_ms3d;
 extern Ms3dBundle* g_harpShadow_ms3d;
 extern Ms3dBundle* g_songFillbarBox_ms3d;
 extern Ms3dBundle* g_songFillbar_ms3d;
-extern short g_inst_visible_piano;
 extern short g_inst_visible_xylophone;
 extern short g_inst_visible_bass;
 extern short g_inst_visible_guitar;
@@ -54,7 +53,7 @@ extern IDirectMusicPerformance8* g_DirectMusicPerformance;
 extern DirectMusicSegmentWrapper* g_DirectMusicSegmentWrapper;
 extern MUSIC_TIME g_mtStart;
 extern MUSIC_TIME g_midiFile_duration;
-extern MUSIC_TIME g_time_global_current;
+extern MUSIC_TIME g_currentGlobalTime;
 extern int g_isShuttingDown;
 extern int g_isFadingIn;
 extern int g_killApplication;
@@ -72,7 +71,6 @@ extern int g_autoCamIdleTime;
 extern int g_autoCameraIsActive;
 
 // Instrument data pointers — non-piano ones are opaque void* until transcribed
-extern I_DS_Piano* g_ds_piano;
 extern void* g_ds_harp;
 extern void* g_ds_trombone;
 extern void* g_ds_trumpet;
@@ -146,7 +144,7 @@ extern float g_recoil_clap_hand_l;
 extern float g_recoil_tambourine_hand;
 extern float g_recoil_tambourine;
 extern float g_recoil_sticks_1;
-extern float g_pianokey_translation_x[14]; // doubles as recoil_clave_r
+extern float g_pianoKeyOffsetX[14]; // doubles as recoil_clave_r
 extern float g_recoil_clave_l;
 extern float g_recoil_jingleBell;
 extern float g_recoil_castanets;
@@ -202,8 +200,8 @@ extern short g_mouseWheelDelta;
 extern __int16 BASS_NOTES_REV[22][4];
 
 // Forward declarations for instrument render/update functions — stubbed until transcribed
-void I_Piano();
-bool I_Piano_MM(MUSIC_TIME pmtNow);
+void RenderPiano();
+bool UpdatePiano(MUSIC_TIME pmtNow);
 
 static inline void RenderPercussion()
 {
@@ -533,15 +531,15 @@ BOOL UpdateMidiJam()
     glPopMatrix();
 
     // --- Phase 4: Shadows ---
-    if (g_inst_visible_piano > 0)
+    if (g_pianoVisible > 0)
     {
         glPushMatrix();
         glTranslatef(-50.0f, -32.0f, -20.0f);
         glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
         glTranslatef(0.0f, 0.0f, 5.0f);
-        if (g_inst_visible_piano > 1)
+        if (g_pianoVisible > 1)
         {
-            z = (g_inst_visible_piano - 1) * 0.5f + 1.0f;
+            z = (g_pianoVisible - 1) * 0.5f + 1.0f;
             glScalef(1.0f, 1.0f, z);
         }
         g_pianoShadow_ms3d->RenderModel();
@@ -665,12 +663,12 @@ BOOL UpdateMidiJam()
 
     if (g_ds_musicBox) I_MusicBox();
 
-    if (g_ds_piano)
+    if (g_piano)
     {
         glPushMatrix();
         glTranslatef(-50.0f, 0.0f, -20.0f);
         glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
-        I_Piano();
+        RenderPiano();
         glPopMatrix();
     }
 
@@ -768,17 +766,17 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         g_vibratingString_frame = VIBRATING_STRING_ANIM_SEQUENCE[g_vibratingString_frameIndex];
     }
 
-    if (!g_time_global_current)
-        g_time_global_current = pmtNow;
+    if (!g_currentGlobalTime)
+        g_currentGlobalTime = pmtNow;
     if (g_isShuttingDown == 1)
-        pmtNow = g_time_global_current;
+        pmtNow = g_currentGlobalTime;
 
     // --- Phase 1: Instrument updates ---
     short anyInstrumentActive = 0;
 
     I_Accordion_MM(pmtNow);
     if (g_ds_harp && I_Harp_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_piano && I_Piano_MM(pmtNow)) anyInstrumentActive = 1;
+    if (g_piano && UpdatePiano(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_xylophone && I_Xylophone_MM(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_violin && I_Violin_MM(pmtNow) == 1) anyInstrumentActive = 1;
     if (g_ds_viola && I_Viola_MM(pmtNow) == 1) anyInstrumentActive = 1;
@@ -835,7 +833,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
                     anyInstrumentActive = 1;
                     anyPercussionActive = 1;
                     g_percussion_framesWithEmptyQueue = 0;
-                    g_percussion_time_queue[percussionIndex][i] -= pmtNow - g_time_global_current;
+                    g_percussion_time_queue[percussionIndex][i] -= pmtNow - g_currentGlobalTime;
 
                     if (g_percussion_time_queue[percussionIndex][i] <= 0)
                     {
@@ -893,7 +891,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
                             ADD_RECOIL(g_recoil_sticks_1, velocityFactor, MAX_RECOIL);
                             break;
                         case CLAVES:
-                            ADD_RECOIL(g_pianokey_translation_x[0], velocityFactor, MAX_RECOIL);
+                            ADD_RECOIL(g_pianoKeyOffsetX[0], velocityFactor, MAX_RECOIL);
                             ADD_RECOIL(g_recoil_clave_l, velocityFactor, MAX_RECOIL);
                             break;
                         case JINGLE_BELL:
@@ -1063,7 +1061,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         g_isShuttingDown = 1;
     }
 
-    g_time_global_current = pmtNow;
+    g_currentGlobalTime = pmtNow;
     ++g_framesAlive;
     HandleKeyPresses();
 

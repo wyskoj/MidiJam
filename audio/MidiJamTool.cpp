@@ -9,9 +9,6 @@
 #include <cstdlib>
 
 extern MidiJamInstrumentId g_midiJamInstrumentIds[1000];
-extern I_DS_Piano* g_ds_piano;
-extern short g_ialloc_piano;
-extern short g_piano_assignment[1000];
 extern int g_currentTempo_scaleFactor0_5;
 extern int g_currentTempo_scaleFactor0_9;
 extern int g_currentTempo_scaleFactor1_15;
@@ -105,28 +102,28 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                 break;
 
             short slot = 0;
-            const int pi = g_piano_assignment[msgChannel];
-            while (g_ds_piano[pi].queueDurations[keyboardKeyIndex][slot]
+            const int pi = g_pianoChannel[msgChannel];
+            while (g_piano[pi].queueDurations[keyboardKeyIndex][slot]
                 && slot < 16)
                 ++slot;
 
             if (slot >= 16)
                 break;
 
-            g_ds_piano[pi].queueDurations[keyboardKeyIndex][slot] =
+            g_piano[pi].queueDurations[keyboardKeyIndex][slot] =
                 noteMsg->mtDuration - g_currentTempo_scaleFactor0_5;
-            if (g_ds_piano[pi].queueDurations[keyboardKeyIndex][slot] < 0)
-                g_ds_piano[pi].queueDurations[keyboardKeyIndex][slot] = 10;
+            if (g_piano[pi].queueDurations[keyboardKeyIndex][slot] < 0)
+                g_piano[pi].queueDurations[keyboardKeyIndex][slot] = 10;
 
-            g_ds_piano[pi].velocities[keyboardKeyIndex][slot] =
+            g_piano[pi].velocities[keyboardKeyIndex][slot] =
                 noteMsg->bVelocity;
 
             pPerf->GetTime(&rtNow, &mtNow);
-            g_ds_piano[pi].timeDeltas[keyboardKeyIndex][slot] =
+            g_piano[pi].timeDeltas[keyboardKeyIndex][slot] =
                 static_cast<int16_t>(msgMtTime - mtNow)
                 - static_cast<int16_t>(g_currentTempo_scaleFactor0_9);
-            if (g_ds_piano[pi].timeDeltas[keyboardKeyIndex][slot] <= 0)
-                g_ds_piano[pi].timeDeltas[keyboardKeyIndex][slot] = 1;
+            if (g_piano[pi].timeDeltas[keyboardKeyIndex][slot] <= 0)
+                g_piano[pi].timeDeltas[keyboardKeyIndex][slot] = 1;
             break;
         }
 
@@ -163,29 +160,29 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
         case HONKY_TONK_PIANO:
         case HARPSICHORD:
         {
-            if (g_ds_piano)
-                g_ds_piano = static_cast<I_DS_Piano*>(
-                    realloc(g_ds_piano, sizeof(I_DS_Piano) * (g_ialloc_piano + 1)));
+            if (g_piano)
+                g_piano = static_cast<PianoState*>(
+                    realloc(g_piano, sizeof(PianoState) * (g_pianoCount + 1)));
             else
-                g_ds_piano = static_cast<I_DS_Piano*>(
-                    malloc(sizeof(I_DS_Piano)));
-            memset(&g_ds_piano[g_ialloc_piano], 0, sizeof(I_DS_Piano));
+                g_piano = static_cast<PianoState*>(
+                    malloc(sizeof(PianoState)));
+            memset(&g_piano[g_pianoCount], 0, sizeof(PianoState));
 
             switch (g_midiJamInstrumentIds[pPMSG->dwPChannel])
             {
             case (MidiJamInstrumentId)40:
-                g_ds_piano[g_ialloc_piano].materialIndex = 1;
+                g_piano[g_pianoCount].materialIndex = 1;
                 break;
             case (MidiJamInstrumentId)44:
-                g_ds_piano[g_ialloc_piano].materialIndex = 2;
+                g_piano[g_pianoCount].materialIndex = 2;
                 break;
             case (MidiJamInstrumentId)45:
-                g_ds_piano[g_ialloc_piano].materialIndex = 3;
+                g_piano[g_pianoCount].materialIndex = 3;
                 break;
             default:
                 break;
             }
-            g_piano_assignment[pPMSG->dwPChannel] = g_ialloc_piano++;
+            g_pianoChannel[pPMSG->dwPChannel] = g_pianoCount++;
             break;
         }
 

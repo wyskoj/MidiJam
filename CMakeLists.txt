@@ -64,6 +64,11 @@ add_executable(MidiJam WIN32
         audio/initialize.h
         util/time.h
         instruments/Harp.h
+        instruments/instrument.h
+        instruments/keys.h
+        instruments/keys.cpp
+        scene/scene.h
+        scene/scene.cpp
 )
 
 target_link_libraries(MidiJam PRIVATE opengl32.lib glu32.lib)

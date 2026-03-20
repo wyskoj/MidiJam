@@ -7,6 +7,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <GL/gl.h>
 #include <GL/glu.h>
 
@@ -15,6 +16,7 @@
 #include "model/Ms3dBundle.h"
 #include "audio/initialize.h"
 #include "audio/playback.h"
+#include "instruments/keys.h"
 #include "render/window.h"
 #include "render/texture.h"
 #include "scene/update.h"
@@ -64,7 +66,6 @@ extern int g_autoCamIdleTime;
 extern int g_autoCameraIsActive;
 extern int g_framesSinceStart;
 extern int g_framesAlive;
-extern GLfloat g_pianoXylophoneOffset;
 extern float g_playbackSpeed;
 extern float RECOIL_SCALE_FACTOR;
 
@@ -76,9 +77,8 @@ extern float g_cymbalRestingAngle[7];
 extern int g_latinSquare[36];
 
 // Piano key geometry
-extern GLfloat g_pianokey_translation_x[14];
-extern float KEY_WIDTHS[];
-extern int PIANO_KEY_SHAPE[];
+extern GLfloat g_pianoKeyOffsetX[14];
+extern GLfloat g_pianoKeyBackScale[14];
 
 // Vibrating string
 extern int VIBRATING_STRING_ANIM_SEQUENCE[8];
@@ -322,7 +322,7 @@ extern Ms3dBundle* guitarHighStringBottomX_ms3d; // [0..4] via pointer arithmeti
 extern Ms3dBundle* guitarNoteFinger_ms3d;
 
 // Piano
-extern PianoModels g_pianoModels_ms3d[4];
+extern PianoModels g_pianoModels[4];
 
 // Particle system
 extern void* g_ds_particles; // TODO: type when transcribed
@@ -341,7 +341,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         for (short j = 0; j < 6; ++j)
             g_latinSquare[6 * i + j] = (i + j) % 6;
 
-    g_pianoXylophoneOffset = 0.0f;
+    g_keysOffset = 0.0f;
 
     // --- Cymbal azimuth precompute ---
     for (short i = 0; i < 7; ++i)
@@ -411,36 +411,38 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     // --- Piano key offset ---
     for (short i = 0; i < 88; ++i)
-        g_pianoXylophoneOffset += KEY_WIDTHS[PIANO_KEY_SHAPE[i]];
-    g_pianoXylophoneOffset *= 0.5f;
+        g_keysOffset += KEY_WIDTHS[KEY_SHAPE_INDEX[i]];
+    g_keysOffset *= 0.5f;
+
+    std::cout << g_keysOffset << std::endl;
 
     // --- Clave / recoil table init ---
-    g_pianokey_translation_x[1] = -0.20833333f;
-    unk_464F68 = 1058362709;
-    g_pianokey_translation_x[2] = 0.0f;
-    unk_464F6C = 1056964608;
-    g_pianokey_translation_x[3] = 0.20833333f;
-    unk_464F70 = 1058362709;
-    g_pianokey_translation_x[4] = -0.25f;
-    unk_464F74 = 1056964608;
-    g_pianokey_translation_x[5] = -0.083333336f;
-    unk_464F78 = 1056964608;
-    g_pianokey_translation_x[6] = 0.083333336f;
-    unk_464F7C = 1056964608;
-    g_pianokey_translation_x[7] = 0.25f;
-    unk_464F80 = 1056964608;
-    g_pianokey_translation_x[8] = 0.0f;
-    unk_464F84 = 1065353216;
-    g_pianokey_translation_x[9] = -0.125f;
-    unk_464F88 = 1065353216;
-    g_pianokey_translation_x[10] = 0.125f;
-    unk_464F8C = 1065353216;
-    g_pianokey_translation_x[11] = -0.25f;
-    unk_464F90 = 1065353216;
-    g_pianokey_translation_x[12] = 0.0f;
-    unk_464F94 = 1065353216;
-    g_pianokey_translation_x[13] = 0.25f;
-    unk_464F98 = 1065353216;
+    g_pianoKeyOffsetX[1] = -0.20833333;
+    g_pianoKeyBackScale[1] = 0.58333331;
+    g_pianoKeyOffsetX[2] = 0.0;
+    g_pianoKeyBackScale[2] = 0.5;
+    g_pianoKeyOffsetX[3] = 0.20833333;
+    g_pianoKeyBackScale[3] = 0.58333331;
+    g_pianoKeyOffsetX[4] = -0.25;
+    g_pianoKeyBackScale[4] = 0.5;
+    g_pianoKeyOffsetX[5] = -0.083333336;
+    g_pianoKeyBackScale[5] = 0.5;
+    g_pianoKeyOffsetX[6] = 0.083333336;
+    g_pianoKeyBackScale[6] = 0.5;
+    g_pianoKeyOffsetX[7] = 0.25;
+    g_pianoKeyBackScale[7] = 0.5;
+    g_pianoKeyOffsetX[8] = 0.0;
+    g_pianoKeyBackScale[8] = 1.0;
+    g_pianoKeyOffsetX[9] = -0.125;
+    g_pianoKeyBackScale[9] = 1.0;
+    g_pianoKeyOffsetX[10] = 0.125;
+    g_pianoKeyBackScale[10] = 1.0;
+    g_pianoKeyOffsetX[11] = -0.25;
+    g_pianoKeyBackScale[11] = 1.0;
+    g_pianoKeyOffsetX[12] = 0.0;
+    g_pianoKeyBackScale[12] = 1.0;
+    g_pianoKeyOffsetX[13] = 0.25;
+    g_pianoKeyBackScale[13] = 1.0;
 
     // --- Misc state init ---
     g_windowCenterX = 0;
@@ -847,23 +849,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // Piano models (4 variants: standard, honky-tonk/wood, synth, harpsichord)
     for (short i = 0; i < 4; ++i)
     {
-        LOAD_MODEL(g_pianoModels_ms3d[i].pianoCase, "PianoCase.ms3d");
-        LOAD_MODEL(g_pianoModels_ms3d[i].pianoKeyBlack, "PianoKeyBlack.ms3d");
-        LOAD_MODEL(g_pianoModels_ms3d[i].pianoKeyBlackDown, "PianoKeyBlackDown.ms3d");
-        LOAD_MODEL(g_pianoModels_ms3d[i].pianoKeyWhiteFront, "PianoKeyWhiteFront.ms3d");
-        LOAD_MODEL(g_pianoModels_ms3d[i].pianoKeyWhiteBack, "PianoKeyWhiteBack.ms3d");
-        LOAD_MODEL(g_pianoModels_ms3d[i].pianoKeyWhiteFrontDown, "PianoKeyWhiteFrontDown.ms3d");
-        LOAD_MODEL(g_pianoModels_ms3d[i].pianoKeyWhiteBackDown, "PianoKeyWhiteBackDown.ms3d");
+        LOAD_MODEL(g_pianoModels[i].pianoCase, "PianoCase.ms3d");
+        LOAD_MODEL(g_pianoModels[i].pianoKeyBlack, "PianoKeyBlack.ms3d");
+        LOAD_MODEL(g_pianoModels[i].pianoKeyBlackDown, "PianoKeyBlackDown.ms3d");
+        LOAD_MODEL(g_pianoModels[i].pianoKeyWhiteFront, "PianoKeyWhiteFront.ms3d");
+        LOAD_MODEL(g_pianoModels[i].pianoKeyWhiteBack, "PianoKeyWhiteBack.ms3d");
+        LOAD_MODEL(g_pianoModels[i].pianoKeyWhiteFrontDown, "PianoKeyWhiteFrontDown.ms3d");
+        LOAD_MODEL(g_pianoModels[i].pianoKeyWhiteBackDown, "PianoKeyWhiteBackDown.ms3d");
     }
     // Variant 1: Electric piano / wood skin
     for (short m = 0; m < 7; ++m)
-        REPLACE_TEX(reinterpret_cast<Ms3dBundle**>(&g_pianoModels_ms3d[1])[m], "PianoSkin.bmp", "PianoSkin_Wood.bmp");
+        REPLACE_TEX(reinterpret_cast<Ms3dBundle**>(&g_pianoModels[1])[m], "PianoSkin.bmp", "PianoSkin_Wood.bmp");
     // Variant 2: Honky-tonk / synth skin
     for (short m = 0; m < 7; ++m)
-        REPLACE_TEX(reinterpret_cast<Ms3dBundle**>(&g_pianoModels_ms3d[2])[m], "PianoSkin.bmp", "SynthSkin.bmp");
+        REPLACE_TEX(reinterpret_cast<Ms3dBundle**>(&g_pianoModels[2])[m], "PianoSkin.bmp", "SynthSkin.bmp");
     // Variant 3: Harpsichord skin
     for (short m = 0; m < 7; ++m)
-        REPLACE_TEX(reinterpret_cast<Ms3dBundle**>(&g_pianoModels_ms3d[3])[m], "PianoSkin.bmp", "HarpsichordSkin.bmp");
+        REPLACE_TEX(reinterpret_cast<Ms3dBundle**>(&g_pianoModels[3])[m], "PianoSkin.bmp", "HarpsichordSkin.bmp");
 
     // --- Seed RNG and initialize ---
     setseed(static_cast<long>(GetUnixEpochTime(0)));
@@ -1056,13 +1058,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(guitarNoteFinger_ms3d);
     for (short i = 0; i < 4; ++i)
     {
-        APPLY_TEX(g_pianoModels_ms3d[i].pianoCase);
-        APPLY_TEX(g_pianoModels_ms3d[i].pianoKeyBlack);
-        APPLY_TEX(g_pianoModels_ms3d[i].pianoKeyBlackDown);
-        APPLY_TEX(g_pianoModels_ms3d[i].pianoKeyWhiteFront);
-        APPLY_TEX(g_pianoModels_ms3d[i].pianoKeyWhiteBack);
-        APPLY_TEX(g_pianoModels_ms3d[i].pianoKeyWhiteFrontDown);
-        APPLY_TEX(g_pianoModels_ms3d[i].pianoKeyWhiteBackDown);
+        APPLY_TEX(g_pianoModels[i].pianoCase);
+        APPLY_TEX(g_pianoModels[i].pianoKeyBlack);
+        APPLY_TEX(g_pianoModels[i].pianoKeyBlackDown);
+        APPLY_TEX(g_pianoModels[i].pianoKeyWhiteFront);
+        APPLY_TEX(g_pianoModels[i].pianoKeyWhiteBack);
+        APPLY_TEX(g_pianoModels[i].pianoKeyWhiteFrontDown);
+        APPLY_TEX(g_pianoModels[i].pianoKeyWhiteBackDown);
     }
 
     // --- Timer and MIDI startup ---
