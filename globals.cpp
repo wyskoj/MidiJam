@@ -14,6 +14,7 @@
 #include <dmusici.h>
 
 #include "audio/MidiJamTool.h"
+#include "instruments/Harp.h"
 
 DirectMusicSegmentWrapper* g_DirectMusicSegmentWrapper = nullptr;
 char g_midiFileNameDisp[260] = {};
@@ -69,7 +70,6 @@ IDirectMusicPerformance8* g_DirectMusicPerformance;
 IDirectMusicGraph8* g_DirectMusicGraph;
 MidiJamTool* g_midiJamTool;
 MidiJamInstrumentId g_midiJamInstrumentIds[1000] = {};
-short g_piano_assignment[1000] = {};
 int g_currentTempo_scaleFactor0_5 = 0;
 int g_currentTempo_scaleFactor0_9 = 0;
 int g_currentTempo_scaleFactor1_15 = 0;
@@ -209,7 +209,7 @@ float g_recoil_hihat = 0.0f;
 // STICKS recoil — IDA referenced this as BASS_NOTES_REV;
 // points into the bass note table. Zeroed here; populated when bass is transcribed.
 float g_bassNotesRev_storage = 0.0f;
-float* BASS_NOTES_REV = &g_bassNotesRev_storage;
+__int16 BASS_NOTES_REV[22][4] = {};
 
 // ---------------------------------------------------------------------------
 // Instrument data tables (sized from binary analysis; zeroed for now)
@@ -514,7 +514,19 @@ struct CameraPosition
     float lookAtX, lookAtY, lookAtZ;
 };
 
-CameraPosition CAMERA_POSITIONS[11] = {};
+CameraPosition CAMERA_POSITIONS[11] = {
+    { -2.0f,  60.0f, 120.0f,  -2.0f, 20.0f,   0.0f },  // CAMERA_1A
+    {  60.0f, 60.0f, 110.0f,  10.0f, 20.0f,   0.0f },  // CAMERA_1B
+    { -60.0f, 60.0f,  80.0f, -20.0f, 20.0f,   0.0f },  // CAMERA_1C
+    {   0.0f, 40.0f,  30.0f, -50.0f, 20.0f, -20.0f },  // CAMERA_2A
+    {   0.0f, 50.0f,  20.0f,  50.0f, 24.0f, -25.0f },  // CAMERA_4A
+    {   0.0f, 30.0f,  25.0f,   0.0f,  5.0f, -65.0f },  // CAMERA_3A
+    {   5.0f,400.0f,  10.0f,   5.0f,  0.0f, -40.0f },  // CAMERA_5
+    { -35.0f, 45.0f,  20.0f, -50.0f,-25.0f, -25.0f },  // CAMERA_2B
+    {  35.0f, -5.0f, -30.0f,  55.0f, 25.0f, -40.0f },  // CAMERA_4B
+    { -20.0f, 45.0f, -10.0f,   5.0f,  0.0f, -95.0f },  // CAMERA_3B
+    {  17.0f, -1.0f,  30.0f,  42.0f,  4.0f,  -5.0f },  // CAMERA_6
+};
 
 // DirectMusic GUID
 GUID GUID_PERF_MASTER_TEMPO = {
@@ -527,3 +539,132 @@ char g_useSound = 0;
 GLsizei g_windowHeight = 0;
 int g_bitDepth = 0;
 GLfloat g_refreshRate = 0.0f;
+
+// ---------------------------------------------------------------------------
+// Harp geometry and color (populated by MidiJamInitialize)
+// ---------------------------------------------------------------------------
+
+HarpStringColor g_harpStringColors[47] = {};
+
+float HARP_STRING_SCALE[47] = {
+    69.010002f, 68.606003f, 68.093002f, 67.471001f, 66.876999f,
+    65.849998f, 64.686996f, 63.417000f, 62.335999f, 61.146999f,
+    60.012001f, 59.066002f, 58.362999f, 57.551998f, 56.958000f,
+    56.417000f, 55.876999f, 55.417000f, 55.039001f, 54.687000f,
+    54.282001f, 53.903999f, 53.551998f, 53.174000f, 52.876999f,
+    52.632999f, 52.335999f, 52.201000f, 52.066002f, 51.958000f,
+    51.931000f, 51.985001f, 52.034000f, 52.094002f, 52.194000f,
+    52.313999f, 52.414001f, 52.694000f, 52.973999f, 53.254002f,
+    53.613998f, 54.153999f, 54.594002f, 54.894001f, 55.133999f,
+    55.113998f, 55.113998f,
+};
+
+float g_harp_string_y[47]     = {};
+float g_harp_string_z[47]     = {};
+float g_harp_string_scale[47] = {};
+
+// ---------------------------------------------------------------------------
+// Percussion
+// ---------------------------------------------------------------------------
+
+short g_stick_visible[37] = {};
+
+// ---------------------------------------------------------------------------
+// Per-instrument allocation counters
+// ---------------------------------------------------------------------------
+
+short g_ialloc_bass             = 0;
+short g_ialloc_guitar           = 0;
+short g_ialloc_harp             = 0;
+short g_ialloc_xylophone        = 0;
+short g_ialloc_stageChoir       = 0;
+short g_ialloc_stageHorn        = 0;
+short g_ialloc_whistles         = 0;
+short g_ialloc_panPipe          = 0;
+short g_ialloc_harmonica        = 0;
+short g_ialloc_popBottle        = 0;
+short g_ialloc_agogo            = 0;
+short g_ialloc_woodblocks       = 0;
+short g_ialloc_stageString      = 0;
+short g_ialloc_pizzicatoStrings = 0;
+short g_ialloc_musicBox         = 0;
+short g_ialloc_melodicTom       = 0;
+short g_ialloc_synthDrum        = 0;
+short g_ialloc_steelDrum        = 0;
+short g_ialloc_timpani          = 0;
+short g_ialloc_taiko            = 0;
+short g_ialloc_tubularBells     = 0;
+short g_ialloc_telephone        = 0;
+short g_ialloc_trombone         = 0;
+short g_ialloc_tuba             = 0;
+short g_ialloc_ocarina          = 0;
+short g_ialloc_frenchHorn       = 0;
+short g_ialloc_baritoneSax      = 0;
+short g_ialloc_tenorSax         = 0;
+short g_ialloc_sapranoSax       = 0;
+short g_ialloc_altoSax          = 0;
+short g_ialloc_recorder         = 0;
+short g_ialloc_piccolo          = 0;
+short g_ialloc_flute            = 0;
+short g_ialloc_trumpet          = 0;
+
+// ---------------------------------------------------------------------------
+// Per-channel instrument assignment arrays (300 channels)
+// ---------------------------------------------------------------------------
+
+short g_violin_assignment[300]        = {};
+short g_viola_assignment[300]         = {};
+short g_cello_assignment[300]         = {};
+short g_doubleBass_assignment[300]    = {};
+short g_doubleBass_playingStyle[300]  = {};
+short g_xylophone_types[300]          = {};
+short g_piano_assignment[1000]        = {};  // already declared — remove old definition
+short g_bass_assignment[300]          = {};
+short g_guitar_assignment[300]        = {};
+short g_xylophone_assignment[300]     = {};
+short g_stateChoir_assignment[300]    = {};
+short g_stageHorn_assignment[300]     = {};
+short g_whistles_assignment[300]      = {};
+short g_panPipe_assignment[300]       = {};
+short g_isPanPipeCalliope[300]        = {};
+short g_harmonica_assignment[300]     = {};
+short g_popBottle_assignment[300]     = {};
+short g_agogos_assignment[300]        = {};
+short g_woodblocks_assignment[300]    = {};
+short g_stageStrings_assignment[300]  = {};
+short g_pizzicatoStrings_assignment[300] = {};
+short g_musicBox_assignment[300]      = {};
+short g_melodicTom_assignment[300]    = {};
+short g_synthDrum_assignment[300]     = {};
+short g_steelDrum_assignment[300]     = {};
+short g_timpani_assignment[300]       = {};
+short g_taiko_assignment[300]         = {};
+short g_tubularBells_assignment[300]  = {};
+short g_telephone_assignment[300]     = {};
+short g_trombone_assignment[300]      = {};
+short g_tuba_assignment[300]          = {};
+short g_ocarina_assignment[300]       = {};
+short g_frenchHorn_assignment[300]    = {};
+short g_baritoneSax_assignment[300]   = {};
+short g_tenorSax_assignment[300]      = {};
+short g_sapranoSax_assignment[300]    = {};
+short g_altoSax_assignment[300]       = {};
+short g_recorder_assignment[300]      = {};
+short g_piccolo_assignment[300]       = {};
+short g_flute_assignment[300]         = {};
+short g_trumpet_assignment[300]       = {};
+short g_harp_assignment[300]          = {};
+
+// ---------------------------------------------------------------------------
+// Unnamed globals — TODO: name when context is clearer
+// ---------------------------------------------------------------------------
+
+int   dword_464700 = 0;
+int   dword_468EC0 = 0;
+short word_468974  = 0;
+short word_4614AC  = 0;
+short word_461C90  = 0;
+short word_46AF68  = 0;
+short word_463228  = 0;
+int   dword_46ACF4 = 0;
+short word_464710  = 0;

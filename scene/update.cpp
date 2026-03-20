@@ -20,20 +20,6 @@
 #include "audio/playback.h"
 
 // ---------------------------------------------------------------------------
-// Enums
-// ---------------------------------------------------------------------------
-
-struct CameraPosition
-{
-    float cameraX;
-    float cameraY;
-    float cameraZ;
-    float lookAtX;
-    float lookAtY;
-    float lookAtZ;
-};
-
-// ---------------------------------------------------------------------------
 // Extern globals
 // ---------------------------------------------------------------------------
 
@@ -213,7 +199,7 @@ extern char g_mouseWheelMoved;
 extern short g_mouseWheelDelta;
 
 // Opaque stubs for BASS_NOTES_REV (used in STICKS recoil — instrument-specific)
-extern float* BASS_NOTES_REV;
+extern __int16 BASS_NOTES_REV[22][4];
 
 // Forward declarations for instrument render/update functions — stubbed until transcribed
 void I_Piano();
@@ -903,7 +889,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
                             ADD_RECOIL(g_recoil_tambourine, velocityFactor, MAX_RECOIL);
                             break;
                         case STICKS:
-                            ADD_RECOIL(*BASS_NOTES_REV, velocityFactor, MAX_RECOIL);
+                            // TODO: BASS_NOTES_REV is __int16[22][4] — recoil target unclear until bass is transcribed
                             ADD_RECOIL(g_recoil_sticks_1, velocityFactor, MAX_RECOIL);
                             break;
                         case CLAVES:
