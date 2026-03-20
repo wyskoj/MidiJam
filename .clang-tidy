@@ -1,0 +1,33 @@
+# .clang-tidy
+# Configured for MidiJam decompilation reconstruction.
+# Many standard checks are disabled because the goal is faithful reproduction
+# of original ~2006 MSVC code, not modern C++ best practices.
+
+Checks: >
+  clang-diagnostic-*,
+  clang-analyzer-*,
+  -cppcoreguidelines-pro-type-member-init,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -readability-magic-numbers,
+  -modernize-*,
+  -fuchsia-*,
+  -google-*,
+  -llvm-*,
+  -hicpp-*,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-no-malloc,
+  -readability-identifier-naming,
+  -readability-braces-around-statements,
+  -bugprone-easily-swappable-parameters
+
+WarningsAsErrors: ''
+
+HeaderFilterRegex: '.*'
+
+CheckOptions:
+  - key: readability-function-cognitive-complexity.Threshold
+    value: '100'
