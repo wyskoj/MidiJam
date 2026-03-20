@@ -33,8 +33,6 @@ struct MidiJamTool : public IDirectMusicTool
     HRESULT __stdcall ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_PMSG* pPMSG) override;
     HRESULT __stdcall Flush(IDirectMusicPerformance* pPerf, DMUS_PMSG* pPMSG, REFERENCE_TIME rtTime) override;
 
-    static MidiJamTool* ctor(void* mem);
-
     ULONG refCount;
 };
 

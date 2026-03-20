@@ -17,65 +17,58 @@ extern int g_currentTempo_scaleFactor0_9;
 extern int g_currentTempo_scaleFactor1_15;
 extern double g_currentTempo;
 
-// FUNCTION: MIDIJAM 0x43C2C0 (ObjectConstructor — compiler no-op, sets vtable)
-MidiJamTool* MidiJamTool::ctor(void* mem)
+ULONG __stdcall MidiJamTool::AddRef() { return InterlockedIncrement(&refCount); }
+
+HRESULT __stdcall MidiJamTool::Flush(IDirectMusicPerformance*, DMUS_PMSG*, REFERENCE_TIME) { return E_NOTIMPL; }
+
+HRESULT __stdcall MidiJamTool::GetMediaTypeArraySize(DWORD* pdwNumElements)
 {
-    MidiJamTool* self = static_cast<MidiJamTool*>(mem);
-    // vtable set by compiler
-    self->refCount = 1;
-    return self;
+    *pdwNumElements = 4;
+    return S_OK;
 }
+
+HRESULT __stdcall MidiJamTool::GetMediaTypes(DWORD** padwMediaTypes, const DWORD dwNumElements)
+{
+    if (dwNumElements != 4)
+        return E_FAIL;
+    (*padwMediaTypes)[0] = DMUS_PMSGT_NOTE;
+    (*padwMediaTypes)[1] = DMUS_PMSGT_MIDI;
+    (*padwMediaTypes)[2] = DMUS_PMSGT_PATCH;
+    (*padwMediaTypes)[3] = DMUS_PMSGT_TEMPO;
+    return S_OK;
+}
+
+HRESULT __stdcall MidiJamTool::GetMsgDeliveryType(DWORD* pdwDeliveryType)
+{
+    *pdwDeliveryType = DMUS_PMSGF_TOOL_IMMEDIATE;
+    return S_OK;
+}
+
+HRESULT __stdcall MidiJamTool::Init(IDirectMusicGraph*) { return E_NOTIMPL; }
 
 HRESULT __stdcall MidiJamTool::QueryInterface(REFIID riid, void** ppv)
 {
-    if (!ppv) return E_POINTER;
-    *ppv = nullptr;
-    if (riid == IID_IUnknown || riid == IID_IDirectMusicTool)
+    if (IsEqualGUID(riid, IID_IUnknown) || IsEqualGUID(riid, IID_IDirectMusicTool))
     {
-        *ppv = static_cast<IDirectMusicTool*>(this);
+        *ppv = this;
         AddRef();
         return S_OK;
     }
+
+    *ppv = nullptr;
     return E_NOINTERFACE;
 }
 
-ULONG __stdcall MidiJamTool::AddRef() { return ++refCount; }
-ULONG __stdcall MidiJamTool::Release() { return --refCount; }
-
-HRESULT __stdcall MidiJamTool::Init(IDirectMusicGraph*) { return S_OK; }
-
-HRESULT __stdcall MidiJamTool::GetMsgDeliveryType(DWORD* p)
+ULONG __stdcall MidiJamTool::Release()
 {
-    if (p) *p = DMUS_PMSGF_TOOL_IMMEDIATE;
-    return S_OK;
+    if (InterlockedDecrement(&refCount))
+        return refCount;
+    if (this)
+        delete this;
+    return 0;
 }
-
-HRESULT __stdcall MidiJamTool::GetMediaTypeArraySize(DWORD* p)
-{
-    if (p) *p = 0;
-    return S_OK;
-}
-
-HRESULT __stdcall MidiJamTool::GetMediaTypes(DWORD**, DWORD) { return S_OK; }
 
 HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_PMSG* pPMSG)
-{
-    return IMidiJamTool__ProcessPMsg(
-        0,
-        static_cast<IDirectMusicPerformance8*>(pPerf),
-        pPMSG);
-}
-
-HRESULT __stdcall MidiJamTool::Flush(IDirectMusicPerformance*, DMUS_PMSG*, REFERENCE_TIME)
-{
-    return S_OK;
-}
-
-// FUNCTION: MIDIJAM 0x43C580
-HRESULT __stdcall IMidiJamTool__ProcessPMsg(
-    int a1,
-    IDirectMusicPerformance8* pPerf,
-    DMUS_PMSG* pPMSG)
 {
     REFERENCE_TIME rtNow;
     MUSIC_TIME mtNow;
@@ -93,9 +86,9 @@ HRESULT __stdcall IMidiJamTool__ProcessPMsg(
     {
     case DMUS_PMSGT_NOTE:
     {
-        DMUS_NOTE_PMSG* noteMsg = reinterpret_cast<DMUS_NOTE_PMSG*>(pPMSG);
-        MUSIC_TIME msgMtTime = pPMSG->mtTime;
-        DWORD msgChannel = pPMSG->dwPChannel;
+        const DMUS_NOTE_PMSG* noteMsg = reinterpret_cast<DMUS_NOTE_PMSG*>(pPMSG);
+        const MUSIC_TIME msgMtTime = pPMSG->mtTime;
+        const DWORD msgChannel = pPMSG->dwPChannel;
 
         if (!noteMsg->bVelocity || msgChannel > 999)
             break;
@@ -107,12 +100,12 @@ HRESULT __stdcall IMidiJamTool__ProcessPMsg(
         case HONKY_TONK_PIANO:
         case HARPSICHORD:
         {
-            unsigned short keyboardKeyIndex = noteMsg->wMusicValue - 21;
+            const unsigned short keyboardKeyIndex = noteMsg->wMusicValue - 21;
             if (keyboardKeyIndex >= 88u)
                 break;
 
             short slot = 0;
-            int pi = g_piano_assignment[msgChannel];
+            const int pi = g_piano_assignment[msgChannel];
             while (g_ds_piano[pi].queueDurations[keyboardKeyIndex][slot]
                 && slot < 16)
                 ++slot;
@@ -148,7 +141,7 @@ HRESULT __stdcall IMidiJamTool__ProcessPMsg(
         if (pPMSG->dwPChannel > 999)
             break;
 
-        DMUS_PATCH_PMSG* patchMsg = reinterpret_cast<DMUS_PATCH_PMSG*>(pPMSG);
+        const DMUS_PATCH_PMSG* patchMsg = reinterpret_cast<DMUS_PATCH_PMSG*>(pPMSG);
 
         if (pPMSG->dwPChannel == 9)
         {
@@ -166,9 +159,9 @@ HRESULT __stdcall IMidiJamTool__ProcessPMsg(
         switch (g_midiJamInstrumentIds[pPMSG->dwPChannel])
         {
         case PIANO:
-        case (MidiJamInstrumentId)(AGOGOS | GUITAR):
-        case (MidiJamInstrumentId)(VIOLA | GUITAR):
-        case (MidiJamInstrumentId)(FLUTE | XYLOPHONE):
+        case ELECTRIC_PIANO:
+        case HONKY_TONK_PIANO:
+        case HARPSICHORD:
         {
             if (g_ds_piano)
                 g_ds_piano = static_cast<I_DS_Piano*>(
@@ -204,8 +197,7 @@ HRESULT __stdcall IMidiJamTool__ProcessPMsg(
 
     case DMUS_PMSGT_TEMPO:
     {
-        DMUS_TEMPO_PMSG* tempoMsg = reinterpret_cast<DMUS_TEMPO_PMSG*>(pPMSG);
-        g_currentTempo = tempoMsg->dblTempo;
+        g_currentTempo = reinterpret_cast<DMUS_TEMPO_PMSG*>(pPMSG)->dblTempo;
         g_currentTempo_scaleFactor0_5 = static_cast<int>(g_currentTempo * 0.5);
         g_currentTempo_scaleFactor0_9 = static_cast<int>(g_currentTempo * 0.8999999761581421);
         g_currentTempo_scaleFactor1_15 = static_cast<int>(g_currentTempo * 1.149999976158142);
@@ -217,9 +209,9 @@ HRESULT __stdcall IMidiJamTool__ProcessPMsg(
 }
 
 // FUNCTION: MIDIJAM 0x43C2D0
-bool IsGmPercussionSupported(GM_PERCUSSION gmPercussion)
+bool IsGmPercussionSupported(const GM_PERCUSSION patch)
 {
-    switch (gmPercussion)
+    switch (patch)
     {
     case ACOUSTIC_SNARE:
     case ELECTRIC_SNARE:
@@ -267,8 +259,9 @@ bool IsGmPercussionSupported(GM_PERCUSSION gmPercussion)
     case MUTE_TRIANGLE:
     case LOW_WOODBLOCK:
     case HIGH_AGOGO:
+    case LOW_AGOGO:
         return true;
     default:
-        return gmPercussion == LOW_AGOGO;
+        return false;
     }
 }

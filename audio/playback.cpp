@@ -69,17 +69,15 @@ int LoadAndPlayMidiFile(const char* midiFilePath)
 // FUNCTION: MIDIJAM 0x438D90
 HRESULT PlaySegment()
 {
-    HRESULT hr = g_DirectMusicSegmentWrapper->SetRepeats(0);
-    if (FAILED(hr))
-        return hr;
+    HRESULT hrSetRepeats;
+    int hrPlaySegment;
 
+    hrSetRepeats = g_DirectMusicSegmentWrapper->SetRepeats(0);
+    if (hrSetRepeats < 0)
+        return hrSetRepeats;
     g_DirectMusicPerformance->GetTime(&g_prtStart, &g_mtStart);
-
-    // DMUS_SEGF_SECONDARY (0x800000) — play as a secondary segment,
-    // allowing it to play alongside other segments.
-    hr = g_DirectMusicSegmentWrapper->PlaySegment(DMUS_SEGF_SECONDARY, nullptr);
-    if (SUCCEEDED(hr))
-        return S_OK;
-
-    return hr;
+    hrPlaySegment = g_DirectMusicSegmentWrapper->PlaySegment(0x800000, 0);
+    if (hrPlaySegment >= 0)
+        return 0;
+    return hrPlaySegment;
 }

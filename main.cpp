@@ -7,15 +7,12 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
-#include <ctime>
 #include <GL/gl.h>
 #include <GL/glu.h>
 
 #include "util/time.h"
 #include "macros.h"
 #include "model/Ms3dBundle.h"
-#include "audio/DirectMusicSegmentWrapper.h"
-#include "audio/DirectMusicSystem.h"
 #include "audio/initialize.h"
 #include "audio/playback.h"
 #include "render/window.h"
@@ -30,8 +27,8 @@
 void MidiJamInitialize();
 void MidiJamWindowCleanup();
 int MidiJamMain(const char* title, HINSTANCE hInstance, FILE* hwfStream, void* pHwfAppendix, int nHwfAppendixItems);
-int   LoadAndPlayMidiFile(const char* filename);
-int   SwapBuffers_0();
+int LoadAndPlayMidiFile(const char* filename);
+int SwapBuffers_0();
 time_t GetUnixEpochTime(time_t* t);
 float arctan(float x);
 
