@@ -3,7 +3,7 @@
 //
 
 #include "audio/DirectMusicSystem.h"
-#include "audio/DirectMusicSegmentWrapper.h"
+#include "audio/DirectMusicSegmentPlayer.h"
 #include "model/animation/AnimationController.h"
 #include "instruments/instrument_ids.h"
 #include "model/Ms3dBundle.h"
@@ -13,7 +13,7 @@
 
 #include "audio/MidiJamTool.h"
 
-DirectMusicSegmentWrapper* g_DirectMusicSegmentWrapper = nullptr;
+DirectMusicSegmentPlayer* g_DirectMusicSegmentWrapper = nullptr;
 char g_midiFileNameDisp[260] = {};
 MUSIC_TIME g_midiFile_duration = 0;
 REFERENCE_TIME g_prtStart = 0;

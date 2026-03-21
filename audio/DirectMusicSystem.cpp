@@ -5,7 +5,7 @@
 #define INITGUID
 #include "DirectMusicSystem.h"
 
-#include "DirectMusicSegmentWrapper.h"
+#include "DirectMusicSegmentPlayer.h"
 #include "DlsCollectionWrapper.h"
 
 #include <dmusici.h>
@@ -89,7 +89,7 @@ void DirectMusicSystem::CollectLoaderGarbage() const
 
 // FUNCTION: MIDIJAM 0x401260
 HRESULT DirectMusicSystem::LoadMidiSegmentFromPath(
-    DirectMusicSegmentWrapper** ppSegmentWrapper,
+    DirectMusicSegmentPlayer** ppSegmentWrapper,
     const LPCCH midiFilePath,
     const BOOL downloadInstruments,
     const BOOL setAsStandardMidiFile) const
@@ -107,7 +107,7 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromPath(
 
     if (SUCCEEDED(hr))
     {
-        DirectMusicSegmentWrapper* pBlock = new DirectMusicSegmentWrapper(
+        DirectMusicSegmentPlayer* pBlock = new DirectMusicSegmentPlayer(
             pPerformance,
             pLoader,
             pSegment);
@@ -154,7 +154,7 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromPath(
 
 // FUNCTION: MIDIJAM 0x401400
 HRESULT DirectMusicSystem::LoadMidiSegmentFromResource(
-    DirectMusicSegmentWrapper** ppSegmentWrapper,
+    DirectMusicSegmentPlayer** ppSegmentWrapper,
     const LPCSTR lpName,
     const LPCSTR lpType,
     const BOOL downloadInstruments,
@@ -187,7 +187,7 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromResource(
 
     if (SUCCEEDED(hr))
     {
-        DirectMusicSegmentWrapper* pBlock = new DirectMusicSegmentWrapper(
+        DirectMusicSegmentPlayer* pBlock = new DirectMusicSegmentPlayer(
             pPerformance,
             pLoader,
             pSegment);

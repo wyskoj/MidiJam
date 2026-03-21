@@ -5,7 +5,7 @@
 #include "update.h"
 #include "../macros.h"
 #include "../model/Ms3dBundle.h"
-#include "../audio/DirectMusicSegmentWrapper.h"
+#include "../audio/DirectMusicSegmentPlayer.h"
 #include "../instruments/instrument_ids.h"
 #include "../scene/fadeout.h"
 #include "../render/text.h"
@@ -51,7 +51,7 @@ extern GLfloat g_songFillbarScale;
 extern char g_midiFileNameDisp[260];
 extern float g_framesPerSecond;
 extern IDirectMusicPerformance8* g_DirectMusicPerformance;
-extern DirectMusicSegmentWrapper* g_DirectMusicSegmentWrapper;
+extern DirectMusicSegmentPlayer* g_DirectMusicSegmentWrapper;
 extern MUSIC_TIME g_mtStart;
 extern MUSIC_TIME g_midiFile_duration;
 extern MUSIC_TIME g_currentGlobalTime;

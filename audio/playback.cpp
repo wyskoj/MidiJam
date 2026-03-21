@@ -5,7 +5,7 @@
 #include "playback.h"
 
 #include "DirectMusicSystem.h"
-#include "DirectMusicSegmentWrapper.h"
+#include "DirectMusicSegmentPlayer.h"
 
 #include <dmusici.h>
 #include <cstdio>
@@ -16,7 +16,7 @@
 // These are defined elsewhere in the application and declared here for access.
 // ---------------------------------------------------------------------------
 
-extern DirectMusicSegmentWrapper* g_DirectMusicSegmentWrapper;
+extern DirectMusicSegmentPlayer* g_DirectMusicSegmentWrapper;
 extern DirectMusicSystem* g_DirectMusicSystem;
 extern IDirectMusicPerformance8* g_DirectMusicPerformance;
 extern char g_midiFileNameDisp[];
@@ -60,7 +60,7 @@ int LoadAndPlayMidiFile(const char* midiFilePath)
     // TODO: verify — IDA shows GetPerformance called on g_DirectMusicSegmentWrapper,
     // but DirectMusicSegmentWrapper has no GetPerformance method. This likely
     // accesses pSegment directly to retrieve the track length.
-    IDirectMusicSegment8* pSegment = g_DirectMusicSegmentWrapper->pSegment;
+    IDirectMusicSegment8* pSegment = g_DirectMusicSegmentWrapper->segment;
     pSegment->GetLength(&g_midiFile_duration);
 
     return 0;
@@ -72,11 +72,11 @@ HRESULT PlaySegment()
     HRESULT hrSetRepeats;
     int hrPlaySegment;
 
-    hrSetRepeats = g_DirectMusicSegmentWrapper->SetRepeats(0);
+    hrSetRepeats = g_DirectMusicSegmentWrapper->SetRepeatCount(0);
     if (hrSetRepeats < 0)
         return hrSetRepeats;
     g_DirectMusicPerformance->GetTime(&g_prtStart, &g_mtStart);
-    hrPlaySegment = g_DirectMusicSegmentWrapper->PlaySegment(0x800000, 0);
+    hrPlaySegment = g_DirectMusicSegmentWrapper->Play(0x800000, 0);
     if (hrPlaySegment >= 0)
         return 0;
     return hrPlaySegment;

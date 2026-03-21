@@ -9,7 +9,7 @@
 #include <dmusici.h>
 
 class DlsCollectionWrapper;
-class DirectMusicSegmentWrapper;
+class DirectMusicSegmentPlayer;
 
 /**
  * Top-level DirectMusic system object. Owns the IDirectMusicLoader8 and
@@ -69,7 +69,7 @@ public:
      * @return                      S_OK on success, or the failing HRESULT.
      */
     HRESULT LoadMidiSegmentFromPath(
-        DirectMusicSegmentWrapper** ppSegmentWrapper,
+        DirectMusicSegmentPlayer** ppSegmentWrapper,
         LPCCH midiFilePath,
         BOOL downloadInstruments,
         BOOL setAsStandardMidiFile) const;
@@ -85,7 +85,7 @@ public:
      * @return                      S_OK on success, or the failing HRESULT.
      */
     HRESULT LoadMidiSegmentFromResource(
-        DirectMusicSegmentWrapper** ppSegmentWrapper,
+        DirectMusicSegmentPlayer** ppSegmentWrapper,
         LPCSTR lpName,
         LPCSTR lpType,
         BOOL downloadInstruments,

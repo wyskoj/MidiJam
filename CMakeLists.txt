@@ -20,8 +20,7 @@ add_executable(MidiJam WIN32
         main.cpp
         globals.cpp
         macros.h
-        audio/DirectMusicSegmentWrapper.cpp
-        audio/DirectMusicSegmentWrapper.h
+        audio/DirectMusicSegmentPlayer.cpp
         audio/DirectMusicSystem.cpp
         audio/DlsCollectionWrapper.cpp
         audio/DlsCollectionWrapper.h
