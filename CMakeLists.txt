@@ -71,6 +71,8 @@ add_executable(MidiJam WIN32
         util/string.cpp
         util/time.cpp
         util/time.h
+        instruments/Accordion.cpp
+        instruments/Accordion.h
 )
 
 target_link_libraries(MidiJam PRIVATE opengl32.lib glu32.lib)

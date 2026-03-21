@@ -17,6 +17,7 @@
 #include "instruments/Piano.h"
 #include "instruments/keys.h"
 #include "macros.h"
+#include "instruments/Accordion.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
 #include "render/window.h"
@@ -221,17 +222,6 @@ extern Ms3dBundle* g_tubularBellMallet_ms3d;
 
 // Choir
 extern Ms3dBundle* g_stageChoir_ms3d;
-
-// Accordion
-extern Ms3dBundle* g_accordionKeyWhiteBack_ms3d;
-extern Ms3dBundle* g_accordionKeyWhiteFront_ms3d;
-extern Ms3dBundle* g_accordionKeyWhiteBack_Down_ms3d;
-extern Ms3dBundle* g_accordionKeyWhiteFront_Down_ms3d;
-extern Ms3dBundle* g_accordionKeyBlack_ms3d;
-extern Ms3dBundle* g_accordionKeyBlack_Down_ms3d;
-extern Ms3dBundle* g_accordionFold_ms3d;
-extern Ms3dBundle* g_accordionLeftHand_ms3d;
-extern Ms3dBundle* g_accordionRightHand_ms3d;
 
 // Xylophone
 extern Ms3dBundle* g_xylophoneMalletWhite_ms3d;

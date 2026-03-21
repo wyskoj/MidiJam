@@ -8,6 +8,7 @@
 #include <cstring>
 #include <cstdlib>
 
+#include "instruments/Accordion.h"
 #include "instruments/Bass.h"
 
 // Finds the first empty slot and executes body with slot variable in scope.
@@ -164,6 +165,27 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case ACCORDION: {
+                    const short noteIndex = (noteMsg->wMusicValue + 12) % 24 + 1;
+                    AccordionState& inst = g_accordion[g_accordionChannel[msgChannel]];
+
+                    pPerf->GetTime(&rtNow, &mtNow);
+                    int duration = noteMsg->mtDuration - g_currentTempo_scaleFactor0_5;
+                    if (duration < 0) duration = 10;
+                    int16_t timeDelta = static_cast<int16_t>(msgMtTime - mtNow)
+                        - static_cast<int16_t>(g_currentTempo_scaleFactor0_9);
+                    if (timeDelta <= 0) timeDelta = 1;
+
+                    FIND_SLOT(
+                        inst.queue[noteIndex][slot], 16, slot,
+                        {
+                        inst.queue[noteIndex][slot] = duration;
+                        inst.timeDeltas[noteIndex][slot] = timeDelta;
+                        }
+                    );
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -198,6 +220,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case ACCORDION: {
+                    ALLOC_INST(accordion, AccordionState);
+                    g_accordion[g_accordionCount - 1].squeezeAngle = 4.0f;
+                }
+
                 default:
                     break;
             }
@@ -207,8 +234,8 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
         case DMUS_PMSGT_TEMPO: {
             g_currentTempo = reinterpret_cast<DMUS_TEMPO_PMSG*>(pPMSG)->dblTempo;
             g_currentTempo_scaleFactor0_5 = static_cast<int>(g_currentTempo * 0.5);
-            g_currentTempo_scaleFactor0_9 = static_cast<int>(g_currentTempo * 0.8999999761581421);
-            g_currentTempo_scaleFactor1_15 = static_cast<int>(g_currentTempo * 1.149999976158142);
+            g_currentTempo_scaleFactor0_9 = static_cast<int>(g_currentTempo * 0.9);
+            g_currentTempo_scaleFactor1_15 = static_cast<int>(g_currentTempo * 1.15);
             break;
         }
         default:
