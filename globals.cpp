@@ -12,7 +12,6 @@
 #include <dmusici.h>
 
 #include "audio/MidiJamTool.h"
-#include "instruments/Harp.h"
 
 DirectMusicSegmentWrapper* g_DirectMusicSegmentWrapper = nullptr;
 char g_midiFileNameDisp[260] = {};
@@ -128,7 +127,6 @@ int g_show_percussion = 0;
 short g_inst_visible_drumset = 0;
 short g_inst_visible_xylophone = 0;
 short g_inst_visible_guitar = 0;
-short g_inst_visible_harp = 0;
 int g_percussion_time_queue[88][32] = {};
 int g_percussion_velocity_queue[88][32] = {};
 int g_percussion_framesWithEmptyQueue = 0;
@@ -246,7 +244,6 @@ GLfloat g_songFillbarScale = 0.0f;
 // ---------------------------------------------------------------------------
 // Instrument data pointers — non-piano; nullptr until transcribed
 // ---------------------------------------------------------------------------
-void* g_ds_harp = nullptr;
 void* g_ds_trombone = nullptr;
 void* g_ds_trumpet = nullptr;
 void* g_ds_frenchHorn = nullptr;
@@ -295,14 +292,9 @@ Ms3dBundle* g_pianoShadow_ms3d = nullptr;
 Ms3dBundle* g_xylophoneShadow_ms3d = nullptr;
 Ms3dBundle* g_guitarShadow_ms3d = nullptr;
 Ms3dBundle* g_drumShadow_ms3d = nullptr;
-Ms3dBundle* g_harpShadow_ms3d = nullptr;
+
 Ms3dBundle* g_agogoSingle_ms3d = nullptr;
 Ms3dBundle* g_woodBlockSingle_ms3d = nullptr;
-
-// Harp
-Ms3dBundle* g_harp_ms3d = nullptr;
-Ms3dBundle* g_harpString_ms3d[3] = {};
-Ms3dBundle* g_harpStringPlayingX_ms3d[3][5] = {};
 
 // Drum set
 Ms3dBundle* g_drumSet_Stick_ms3d = nullptr;
@@ -504,29 +496,6 @@ int g_bitDepth = 0;
 GLfloat g_refreshRate = 0.0f;
 
 // ---------------------------------------------------------------------------
-// Harp geometry and color (populated by MidiJamInitialize)
-// ---------------------------------------------------------------------------
-
-HarpStringColor g_harpStringColors[47] = {};
-
-float HARP_STRING_SCALE[47] = {
-    69.010002f, 68.606003f, 68.093002f, 67.471001f, 66.876999f,
-    65.849998f, 64.686996f, 63.417000f, 62.335999f, 61.146999f,
-    60.012001f, 59.066002f, 58.362999f, 57.551998f, 56.958000f,
-    56.417000f, 55.876999f, 55.417000f, 55.039001f, 54.687000f,
-    54.282001f, 53.903999f, 53.551998f, 53.174000f, 52.876999f,
-    52.632999f, 52.335999f, 52.201000f, 52.066002f, 51.958000f,
-    51.931000f, 51.985001f, 52.034000f, 52.094002f, 52.194000f,
-    52.313999f, 52.414001f, 52.694000f, 52.973999f, 53.254002f,
-    53.613998f, 54.153999f, 54.594002f, 54.894001f, 55.133999f,
-    55.113998f, 55.113998f,
-};
-
-float g_harp_string_y[47] = {};
-float g_harp_string_z[47] = {};
-float g_harp_string_scale[47] = {};
-
-// ---------------------------------------------------------------------------
 // Percussion
 // ---------------------------------------------------------------------------
 
@@ -537,7 +506,6 @@ short g_stick_visible[37] = {};
 // ---------------------------------------------------------------------------
 
 short g_ialloc_guitar = 0;
-short g_ialloc_harp = 0;
 short g_ialloc_xylophone = 0;
 short g_ialloc_stageChoir = 0;
 short g_ialloc_stageHorn = 0;
@@ -613,7 +581,6 @@ short g_recorder_assignment[300] = {};
 short g_piccolo_assignment[300] = {};
 short g_flute_assignment[300] = {};
 short g_trumpet_assignment[300] = {};
-short g_harp_assignment[300] = {};
 
 // ---------------------------------------------------------------------------
 // Unnamed globals — TODO: name when context is clearer

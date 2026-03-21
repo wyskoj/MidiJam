@@ -27,7 +27,6 @@
 // GUIDs
 // ---------------------------------------------------------------------------
 
-enum HarpStringColor : short;
 static const GUID NULL_GUID = {};
 
 static const IID IID_I_DIRECT_MUSIC_GRAPH8 = {
@@ -56,13 +55,6 @@ extern DirectMusicSystem* g_DirectMusicSystem;
 extern IDirectMusicPerformance8* g_DirectMusicPerformance;
 extern IDirectMusicGraph8* g_DirectMusicGraph;
 extern MidiJamTool* g_midiJamTool;
-
-// --- Harp ---
-extern HarpStringColor  g_harpStringColors[47];
-extern float            HARP_STRING_SCALE[47];
-extern float            g_harp_string_y[47];
-extern float            g_harp_string_z[47];
-extern float            g_harp_string_scale[47];
 
 // --- Cymbal physics ---
 extern float            CYMBAL_SCALE[7];
@@ -125,7 +117,6 @@ extern GLfloat          g_pianoKeyOffsetX[14];
 
 // --- Allocation counters ---
 extern short            g_ialloc_guitar;
-extern short            g_ialloc_harp;
 extern short            g_ialloc_xylophone;
 extern short            g_ialloc_stageChoir;
 extern short            g_ialloc_stageHorn;
@@ -198,7 +189,6 @@ extern short            g_recorder_assignment[300];
 extern short            g_piccolo_assignment[300];
 extern short            g_flute_assignment[300];
 extern short            g_trumpet_assignment[300];
-extern short            g_harp_assignment[300];
 extern MidiJamInstrumentId g_midiJamInstrumentIds[300];
 
 // --- Unnamed ---
@@ -449,12 +439,12 @@ void MidiJamInitialize()
     }
 
     // --- Harp string geometry ---
-    for (short k = 0; k < 47; ++k)
+    for (short i = 0; i < 47; ++i)
     {
-        HARP_STRING_SCALE[k] = HARP_STRING_SCALE[k] - (k / 47.0f * 4.5f + 1.0f);
-        g_harp_string_y[k]   = k / 47.0f * 42.0f + 4.7379999f;
-        g_harp_string_z[k]   = -k * 0.75f - 4.0f;
-        g_harp_string_scale[k] = ((1.0f - k / 47.0f) * 42.0f + HARP_STRING_SCALE[k] - 42.0f) / 72.0f;
+        g_harpStringRestLength[i] = g_harpStringRestLength[i] - (i / 47.0f * 4.5f + 1.0f);
+        g_harpStringY[i]   = i / 47.0f * 42.0f + 4.7379999f;
+        g_harpStringZ[i]   = -i * 0.75f - 4.0f;
+        g_harpStringScale[i] = ((1.0f - i / 47.0f) * 42.0f + g_harpStringRestLength[i] - 42.0f) / 72.0f;
     }
 
     // --- Cymbal physics init ---
@@ -477,7 +467,7 @@ void MidiJamInitialize()
     g_ialloc_guitar         = 0;
     dword_464700            = 0;
     dword_468EC0            = 0;
-    g_ialloc_harp           = 0;
+    g_harpCount           = 0;
     g_ialloc_xylophone      = 0;
     g_ialloc_stageChoir     = 0;
     g_ialloc_stageHorn      = 0;
@@ -610,7 +600,7 @@ void MidiJamInitialize()
         g_piccolo_assignment[slot]       = -1;
         g_flute_assignment[slot]         = -1;
         g_trumpet_assignment[slot]       = -1;
-        g_harp_assignment[slot]          = -1;
+        g_harpChannel[slot]          = -1;
     }
 
     // --- Key state reset ---

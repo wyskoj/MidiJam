@@ -10,6 +10,7 @@
 
 #include "instruments/Accordion.h"
 #include "instruments/Bass.h"
+#include "instruments/Harp.h"
 
 // Finds the first empty slot and executes body with slot variable in scope.
 // Slot field is the expression used to test for empty (== 0).
@@ -47,6 +48,10 @@ g_##name = static_cast<type*>(malloc(sizeof(type))); \
 memset(&g_##name[g_##name##Count], 0, sizeof(type)); \
 g_##name##Channel[pPMSG->dwPChannel] = g_##name##Count++; \
 } while(0)
+
+__int16 word_45EC60[12] = {
+    0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6
+};
 
 extern MidiJamInstrumentId g_midiJamInstrumentIds[1000];
 extern int g_currentTempo_scaleFactor0_5;
@@ -186,6 +191,33 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case HARP: {
+                    const auto v60 = noteMsg->wMusicValue - 24;
+                    if (v60 < 0x50u) {
+                        const auto v59 = word_45EC60[v60 % 12] + 7 * (v60 / 12);
+                        if (v59 < 0x2Fu) {
+                            auto i15 = 0;
+                            while (g_harp[g_harpChannel[noteMsg->dwPChannel]].queue[v59][i15] && i15 < 16) ++i15;
+                            if (i15 < 16) {
+                                g_harp[g_harpChannel[noteMsg->dwPChannel]].queue[v59][i15] = noteMsg->mtDuration;
+                                g_harp[g_harpChannel[noteMsg->dwPChannel]].queue[v59][i15] = g_harp[g_harpChannel[
+                                        noteMsg->dwPChannel]].queue[v59][i15]
+                                    - g_currentTempo_scaleFactor0_5;
+                                if (g_harp[g_harpChannel[noteMsg->dwPChannel]].queue[v59][i15] < 0)
+                                    g_harp[g_harpChannel[noteMsg->dwPChannel]].queue[v59][i15] = 10;
+                                pPerf->GetTime(&rtNow, &mtNow);
+                                g_harp[g_harpChannel[noteMsg->dwPChannel]].timeDeltas[v59][i15] = noteMsg->mtTime -
+                                    mtNow;
+                                g_harp[g_harpChannel[noteMsg->dwPChannel]].timeDeltas[v59][i15] -=
+                                    g_currentTempo_scaleFactor0_9;
+                                if (g_harp[g_harpChannel[noteMsg->dwPChannel]].timeDeltas[v59][i15] <= 0)
+                                    g_harp[g_harpChannel[noteMsg->dwPChannel]].timeDeltas[v59][i15] = 1;
+                            }
+                        }
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -223,6 +255,12 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                 case ACCORDION: {
                     ALLOC_INST(accordion, AccordionState);
                     g_accordion[g_accordionCount - 1].squeezeAngle = 4.0f;
+                    break;
+                }
+
+                case HARP: {
+                    ALLOC_INST(harp, HarpState);
+                    break;
                 }
 
                 default:

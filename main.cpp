@@ -18,6 +18,7 @@
 #include "instruments/keys.h"
 #include "macros.h"
 #include "instruments/Accordion.h"
+#include "instruments/Harp.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
 #include "render/window.h"
@@ -124,15 +125,9 @@ extern Ms3dBundle* g_xylophoneShadow_ms3d;
 
 extern Ms3dBundle* g_guitarShadow_ms3d;
 extern Ms3dBundle* g_drumShadow_ms3d;
-extern Ms3dBundle* g_harpShadow_ms3d;
 extern Ms3dBundle* g_pianoStand_ms3d;
 extern Ms3dBundle* g_agogoSingle_ms3d;
 extern Ms3dBundle* g_woodBlockSingle_ms3d;
-
-// Harp models
-extern Ms3dBundle* g_harp_ms3d;
-extern Ms3dBundle* g_harpString_ms3d[3];
-extern Ms3dBundle* g_harpStringPlayingX_ms3d[3][5];
 
 // Drum set models
 extern Ms3dBundle* g_drumSet_Stick_ms3d;
@@ -537,8 +532,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     };
     for (short c = 0; c < 3; ++c)
         for (short f = 0; f < 5; ++f) {
-            LOAD_MODEL(g_harpStringPlayingX_ms3d[c][f], harpPlayingFiles[f]);
-            REPLACE_TEX(g_harpStringPlayingX_ms3d[c][f], harpPlayingTextures[c][0], harpPlayingTextures[c][1]);
+            LOAD_MODEL(g_harpStringPlaying_ms3d[c][f], harpPlayingFiles[f]);
+            REPLACE_TEX(g_harpStringPlaying_ms3d[c][f], harpPlayingTextures[c][0], harpPlayingTextures[c][1]);
         }
 
     LOAD_MODEL(g_timpaniBody_ms3d, "TimpaniBody.ms3d");
@@ -867,7 +862,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     for (short i = 0; i < 3; ++i) {
         APPLY_TEX(g_harpString_ms3d[i]);
         for (short k = 0; k < 5; ++k)
-            APPLY_TEX(g_harpStringPlayingX_ms3d[i][k]);
+            APPLY_TEX(g_harpStringPlaying_ms3d[i][k]);
     }
     APPLY_TEX(g_timpaniBody_ms3d);
     APPLY_TEX(g_timpaniHead_ms3d);

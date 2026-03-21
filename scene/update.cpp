@@ -20,6 +20,7 @@
 #include "audio/playback.h"
 #include "instruments/Accordion.h"
 #include "instruments/Bass.h"
+#include "instruments/Harp.h"
 
 // ---------------------------------------------------------------------------
 // Extern globals
@@ -38,13 +39,11 @@ extern Ms3dBundle* g_xylophoneShadow_ms3d;
 extern Ms3dBundle* g_bassShadow_ms3d;
 extern Ms3dBundle* g_guitarShadow_ms3d;
 extern Ms3dBundle* g_drumShadow_ms3d;
-extern Ms3dBundle* g_harpShadow_ms3d;
 extern Ms3dBundle* g_songFillbarBox_ms3d;
 extern Ms3dBundle* g_songFillbar_ms3d;
 extern short g_inst_visible_xylophone;
 extern short g_inst_visible_guitar;
 extern short g_inst_visible_drumset;
-extern short g_inst_visible_harp;
 extern int g_show_percussion;
 extern GLfloat g_fadeFactor;
 extern GLfloat g_songFillbarScale;
@@ -72,7 +71,6 @@ extern int g_autoCamIdleTime;
 extern int g_autoCameraIsActive;
 
 // Instrument data pointers — non-piano ones are opaque void* until transcribed
-extern void* g_ds_harp;
 extern void* g_ds_trombone;
 extern void* g_ds_trumpet;
 extern void* g_ds_frenchHorn;
@@ -203,11 +201,6 @@ static inline void RenderPercussion() {
 }
 
 // Stubs — will be replaced as each instrument is transcribed
-static inline void I_Harp() {
-}
-
-static inline bool I_Harp_MM(MUSIC_TIME) { return false; }
-
 static inline void I_Trombone() {
 }
 
@@ -405,37 +398,6 @@ static inline void TriggerAutoCam() {
 static inline void MoveCameraToAngle(CAMERA_ANGLE, int) {
 }
 
-// ---------------------------------------------------------------------------
-// FUNCTION: MIDIJAM 0x421840
-// ---------------------------------------------------------------------------
-void RenderDebugInstruments() {
-    char buf[256];
-    int y = 50;
-    constexpr int lineHeight = 16;
-
-    auto printLine = [&](char* text) {
-        RenderTextWithShadow(10, y, 2, 2, text, 1, 0.5f, 0.5f);
-        y += lineHeight;
-    };
-
-    sprintf(buf, "INSTRUMENTS [frame %d]", g_framesAlive);
-    printLine(buf);
-
-    if (g_pianoCount > 0) {
-        sprintf(buf, "  piano      x%d", g_pianoCount);
-        printLine(buf);
-    }
-    if (g_bassCount > 0) {
-        sprintf(buf, "  bass       x%d", g_bassCount);
-        printLine(buf);
-    }
-    if (g_accordionCount > 0) {
-        sprintf(buf, "  accordion       x%d", g_accordionCount);
-        printLine(buf);
-    }
-    // TODO: add remaining instruments as they are transcribed
-}
-
 BOOL UpdateMidiJam() {
     GLfloat shadowX;
     GLfloat shadowZ;
@@ -551,8 +513,8 @@ BOOL UpdateMidiJam() {
         glPopMatrix();
     }
 
-    if (g_inst_visible_harp > 0) {
-        for (m = 0; m < g_inst_visible_harp; ++m) {
+    if (g_harpVisible > 0) {
+        for (m = 0; m < g_harpVisible; ++m) {
             glPushMatrix();
             shadowX = m * 16.0f + 7.0f;
             glTranslatef(shadowX, -32.0f, 5.0f);
@@ -563,11 +525,11 @@ BOOL UpdateMidiJam() {
     }
 
     // --- Phase 5: Instruments (piano only; others stubbed) ---
-    if (g_ds_harp) {
+    if (g_harp) {
         glPushMatrix();
         glTranslatef(7.0f, -28.4f, 5.0f);
         glRotatef(-33.0f, 0.0f, 1.0f, 0.0f);
-        I_Harp();
+        RenderHarp();
         glPopMatrix();
     }
     if (g_ds_trombone) I_Trombone();
@@ -672,8 +634,6 @@ BOOL UpdateMidiJam() {
         glPopMatrix();
     }
 
-    RenderDebugInstruments();
-
     glFlush();
     return TRUE;
 }
@@ -714,7 +674,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
     short anyInstrumentActive = 0;
 
     if (g_accordion && UpdateAccordion(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_harp && I_Harp_MM(pmtNow)) anyInstrumentActive = 1;
+    if (g_harp && UpdateHarp(pmtNow)) anyInstrumentActive = 1;
     if (g_piano && UpdatePiano(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_xylophone && I_Xylophone_MM(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_violin && I_Violin_MM(pmtNow) == 1) anyInstrumentActive = 1;
