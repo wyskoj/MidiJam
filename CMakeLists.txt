@@ -31,6 +31,8 @@ add_executable(MidiJam WIN32
         audio/initialize.h
         audio/playback.cpp
         audio/playback.h
+        instruments/Bass.cpp
+        instruments/Bass.h
         instruments/Harp.h
         instruments/Piano.cpp
         instruments/Piano.h
@@ -38,9 +40,10 @@ add_executable(MidiJam WIN32
         instruments/instrument_ids.h
         instruments/keys.cpp
         instruments/keys.h
-        math/MatrixMath.cpp
+        math/AffineTransform4f.h
+        math/AffineTransform4f.cpp
+        math/TransformVec4.cpp
         math/Quaternion.cpp
-        math/QuaternionD.cpp
         math/scalar.cpp
         model/Ms3dBundle.cpp
         model/Ms3dBundle.h
@@ -68,8 +71,6 @@ add_executable(MidiJam WIN32
         util/string.cpp
         util/time.cpp
         util/time.h
-        instruments/Bass.cpp
-        instruments/Bass.h
 )
 
 target_link_libraries(MidiJam PRIVATE opengl32.lib glu32.lib)

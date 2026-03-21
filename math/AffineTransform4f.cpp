@@ -1,19 +1,19 @@
-#include "MatrixMath.h"
+#include "AffineTransform4f.h"
 
 #include "scalar.h"
 
 #include <cstring>
 
 // FUNCTION: MIDIJAM 0x401FD0
-MatrixMath::MatrixMath()
+AffineTransform4f::AffineTransform4f()
 {
-    PopulateIdentity();
+    SetIdentity();
 }
 
 // FUNCTION: MIDIJAM 0x402960
-void MatrixMath::PopulateIdentity()
+void AffineTransform4f::SetIdentity()
 {
-    memset(this, 0, sizeof(MatrixMath));
+    memset(this, 0, sizeof(AffineTransform4f));
     matrix[0][0] = 1.0f;
     matrix[1][1] = 1.0f;
     matrix[2][2] = 1.0f;
@@ -21,13 +21,19 @@ void MatrixMath::PopulateIdentity()
 }
 
 // FUNCTION: MIDIJAM 0x402940
-MatrixMath* MatrixMath::Copy(const void* src)
+AffineTransform4f* AffineTransform4f::CopyFromBytes(const void* src)
 {
-    return static_cast<MatrixMath*>(memcpy(this, src, sizeof(MatrixMath)));
+    return static_cast<AffineTransform4f*>(memcpy(this, src, sizeof(AffineTransform4f)));
 }
 
 // FUNCTION: MIDIJAM 0x402000
-MatrixMath* MatrixMath::Multiply(const MatrixMath* other)
+float AffineTransform4f::GetElement(const int index) const
+{
+    return matrix[0][index];
+}
+
+// FUNCTION: MIDIJAM 0x402000
+AffineTransform4f* AffineTransform4f::PostMultiply(const AffineTransform4f* other)
 {
     float temp[4][4];
 
@@ -51,11 +57,11 @@ MatrixMath* MatrixMath::Multiply(const MatrixMath* other)
     temp[3][2] = matrix[0][2] * other->matrix[3][0] + matrix[1][2] * other->matrix[3][1] + matrix[2][2] * other->matrix[3][2] + matrix[3][2];
     temp[3][3] = 1.0f;
 
-    return Copy(temp);
+    return CopyFromBytes(temp);
 }
 
 // FUNCTION: MIDIJAM 0x402260
-MatrixMath* MatrixMath::SetTranslation(const float* translation)
+AffineTransform4f* AffineTransform4f::SetTranslation(const float* translation)
 {
     // IDA collapsed this to a single pointer copy — the correct form sets all three components.
     matrix[3][0] = translation[0];
@@ -65,7 +71,7 @@ MatrixMath* MatrixMath::SetTranslation(const float* translation)
 }
 
 // FUNCTION: MIDIJAM 0x402390
-MatrixMath* MatrixMath::CreateRotationMatrixEulerZYX(const float (*eulerAngles)[3])
+AffineTransform4f* AffineTransform4f::SetRotationFromEulerZYX(const float (*eulerAngles)[3])
 {
     const float cosX = cosine((*eulerAngles)[0]);
     const float sinX = sine((*eulerAngles)[0]);
@@ -93,7 +99,7 @@ MatrixMath* MatrixMath::CreateRotationMatrixEulerZYX(const float (*eulerAngles)[
 }
 
 // FUNCTION: MIDIJAM 0x4024B0
-MatrixMath* MatrixMath::CreateRotationMatrixXYZ(const float* eulerAngles)
+AffineTransform4f* AffineTransform4f::SetRotationFromEulerXYZ(const float* eulerAngles)
 {
     const float cosX = cosine(eulerAngles[0]);
     const float sinX = sine(eulerAngles[0]);
@@ -120,14 +126,8 @@ MatrixMath* MatrixMath::CreateRotationMatrixXYZ(const float* eulerAngles)
     return this;
 }
 
-// FUNCTION: MIDIJAM 0x402920
-float MatrixMath::GetElement(int index) const
-{
-    return matrix[0][index];
-}
-
 // FUNCTION: MIDIJAM 0x43C1D0
-void MatrixMath::TransformVectorByMatrixRotation(float (*vector)[3]) const
+void AffineTransform4f::RotateVectorInPlace(float (*vector)[3]) const
 {
     float temp[3];
     temp[0] = (*vector)[0] * matrix[0][0] + (*vector)[1] * matrix[0][1] + (*vector)[2] * matrix[0][2];
@@ -137,7 +137,7 @@ void MatrixMath::TransformVectorByMatrixRotation(float (*vector)[3]) const
 }
 
 // FUNCTION: MIDIJAM 0x43C270
-void MatrixMath::RemoveTranslationFromVector(float (*vector)[3]) const
+void AffineTransform4f::SubtractTranslationInPlace(float (*vector)[3]) const
 {
     (*vector)[0] -= matrix[3][0];
     (*vector)[1] -= matrix[3][1];

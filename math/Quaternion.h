@@ -2,74 +2,82 @@
 // Created by Jacob on 3/16/2026.
 //
 
-#ifndef MIDIJAM_QUATERNION_H
-#define MIDIJAM_QUATERNION_H
-
-#include "MatrixMath.h"
+#ifndef MIDIJAM_QUATERNIOND_H
+#define MIDIJAM_QUATERNIOND_H
 
 /**
- * A 4-component structure used throughout MidiJam for 3D position and orientation.
+ * A proper unit quaternion using double precision, used for skeletal animation.
  *
- * Despite the name, this is not used as a standard unit quaternion in all contexts.
- * In many cases it functions as a 3D vector with w as a tag or homogeneous coordinate.
- * Notably, Length() and Normalize() operate only on x, y, z — w is excluded.
+ * All four components participate in
+ * Length, Normalize, and Multiply, making this a standard Hamilton quaternion.
  *
- * Field layout (confirmed from CopyFromVector and Identity):
- *   x, y, z — spatial components
- *   w       — homogeneous/tag component; set to 1.0 by Identity and FromVector
+ * Field layout:
+ *   x — scalar (real) component; set to 1.0 by Identity
+ *   y — vector i component
+ *   z — vector j component
+ *   w — vector k component
+ *
+ * Note: this is an unconventional layout. Most quaternion libraries place the
+ * scalar in w. Verify against call sites before assuming standard conventions.
  */
-class Quaternion
-{
-public:
-    float x;
-    float y;
-    float z;
-    float w;
-
-    /**
-     * Copies x, y, z from source. w is left unmodified.
-     * @param source  Pointer to a float[3]: { x, y, z }.
-     */
-    void CopyFromVector(const float* source);
-
-    /**
-     * Copies x, y, z from vector and sets w to 1.0.
-     * @param vector  Pointer to a float[3]: { x, y, z }.
-     */
-    void FromVector(const float* vector);
-
-    /**
-     * Sets x, y, z to 0.0 and w to 1.0.
-     * Equivalent to the identity position/orientation.
-     */
-    void Identity();
-
-    /**
-     * Returns the length of the x, y, z components only. w is not included.
-     */
-    float Length() const;
-
-    /**
-     * Normalizes x, y, z by dividing each by Length(). w is not modified.
-     * Undefined behavior if Length() is zero.
-     */
-    void Normalize();
-
-    /**
-     * Transforms this quaternion as a 4-component vector by the full matrix,
-     * including translation (row 3). All four output components are written.
-     * @param pOther  The matrix to transform by.
-     */
-    void TransformByMatrix(const MatrixMath* pOther);
-
-    /**
-     * Transforms x, y, z by the rotation portion of the matrix only (upper-left 3x3).
-     * Translation is ignored. w is set to 1.0 after the transform.
-     * @param pMatrix  The matrix to transform by.
-     */
-    void TransformByMatrixRotation(const MatrixMath* pMatrix);
+struct Quaternion {
+    double x;
+    double y;
+    double z;
+    double w;
 };
 
-static_assert(sizeof(Quaternion) == 16, "Quaternion layout mismatch");
+static_assert(sizeof(Quaternion) == 32, "Quaternion layout mismatch");
 
-#endif // MIDIJAM_QUATERNION_H
+/**
+ * Sets quat to the identity quaternion: x=1, y=0, z=0, w=0.
+ */
+void SetIdentityQuaternion(Quaternion* quat);
+
+/**
+ * Returns the length (magnitude) of all four components of a.
+ */
+double QuaternionLength(Quaternion* a);
+
+/**
+ * Normalizes quat in place by dividing all four components by their combined length.
+ * Undefined behavior if length is zero.
+ */
+void QuaternionNormalize(Quaternion* quat);
+
+/**
+ * Constructs a quaternion from Euler angles (pitch, yaw, roll) in degrees.
+ * Angles are converted to radians internally (multiplied by 0.017453292).
+ * Result is normalized after construction.
+ *
+ * TODO: verify z and w component formulas against a reference implementation —
+ * the decompiled output may have swapped components relative to standard convention.
+ *
+ * @param result  Output quaternion.
+ * @param pitch   Rotation around X axis in degrees.
+ * @param yaw     Rotation around Y axis in degrees.
+ * @param roll    Rotation around Z axis in degrees.
+ */
+void QuaternionFromEulerAngles(Quaternion* result, float pitch, float yaw, float roll);
+
+/**
+ * Multiplies q1 and q2 using the Hamilton product and stores the result in result.
+ * Uses a temp buffer to allow result to alias q1 or q2 safely.
+ * @param result  Output quaternion.
+ * @param q1      Left operand.
+ * @param q2      Right operand.
+ */
+void QuaternionMultiply(Quaternion* result, Quaternion* q1, Quaternion* q2);
+
+/**
+ * Converts a unit quaternion to axis-angle representation.
+ * If the vector length is below 1e-12, returns the default axis (1, 0, 0) and angle 0.
+ * @param quat    Input quaternion.
+ * @param axisX   Output X component of the rotation axis.
+ * @param axisY   Output Y component of the rotation axis.
+ * @param axisZ   Output Z component of the rotation axis.
+ * @param angle   Output rotation angle in radians.
+ */
+void QuaternionToAxisAngles(Quaternion* quat, float* axisX, float* axisY, float* axisZ, float* angle);
+
+#endif // MIDIJAM_QUATERNIOND_H

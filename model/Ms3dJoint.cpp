@@ -7,9 +7,9 @@
 // FUNCTION: MIDIJAM 0x43A060
 Ms3dJoint::Ms3dJoint()
 {
-    worldTransformationMatrix = MatrixMath();
-    localTransformationMatrix = MatrixMath();
-    finalTransformationMatrix = MatrixMath();
+    worldTransformationMatrix = AffineTransform4f();
+    localTransformationMatrix = AffineTransform4f();
+    finalTransformationMatrix = AffineTransform4f();
 }
 
 // FUNCTION: MIDIJAM 0x43A0D0

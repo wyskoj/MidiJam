@@ -5,7 +5,7 @@
 #ifndef MIDIJAM_MS3DJOINT_H
 #define MIDIJAM_MS3DJOINT_H
 
-#include "math/MatrixMath.h"
+#include "math/AffineTransform4f.h"
 
 /**
  * A translation keyframe, storing x, y, z position values.
@@ -77,15 +77,15 @@ struct Ms3dJoint
 {
     float               rotation[3];
     float               position[3];
-    MatrixMath          worldTransformationMatrix;
-    MatrixMath          localTransformationMatrix;
+    AffineTransform4f          worldTransformationMatrix;
+    AffineTransform4f          localTransformationMatrix;
     int                 nKeyframesRot;
     int                 nKeyframesTrans;
     Ms3dKeyframePacked* pKeyframesTrans;
     Ms3dKeyframePacked* pKeyFramesRot;
     int                 currentRotKeyframe;
     int                 currentTransKeyframe;
-    MatrixMath          finalTransformationMatrix;
+    AffineTransform4f          finalTransformationMatrix;
     int                 parentIndex;
 
     /**

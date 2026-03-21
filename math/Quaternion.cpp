@@ -6,85 +6,99 @@
 
 #include "scalar.h"
 
-// FUNCTION: MIDIJAM 0x448390
-void Quaternion::CopyFromVector(const float* source)
+#include <cmath>
+#include <cstring>
+
+// FUNCTION: MIDIJAM 0x446210
+void SetIdentityQuaternion(Quaternion* quat)
 {
-    x = source[0];
-    y = source[1];
-    z = source[2];
+    quat->x = 1.0;
+    quat->y = 0.0;
+    quat->z = 0.0;
+    quat->w = 0.0;
 }
 
-// FUNCTION: MIDIJAM 0x448150
-void Quaternion::FromVector(const float* vector)
+// FUNCTION: MIDIJAM 0x4462C0
+double QuaternionLength(Quaternion* a)
 {
-    CopyFromVector(vector);
-    w = 1.0f;
+    return sqrt(a->x * a->x + a->y * a->y + a->z * a->z + a->w * a->w);
 }
 
-// FUNCTION: MIDIJAM 0x448350
-void Quaternion::Identity()
+// FUNCTION: MIDIJAM 0x445AF0
+void QuaternionNormalize(Quaternion* quat)
 {
-    x = 0.0f;
-    y = 0.0f;
-    z = 0.0f;
-    w = 1.0f;
+    const float length = quat->x * quat->x
+                       + quat->y * quat->y
+                       + quat->z * quat->z
+                       + quat->w * quat->w;
+    const double inverseLength = 1.0 / square_root(length);
+    quat->x = inverseLength * quat->x;
+    quat->y = inverseLength * quat->y;
+    quat->z = inverseLength * quat->z;
+    quat->w = inverseLength * quat->w;
 }
 
-// FUNCTION: MIDIJAM 0x43C320
-float Quaternion::Length() const
+// FUNCTION: MIDIJAM 0x445C00
+void QuaternionFromEulerAngles(Quaternion* result, const float pitch, const float yaw, const float roll)
 {
-    const float squaredLength = x * x + y * y + z * z;
-    return square_root(squaredLength);
+    const double halfPitch = 0.017453292 * pitch / 2.0;
+    const double halfYaw   = 0.017453292 * yaw   / 2.0;
+    const double halfRoll  = 0.017453292 * roll  / 2.0;
+
+    const double cosPitch = cos(halfPitch);
+    const double cosYaw   = cos(halfYaw);
+    const double cosRoll  = cos(halfRoll);
+    const double sinPitch = sin(halfPitch);
+    const double sinYaw   = sin(halfYaw);
+    const double sinRoll  = sin(halfRoll);
+
+    const double cy_cr = cosYaw * cosRoll;
+    const double sy_sr = sinYaw * sinRoll;
+
+    // TODO: verify z and w component formulas — may be swapped vs standard convention.
+    result->x = cosPitch * cy_cr + sinPitch * sy_sr;
+    result->y = sinPitch * cy_cr - cosPitch * sy_sr;
+    result->z = cosPitch * sinYaw * sinRoll + sinPitch * cosYaw * sinRoll;
+    result->w = cosPitch * cosYaw * sinRoll - sinPitch * sinYaw * cosRoll;
+
+    QuaternionNormalize(result);
 }
 
-// FUNCTION: MIDIJAM 0x43C2D0
-void Quaternion::Normalize()
+// FUNCTION: MIDIJAM 0x446040
+void QuaternionMultiply(Quaternion* result, Quaternion* q1, Quaternion* q2)
 {
-    const float length = Length();
-    x = x / length;
-    y = y / length;
-    z = z / length;
+    Quaternion temp;
+
+    // Hamilton product
+    temp.x = q1->x * q2->x - q1->y * q2->y - q1->z * q2->z - q1->w * q2->w;
+    temp.y = q1->x * q2->y + q1->y * q2->x + q1->z * q2->w - q1->w * q2->z;
+    temp.z = q1->x * q2->z + q1->z * q2->x + q1->w * q2->y - q1->y * q2->w;
+    temp.w = q1->x * q2->w + q1->w * q2->x + q1->y * q2->z - q1->z * q2->y;
+
+    // IDA reported qmemcpy size as 128 — incorrect. QuaternionD is 4 doubles = 32 bytes.
+    memcpy(result, &temp, sizeof(Quaternion));
 }
 
-// FUNCTION: MIDIJAM 0x448190
-void Quaternion::TransformByMatrix(const MatrixMath* pOther)
+// FUNCTION: MIDIJAM 0x446140
+void QuaternionToAxisAngles(Quaternion* quat, float* axisX, float* axisY, float* axisZ, float* angle)
 {
-    // ObjectConstructor at 0x43C2C0 is a 14-byte no-op pass-through — elided.
-    const float newY = x * pOther->matrix[0][1]
-                     + y * pOther->matrix[1][1]
-                     + z * pOther->matrix[2][1]
-                     + pOther->matrix[3][1];
-    const float newZ = x * pOther->matrix[0][2]
-                     + y * pOther->matrix[1][2]
-                     + z * pOther->matrix[2][2]
-                     + pOther->matrix[3][2];
-    const float newW = x * pOther->matrix[0][3]
-                     + y * pOther->matrix[1][3]
-                     + z * pOther->matrix[2][3]
-                     + pOther->matrix[3][3];
-    x = x * pOther->matrix[0][0]
-      + y * pOther->matrix[1][0]
-      + z * pOther->matrix[2][0]
-      + pOther->matrix[3][0];
-    y = newY;
-    z = newZ;
-    w = newW;
-}
-
-// FUNCTION: MIDIJAM 0x448290
-void Quaternion::TransformByMatrixRotation(const MatrixMath* pMatrix)
-{
-    // ObjectConstructor at 0x43C2C0 is a 14-byte no-op pass-through — elided.
-    const float newY = x * pMatrix->matrix[0][1]
-                     + y * pMatrix->matrix[1][1]
-                     + z * pMatrix->matrix[2][1];
-    const float newZ = x * pMatrix->matrix[0][2]
-                     + y * pMatrix->matrix[1][2]
-                     + z * pMatrix->matrix[2][2];
-    x = x * pMatrix->matrix[0][0]
-      + y * pMatrix->matrix[1][0]
-      + z * pMatrix->matrix[2][0];
-    y = newY;
-    z = newZ;
-    w = 1.0f;
+    const float vectorLengthSquared = quat->y * quat->y
+                                    + quat->z * quat->z
+                                    + quat->w * quat->w;
+    if (vectorLengthSquared >= 1.0e-12f)
+    {
+        const double inverseLength = 1.0 / square_root(vectorLengthSquared);
+        *axisX = inverseLength * quat->y;
+        *axisY = inverseLength * quat->z;
+        *axisZ = inverseLength * quat->w;
+        const double acosX = acos(quat->x);
+        *angle = acosX + acosX;
+    }
+    else
+    {
+        *axisX = 1.0f;
+        *axisY = 0.0f;
+        *axisZ = 0.0f;
+        *angle = 0.0f;
+    }
 }

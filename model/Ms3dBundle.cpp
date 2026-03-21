@@ -6,7 +6,7 @@
 
 #include "ms3d_format.h"
 #include "math/scalar.h"
-#include "math/Quaternion.h"
+#include "math/TransformVec4.h"
 #include "animation/AnimationController.h"
 
 #include <GL/gl.h>
@@ -287,18 +287,18 @@ int Ms3dBundle::BuildVertexBuffer(Ms3dRenderState* materialInfo, short materialS
                     else
                     {
                         // Skinned vertex — transform by bone matrix.
-                        MatrixMath* boneMatrix =
+                        AffineTransform4f* boneMatrix =
                             &vJoints[pVerts[vertexIndex].boneId].finalTransformationMatrix;
 
-                        Quaternion tempPosition;
-                        tempPosition.FromVector(pVerts[vertexIndex].position);
-                        tempPosition.TransformByMatrix(boneMatrix);
+                        TransformVec4 tempPosition;
+                        tempPosition.SetFromXYZ1(pVerts[vertexIndex].position);
+                        tempPosition.TransformPointByAffine(boneMatrix);
                         memcpy(vertexBuffer->position, &tempPosition, sizeof(vertexBuffer->position));
 
-                        Quaternion normal;
-                        normal.FromVector(pTriangle->vertex_normals[vertexCorner]);
-                        normal.TransformByMatrixRotation(boneMatrix);
-                        normal.Normalize();
+                        TransformVec4 normal;
+                        normal.SetFromXYZ1(pTriangle->vertex_normals[vertexCorner]);
+                        normal.TransformDirectionByRotation3x3(boneMatrix);
+                        normal.Normalize3();
                         memcpy(vertexBuffer->normal, &normal, sizeof(vertexBuffer->normal));
 
                         vertexBuffer->texCoord[0] = pTriangle->s[vertexCorner];
@@ -584,18 +584,18 @@ void Ms3dBundle::RenderModelGroup(short groupIndex)
             else
             {
                 // Skinned vertex — transform by bone matrix.
-                MatrixMath* pJointMatrix =
+                AffineTransform4f* pJointMatrix =
                     &vJoints[pVerts[vertexIndex].boneId].finalTransformationMatrix;
 
-                Quaternion transformedNormal;
-                transformedNormal.FromVector(pTriangle->vertex_normals[vertexInTriangle]);
-                transformedNormal.TransformByMatrixRotation(pJointMatrix);
-                transformedNormal.Normalize();
+                TransformVec4 transformedNormal;
+                transformedNormal.SetFromXYZ1(pTriangle->vertex_normals[vertexInTriangle]);
+                transformedNormal.TransformDirectionByRotation3x3(pJointMatrix);
+                transformedNormal.Normalize3();
                 glNormal3fv(reinterpret_cast<const GLfloat*>(&transformedNormal));
 
-                Quaternion transformedVertex;
-                transformedVertex.FromVector(pVerts[vertexIndex].position);
-                transformedVertex.TransformByMatrix(pJointMatrix);
+                TransformVec4 transformedVertex;
+                transformedVertex.SetFromXYZ1(pVerts[vertexIndex].position);
+                transformedVertex.TransformPointByAffine(pJointMatrix);
                 glVertex3fv(reinterpret_cast<const GLfloat*>(&transformedVertex));
             }
         }
@@ -629,7 +629,7 @@ void Ms3dBundle::ResetJoints()
     {
         vJoints[i].currentRotKeyframe   = 0;
         vJoints[i].currentTransKeyframe = 0;
-        vJoints[i].finalTransformationMatrix.Copy(&vJoints[i].worldTransformationMatrix);
+        vJoints[i].finalTransformationMatrix.CopyFromBytes(&vJoints[i].worldTransformationMatrix);
     }
     pAnimationController->Update();
 }
@@ -645,13 +645,13 @@ void Ms3dBundle::SkinVerticesToSkeleton()
 
         if (bone->parentIndex == -1)
         {
-            bone->worldTransformationMatrix.Copy(&bone->localTransformationMatrix);
+            bone->worldTransformationMatrix.CopyFromBytes(&bone->localTransformationMatrix);
         }
         else
         {
-            bone->worldTransformationMatrix.Copy(
+            bone->worldTransformationMatrix.CopyFromBytes(
                 &vJoints[bone->parentIndex].worldTransformationMatrix);
-            bone->worldTransformationMatrix.Multiply(&bone->localTransformationMatrix);
+            bone->worldTransformationMatrix.PostMultiply(&bone->localTransformationMatrix);
         }
     }
 
@@ -661,9 +661,9 @@ void Ms3dBundle::SkinVerticesToSkeleton()
         Ms3dVertex* vertex = &pVerts[vertexIndex];
         if (vertex->boneId != -1)
         {
-            MatrixMath* boneMatrix = &vJoints[vertex->boneId].worldTransformationMatrix;
-            boneMatrix->RemoveTranslationFromVector(&vertex->position);
-            boneMatrix->TransformVectorByMatrixRotation(&vertex->position);
+            AffineTransform4f* boneMatrix = &vJoints[vertex->boneId].worldTransformationMatrix;
+            boneMatrix->SubtractTranslationInPlace(&vertex->position);
+            boneMatrix->RotateVectorInPlace(&vertex->position);
         }
     }
 
@@ -676,7 +676,7 @@ void Ms3dBundle::SkinVerticesToSkeleton()
             Ms3dVertex* vertexTri = &pVerts[triangle->vertex_indices[i]];
             if (vertexTri->boneId != -1)
             {
-                vJoints[vertexTri->boneId].worldTransformationMatrix.TransformVectorByMatrixRotation(&triangle->vertex_normals[i]);
+                vJoints[vertexTri->boneId].worldTransformationMatrix.RotateVectorInPlace(&triangle->vertex_normals[i]);
             }
         }
     }
@@ -721,13 +721,13 @@ void Ms3dBundle::UpdateSkeletalAnimation()
 
     for (int jointIndex = 0; jointIndex < nJoints; ++jointIndex)
     {
-        MatrixMath rotationMatrix;
+        AffineTransform4f rotationMatrix;
         Ms3dJoint* pJoint = &vJoints[jointIndex];
 
         if (!pJoint->nKeyframesRot && !pJoint->nKeyframesTrans)
         {
             // No keyframes — use world transformation as final.
-            pJoint->finalTransformationMatrix.Copy(&pJoint->worldTransformationMatrix);
+            pJoint->finalTransformationMatrix.CopyFromBytes(&pJoint->worldTransformationMatrix);
             continue;
         }
 
@@ -773,12 +773,12 @@ void Ms3dBundle::UpdateSkeletalAnimation()
 
         if (keyframeIndex == 0)
         {
-            rotationMatrix.CreateRotationMatrixEulerZYX(
+            rotationMatrix.SetRotationFromEulerZYX(
                 reinterpret_cast<const float(*)[3]>(&pJoint->pKeyFramesRot->data));
         }
         else if (keyframeIndex == pJoint->nKeyframesRot)
         {
-            rotationMatrix.CreateRotationMatrixEulerZYX(
+            rotationMatrix.SetRotationFromEulerZYX(
                 reinterpret_cast<const float(*)[3]>(
                     &pJoint->pKeyFramesRot[keyframeIndex - 1].data));
         }
@@ -792,26 +792,26 @@ void Ms3dBundle::UpdateSkeletalAnimation()
             interpolatedRotation[0] = (nextKey->data.rot.x - prevKey->data.rot.x) * factor + prevKey->data.rot.x;
             interpolatedRotation[1] = (nextKey->data.rot.y - prevKey->data.rot.y) * factor + prevKey->data.rot.y;
             interpolatedRotation[2] = (nextKey->data.rot.z - prevKey->data.rot.z) * factor + prevKey->data.rot.z;
-            rotationMatrix.CreateRotationMatrixEulerZYX(
+            rotationMatrix.SetRotationFromEulerZYX(
                 reinterpret_cast<const float(*)[3]>(interpolatedRotation));
         }
 
         rotationMatrix.SetTranslation(translation);
 
         // --- Build final transformation matrix ---
-        MatrixMath localTransform;
-        localTransform.Copy(&pJoint->localTransformationMatrix);
-        localTransform.Multiply(&rotationMatrix);
+        AffineTransform4f localTransform;
+        localTransform.CopyFromBytes(&pJoint->localTransformationMatrix);
+        localTransform.PostMultiply(&rotationMatrix);
 
         if (pJoint->parentIndex == -1)
         {
-            pJoint->finalTransformationMatrix.Copy(&localTransform);
+            pJoint->finalTransformationMatrix.CopyFromBytes(&localTransform);
         }
         else
         {
-            pJoint->finalTransformationMatrix.Copy(
+            pJoint->finalTransformationMatrix.CopyFromBytes(
                 &vJoints[pJoint->parentIndex].finalTransformationMatrix);
-            pJoint->finalTransformationMatrix.Multiply(&localTransform);
+            pJoint->finalTransformationMatrix.PostMultiply(&localTransform);
         }
     }
 }
