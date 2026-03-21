@@ -21,6 +21,7 @@
 #include "instruments/Accordion.h"
 #include "instruments/Bass.h"
 #include "instruments/Harp.h"
+#include "instruments/StageHorn.h"
 
 // ---------------------------------------------------------------------------
 // Extern globals
@@ -82,7 +83,6 @@ extern void* g_ds_recorder;
 extern void* g_ds_piccolo;
 extern void* g_ds_flute;
 extern void* g_ds_tuba;
-extern void* g_ds_stageHorn;
 extern void* g_ds_whistles;
 extern void* g_ds_panPipe;
 extern void* g_ds_harmonica;
@@ -255,11 +255,6 @@ static inline void I_Tuba() {
 }
 
 static inline bool I_Tuba_MM(MUSIC_TIME) { return false; }
-
-static inline void I_StageHorn() {
-}
-
-static inline bool I_StageHorn_MM(MUSIC_TIME) { return false; }
 
 static inline void I_Whistles() {
 }
@@ -543,7 +538,7 @@ BOOL UpdateMidiJam() {
     if (g_ds_piccolo) I_Piccolo();
     if (g_ds_flute) I_Flute();
     if (g_ds_tuba) I_Tuba();
-    if (g_ds_stageHorn) I_StageHorn();
+    if (g_stageHorn) RenderStageHorn();
     if (g_ds_whistles) I_Whistles();
     if (g_ds_panPipe) I_PanPipe();
     if (g_ds_harmonica) I_Harmonica();
@@ -683,7 +678,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
     if (g_ds_doubleBass && I_DoubleBass_MM(pmtNow) == 1) anyInstrumentActive = 1;
     if (g_bass && UpdateBass(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_guitar && I_Guitar_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_stageHorn && I_StageHorn_MM(pmtNow)) anyInstrumentActive = 1;
+    if (g_stageHorn && UpdateStageHorn(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_whistles && I_Whistles_MM(pmtNow)) anyInstrumentActive = 1;
 
     UpdateSteamPuffers();

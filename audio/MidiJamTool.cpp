@@ -11,6 +11,7 @@
 #include "instruments/Accordion.h"
 #include "instruments/Bass.h"
 #include "instruments/Harp.h"
+#include "instruments/StageHorn.h"
 
 // Finds the first empty slot and executes body with slot variable in scope.
 // Slot field is the expression used to test for empty (== 0).
@@ -218,6 +219,25 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case STAGE_HORN: {
+                    const auto v135 = (noteMsg->wMusicValue + 3) % 12;
+                    auto jj = 0;
+                    while (g_stageHorn[g_stageHornChannel[noteMsg->dwPChannel]].queue[v135][jj] && jj < 16) ++jj;
+                    if (jj < 16) {
+                        g_stageHorn[g_stageHornChannel[noteMsg->dwPChannel]].queue[v135][jj] = noteMsg->mtDuration;
+                        if (g_stageHorn[g_stageHornChannel[noteMsg->dwPChannel]].queue[v135][jj] < 0)
+                            g_stageHorn[g_stageHornChannel[noteMsg->dwPChannel]].queue[v135][jj] = 10;
+                        pPerf->GetTime(&rtNow, &mtNow);
+                        g_stageHorn[g_stageHornChannel[noteMsg->dwPChannel]].timeDeltas[v135][jj] = noteMsg->mtTime -
+                            mtNow;
+                        g_stageHorn[g_stageHornChannel[noteMsg->dwPChannel]].timeDeltas[v135][jj] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_stageHorn[g_stageHornChannel[noteMsg->dwPChannel]].timeDeltas[v135][jj] <= 0)
+                            g_stageHorn[g_stageHornChannel[noteMsg->dwPChannel]].timeDeltas[v135][jj] = 1;
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -260,6 +280,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case HARP: {
                     ALLOC_INST(harp, HarpState);
+                    break;
+                }
+
+                case STAGE_HORN: {
+                    ALLOC_INST(stageHorn, StageHornState);
                     break;
                 }
 

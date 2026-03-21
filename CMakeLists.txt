@@ -74,6 +74,8 @@ add_executable(MidiJam WIN32
         instruments/Accordion.cpp
         instruments/Accordion.h
         instruments/Harp.cpp
+        instruments/StageHorn.cpp
+        instruments/StageHorn.h
 )
 
 target_link_libraries(MidiJam PRIVATE opengl32.lib glu32.lib)

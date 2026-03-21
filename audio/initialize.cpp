@@ -20,6 +20,7 @@
 #include "instruments/Bass.h"
 #include "instruments/Harp.h"
 #include "instruments/Piano.h"
+#include "instruments/StageHorn.h"
 #include "scene/update.h"
 
 
@@ -119,7 +120,6 @@ extern GLfloat          g_pianoKeyOffsetX[14];
 extern short            g_ialloc_guitar;
 extern short            g_ialloc_xylophone;
 extern short            g_ialloc_stageChoir;
-extern short            g_ialloc_stageHorn;
 extern short            g_ialloc_whistles;
 extern short            g_ialloc_panPipe;
 extern short            g_ialloc_harmonica;
@@ -159,7 +159,6 @@ extern short            g_xylophone_types[300];
 extern short            g_guitar_assignment[300];
 extern short            g_xylophone_assignment[300];
 extern short            g_stateChoir_assignment[300];
-extern short            g_stageHorn_assignment[300];
 extern short            g_whistles_assignment[300];
 extern short            g_panPipe_assignment[300];
 extern short            g_isPanPipeCalliope[300];
@@ -470,7 +469,7 @@ void MidiJamInitialize()
     g_harpCount           = 0;
     g_ialloc_xylophone      = 0;
     g_ialloc_stageChoir     = 0;
-    g_ialloc_stageHorn      = 0;
+    g_stageHornCount      = 0;
     g_ialloc_whistles       = 0;
     g_ialloc_panPipe        = 0;
     g_ialloc_harmonica      = 0;
@@ -570,7 +569,7 @@ void MidiJamInitialize()
         g_guitar_assignment[slot]        = -1;
         g_xylophone_assignment[slot]     = -1;
         g_stateChoir_assignment[slot]    = -1;
-        g_stageHorn_assignment[slot]     = -1;
+        g_stageHornChannel[slot]     = -1;
         g_whistles_assignment[slot]      = -1;
         g_panPipe_assignment[slot]       = -1;
         g_isPanPipeCalliope[slot]        = -1;

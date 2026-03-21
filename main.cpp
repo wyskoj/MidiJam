@@ -19,6 +19,7 @@
 #include "macros.h"
 #include "instruments/Accordion.h"
 #include "instruments/Harp.h"
+#include "instruments/StageHorn.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
 #include "render/window.h"
@@ -188,7 +189,6 @@ extern Ms3dBundle* g_pizzicatoStringHolder_ms3d;
 extern Ms3dBundle* g_stageStringBow_ms3d;
 extern Ms3dBundle* g_stageString_ms3d;
 extern Ms3dBundle* g_stageStringBottomX_ms3d[5];
-extern Ms3dBundle* g_stageHorn_ms3d;
 extern Ms3dBundle* whistle_ms3d;
 extern Ms3dBundle* g_panPipe_ms3d;
 extern Ms3dBundle* g_calliope_ms3d;
