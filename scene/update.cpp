@@ -31,7 +31,7 @@ extern int g_worldReady;
 extern float g_cameraLocation[6];
 extern int g_rotatingCameraIsActive;
 extern float g_rotatingCameraAngle;
-extern ROTATING_CAMERA_DIRECTION g_rotatingCameraDirection;
+extern RotatingCameraDirection g_rotatingCameraDirection;
 extern int g_rotatingCameraIdleTime;
 extern Ms3dBundle* g_screenGradient_ms3d;
 extern Ms3dBundle* g_stage_ms3d;
@@ -51,9 +51,9 @@ extern GLfloat g_songFillbarScale;
 extern char g_midiFileNameDisp[260];
 extern float g_framesPerSecond;
 extern IDirectMusicPerformance8* g_DirectMusicPerformance;
-extern DirectMusicSegmentPlayer* g_DirectMusicSegmentWrapper;
+extern DirectMusicSegmentPlayer* g_directMusicSegmentPlayer;
 extern MUSIC_TIME g_mtStart;
-extern MUSIC_TIME g_midiFile_duration;
+extern MUSIC_TIME g_midiFileDuration;
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_isShuttingDown;
 extern int g_isFadingIn;
@@ -65,7 +65,7 @@ extern int g_vibratingString_frame;
 extern int g_framesAlive;
 extern int g_framesSinceStart;
 extern DWORD g_applicationStartTime;
-extern CAMERA_ANGLE g_targetCameraAngle;
+extern CameraAngle g_targetCameraAngle;
 extern float g_autoCamDeltaTransform[6];
 extern int g_autoCamIsIdle;
 extern int g_autoCamIdleTime;
@@ -390,7 +390,7 @@ static inline bool IsCameraAngleViable_6() { return true; }
 static inline void TriggerAutoCam() {
 }
 
-static inline void MoveCameraToAngle(CAMERA_ANGLE, int) {
+static inline void MoveCameraToAngle(CameraAngle, int) {
 }
 
 BOOL UpdateMidiJam() {
@@ -644,10 +644,10 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
     REFERENCE_TIME prtNow = 0;
     MUSIC_TIME pmtNow = 0;
 
-    if (g_DirectMusicSegmentWrapper->IsPlaying()) {
+    if (g_directMusicSegmentPlayer->IsPlaying()) {
         g_DirectMusicPerformance->GetTime(&prtNow, &pmtNow);
         if (g_songFillbarScale < 1.0f) {
-            g_songFillbarScale = static_cast<float>(pmtNow - g_mtStart) / static_cast<float>(g_midiFile_duration);
+            g_songFillbarScale = static_cast<float>(pmtNow - g_mtStart) / static_cast<float>(g_midiFileDuration);
             if (g_songFillbarScale > 1.0f)
                 g_songFillbarScale = 1.0f;
         }
@@ -1024,8 +1024,8 @@ void HandleKeyPresses() {
     if (g_keyStateArray[VK_SPACE]) {
         if (!g_isSpacePressed) {
             g_isSpacePressed = 1;
-            if (g_DirectMusicSegmentWrapper->IsPlaying())
-                g_DirectMusicSegmentWrapper->Stop(4096);
+            if (g_directMusicSegmentPlayer->IsPlaying())
+                g_directMusicSegmentPlayer->Stop(4096);
             else
                 PlaySegment();
         }
@@ -1096,13 +1096,13 @@ void HandleKeyPresses() {
 
     // Escape — stop and begin shutdown
     if (g_keyStateArray[VK_ESCAPE]) {
-        g_DirectMusicSegmentWrapper->Stop(4096);
+        g_directMusicSegmentPlayer->Stop(4096);
         g_isShuttingDown = 1;
     }
 
     // Camera keys
     if (g_keyStateArray['1']) {
-        g_targetCameraAngle = static_cast<CAMERA_ANGLE>(static_cast<short>(g_targetCameraAngle) + 1);
+        g_targetCameraAngle = static_cast<CameraAngle>(static_cast<short>(g_targetCameraAngle) + 1);
         g_rotatingCameraIsActive = 0;
         if (g_targetCameraAngle > CAMERA_1C)
             g_targetCameraAngle = CAMERA_1A;

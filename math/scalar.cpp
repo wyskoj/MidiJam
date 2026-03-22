@@ -12,6 +12,7 @@ static float cosImpl(const float value) {
 }
 
 // FUNCTION: MIDIJAM 0x4028A0
+// MATCH: EXACT
 float cosine(const float value) {
     return cosImpl(value);
 }
@@ -22,6 +23,7 @@ static float sinImpl(const float value) {
 }
 
 // FUNCTION: MIDIJAM 0x4028E0
+// MATCH: EXACT
 float sine(const float value) {
     return sinImpl(value);
 }
@@ -32,6 +34,7 @@ static float atan_0(const float value) {
 }
 
 // FUNCTION: MIDIJAM 0x438E60
+// MATCH: EXACT
 float arctan(const float value) {
     return atan_0(value);
 }
@@ -42,6 +45,7 @@ static float sqrt_0(const float value) {
 }
 
 // FUNCTION: MIDIJAM 0x43C360
+// MATCH: EXACT
 float square_root(const float value) {
     return sqrt_0(value);
 }
@@ -52,6 +56,7 @@ static float fabs_0(const float value) {
 }
 
 // FUNCTION: MIDIJAM 0x438E20
+// MATCH: EXACT
 float fAbs(const float value) {
     return fabs_0(value);
 }

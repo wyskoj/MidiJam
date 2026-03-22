@@ -35,7 +35,7 @@ public:
      * Copies x, y, z from vector and sets w to 1.0.
      * @param xyz3  Pointer to a float[3]: { x, y, z }.
      */
-    void SetFromXYZ1(const float* xyz3);
+    TransformVec4* SetFromXYZ1(const float* xyz3);
 
     /**
      * Sets x, y, z to 0.0 and w to 1.0.

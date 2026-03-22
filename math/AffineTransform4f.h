@@ -58,7 +58,7 @@ public:
      * @param translation  Pointer to an array of 3 floats: { x, y, z }.
      * @return             this
      */
-    AffineTransform4f* SetTranslation(const float* translation);
+    void SetTranslation(const float* translation);
 
     /**
      * Builds a rotation matrix from Euler angles applied in Z, Y, X order.

@@ -25,7 +25,6 @@
 #include "render/window.h"
 #include "scene/camera.h"
 #include "scene/update.h"
-#include "util/time.h"
 
 // ---------------------------------------------------------------------------
 // Forward declarations for functions not yet transcribed
@@ -35,7 +34,6 @@ void MidiJamWindowCleanup();
 int MidiJamMain(const char* title, HINSTANCE hInstance, FILE* hwfStream, void* pHwfAppendix, int nHwfAppendixItems);
 int LoadAndPlayMidiFile(const char* filename);
 int SwapBuffers_0();
-time_t GetUnixEpochTime(time_t* t);
 float arctan(float x);
 
 // ---------------------------------------------------------------------------
@@ -45,7 +43,11 @@ extern HINSTANCE g_hInstance;
 extern int g_worldReady;
 extern int g_killApplication_0;
 extern DWORD g_applicationStartTime;
+#if _MSC_VER < 1400
+extern long   g_lastUnixEpochTime;
+#else
 extern time_t g_lastUnixEpochTime;
+#endif
 extern float g_framesPerSecond;
 extern GLfloat g_fadeFactor;
 extern int g_isFadingIn;
@@ -63,7 +65,7 @@ extern int g_windowCenter_Y;
 extern int g_windowCenterX;
 extern int g_windowCenterY;
 extern MMRESULT g_timerEventId;
-extern CAMERA_ANGLE g_targetCameraAngle;
+extern CameraAngle g_targetCameraAngle;
 extern float g_autoCamDeltaTransform[6];
 extern int g_autoCamIsIdle;
 extern int g_autoCamIdleTime;
@@ -431,7 +433,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     if (g_workingDirectory[strlen(g_workingDirectory) - 1] == '\\')
         g_workingDirectory[strlen(g_workingDirectory) - 1] = 0;
 
-    g_lastUnixEpochTime = GetUnixEpochTime(nullptr);
+    g_lastUnixEpochTime = time(nullptr);
 
     // --- HWF file ---
     char hwfPath[1000];
@@ -823,7 +825,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         REPLACE_TEX(reinterpret_cast<Ms3dBundle**>(&g_pianoModels[3])[m], "PianoSkin.bmp", "HarpsichordSkin.bmp");
 
     // --- Seed RNG and initialize ---
-    setseed(static_cast<long>(GetUnixEpochTime(nullptr)));
+    srand(static_cast<long>(time(nullptr)));
     MidiJamInitialize();
 
     // --- ApplyTextures pass ---
@@ -1076,10 +1078,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         else if (!g_isWindowActive || UpdateMidiJam()) {
             SwapBuffers_0();
             ++frameCount;
-            if (GetUnixEpochTime(nullptr) > g_lastUnixEpochTime) {
+            if (time(nullptr) > g_lastUnixEpochTime) {
                 g_framesPerSecond = static_cast<float>(frameCount);
                 frameCount = 0;
-                g_lastUnixEpochTime = GetUnixEpochTime(nullptr);
+                g_lastUnixEpochTime = time(nullptr);
             }
         }
         else {

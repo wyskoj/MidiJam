@@ -195,11 +195,12 @@ static_assert(sizeof(Ms3dVertex) == 0xD, "Ms3dVertex layout mismatch");
  *   +0x96  char*                     materialVisibility
  *   +0x9A  short*                    nTrianglesPerMaterial
  */
+#pragma pack(push, 1)
 class Ms3dBundle
 {
 public:
-    byte _unknown_04[64];
-    char hasSkeletalAnimation;
+    byte _unknown_00[68];
+    unsigned char hasSkeletalAnimation;
     float magX;
     float magY;
     float magZ;
@@ -243,7 +244,7 @@ public:
     void RenderModelSimple();
     void RenderModelGroup(short groupIndex);
     void RenderImmediate();
-    void RenderCompiled();
+    void RenderCompiled() const;
 
     GLboolean ApplyMaterial();
     void ApplyTextures(FILE* hwfStream, void* hwfAppendix, unsigned int hwfAppendixEntriesCount);
@@ -256,5 +257,12 @@ public:
     void ResetJoints();
     void UpdateSkeletalAnimation();
 };
+#pragma pack(pop)
+
+static_assert(sizeof(Ms3dBundle) == 0x9E, "Ms3dBundle size mismatch");
+static_assert(offsetof(Ms3dBundle, hasSkeletalAnimation) == 0x44, "hasSkeletalAnimation offset mismatch");
+static_assert(offsetof(Ms3dBundle, nGroups)              == 0x51, "nGroups offset mismatch");
+static_assert(offsetof(Ms3dBundle, animationDurationMs)  == 0x7D, "animationDurationMs offset mismatch");
+static_assert(offsetof(Ms3dBundle, rightWristJointIndex) == 0x90, "rightWristJointIndex offset mismatch");
 
 #endif // MIDIJAM_MS3DBUNDLE_H

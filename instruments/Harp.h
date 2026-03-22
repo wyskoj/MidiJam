@@ -25,8 +25,12 @@ static_assert(sizeof(HarpState) == 0x131C, "HarpState layout mismatch");
 // Globals
 // ---------------------------------------------------------------------------
 DECL_INST_DS(harp, HarpState)
-
-enum HarpStringColor : short {
+#if _MSC_VER < 1400
+enum HarpStringColor
+#else
+enum HarpStringColor : short
+#endif
+{
     White = 0,
     Red = 1,
     Blue = 2,

@@ -7,6 +7,7 @@
 extern GLfloat g_fadeFactor;
 
 // FUNCTION: MIDIJAM 0x438B80
+// MATCH: EXACT
 void RenderFadeout()
 {
     glDisable(GL_TEXTURE_2D);
@@ -20,6 +21,7 @@ void RenderFadeout()
 }
 
 // FUNCTION: MIDIJAM 0x438BF0
+// MATCH: EXACT
 void RenderFadeoutImpl(const GLfloat r, const GLfloat g, const GLfloat b, const GLfloat a)
 {
     GLfloat params[4];

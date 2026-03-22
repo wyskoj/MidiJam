@@ -17,10 +17,9 @@
  *   +0x04  int    height
  *   +0x08  void*  pPixelData
  */
-struct TextureData
-{
-    int   width;
-    int   height;
+struct TextureData {
+    int width;
+    int height;
     void* pPixelData;
 };
 
@@ -29,13 +28,13 @@ static_assert(sizeof(TextureData) == 0xC, "TextureData layout mismatch");
 TextureData* LoadDibFileSafe(char* fileName);
 TextureData* LoadDibFileW(const char* lpFileName);
 TextureData* LoadDibFileInternal(const void* pszFileName, BOOL isUnicodePath);
-short        CalculateColorTableSize(const char* pDibHeader);
+short CalculateColorTableSize(const char* pDibHeader);
 
 GLuint LoadTexture(const char* textureName);
 GLuint LoadTextureFromHwf(
-    const char*  textureName,
-    FILE*        hwfStream,
-    void*        hwfAppendix,
+    const char* textureName,
+    FILE* hwfStream,
+    void* hwfAppendix,
     unsigned int hwfAppendixEntriesCount);
 GLuint CreateTextureFromBitmapData(char* bitmapData);
 
@@ -43,14 +42,18 @@ GLuint CreateTextureFromBitmapData(char* bitmapData);
  * Font texture type — COLOR is the full color font bitmap,
  * MASK is the alpha mask bitmap used for blending.
  */
-enum BITMAP_FONT_TYPE : short
+#if _MSC_VER < 1400
+enum BitmapFontType
+#else
+enum BitmapFontType : short
+#endif
 {
     COLOR = 0,
-    MASK  = 1
+    MASK = 1
 };
 
 char* ReadHwfAppendix(char* pHwfAppendix, FILE* hwfStream, unsigned int* nHwfAppendixItems);
-BOOL  ProcessBitmapFont(char* bitmapFontData, BITMAP_FONT_TYPE bitmapFontType);
+BOOL ProcessBitmapFont(char* bitmapFontData, BitmapFontType bitmapFontType);
 void SetTextureState(GLboolean wasEnabled);
 
 #endif // MIDIJAM_TEXTURE_H

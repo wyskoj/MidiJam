@@ -8,10 +8,14 @@
 #include "../model/Ms3dBundle.h"
 #include "instrument.h"
 
-#include <cstdint>
 #include <dmusici.h>
 
-enum AccordionDirection : __int16 {
+#if _MSC_VER < 1400
+enum AccordionDirection
+#else
+enum AccordionDirection : __int16
+#endif
+{
     CONTRACTING = 0x0,
     EXPANDING = 0x1,
 };

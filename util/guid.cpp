@@ -12,6 +12,7 @@
  * @return       TRUE if the GUIDs are equal, FALSE otherwise.
  */
 // FUNCTION: MIDIJAM 0x445AD0
+// MATCH: EXACT
 static BOOL IsEqualGUIDImpl(const GUID *guid1, const GUID *guid2) {
     return memcmp(guid1, guid2, sizeof(GUID)) == 0;
 }

@@ -5,7 +5,11 @@
 #ifndef MIDIJAM_CAMERA_H
 #define MIDIJAM_CAMERA_H
 
-enum CAMERA_ANGLE : short
+#if _MSC_VER < 1400
+enum CameraAngle
+#else
+enum CameraAngle : short
+#endif
 {
     CAMERA_1A = 0x0,
     CAMERA_1B = 0x1,
@@ -20,8 +24,11 @@ enum CAMERA_ANGLE : short
     CAMERA_6 = 0xA,
 };
 
-
-enum ROTATING_CAMERA_DIRECTION : short
+#if _MSC_VER < 1400
+enum RotatingCameraDirection
+#else
+enum RotatingCameraDirection : short
+#endif
 {
     CLOCKWISE = 0,
     ANTI_CLOCKWISE = 1,

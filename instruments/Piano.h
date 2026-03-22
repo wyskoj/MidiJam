@@ -8,7 +8,6 @@
 #include "../model/Ms3dBundle.h"
 #include "instrument.h"
 
-#include <cstdint>
 #include <dmusici.h>
 
 struct PianoState
@@ -20,9 +19,9 @@ struct PianoState
     float keyAngles[88];
     int durations[88];
     int queue[88][16];
-    uint8_t velocities[88][16];
-    int16_t timeDeltas[88][16];
-    uint8_t trailer[16];
+    unsigned char velocities[88][16];
+    short timeDeltas[88][16];
+    unsigned char trailer[16];
 };
 
 static_assert(sizeof(PianoState) == 0x2958, "PianoState layout mismatch");

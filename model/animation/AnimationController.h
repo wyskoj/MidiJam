@@ -13,9 +13,8 @@ class IAnimationController;
  * A node in the global linked list of all active animation controllers.
  * Registered in InitBaseClass, used to tick all controllers each frame.
  */
-struct AnimationControllerNode
-{
-    IAnimationController*  pController;
+struct AnimationControllerNode {
+    IAnimationController* pController;
     AnimationControllerNode* pNext;
 };
 
@@ -41,22 +40,27 @@ struct AnimationControllerNode
  *   +0x1D  int                           num_frames
  *   +0x21  double                        elapsed
  */
-class IAnimationController
-{
+#pragma pack(push, 1)
+class IAnimationController {
 public:
     LARGE_INTEGER lpFrequency;
-    double        tickToMs;
-    int           lastTick;
+    float tickToMs;
+    int lastTick;
     LARGE_INTEGER lpPerformanceCount;
-    bool          isHighResolutionTiming;
-    int           num_frames;
-    double        elapsed;
+    bool isHighResolutionTiming;
+    int num_frames;
+    double elapsed;
 
     /**
      * Constructs the controller, registers it in the global list,
      * and initializes high-resolution or low-resolution timing.
      */
     IAnimationController();
+
+    /**
+     * Destroys this controller. Called by Ms3dBundle during cleanup.
+     */
+    virtual ~IAnimationController();
 
     /**
      * Registers this controller in the global animation controller linked list
@@ -70,12 +74,6 @@ public:
     virtual void Update();
 
     /**
-     * Returns elapsed time in milliseconds since the last Update() call.
-     * If num_frames > 0 (paused), returns the frozen elapsed value.
-     */
-    virtual double ComputeElapsed();
-
-    /**
      * Freezes elapsed time and increments the frame counter.
      * Elapsed is captured before incrementing so the first tick records
      * the correct time.
@@ -83,24 +81,27 @@ public:
     void TickFrame();
 
     /**
+     * Returns elapsed time in milliseconds since the last Update() call.
+     * If num_frames > 0 (paused), returns the frozen elapsed value.
+     */
+    virtual double ComputeElapsed();
+
+    /**
      * Decrements the frame counter. When it reaches zero, resyncs the
      * timing reference so elapsed continues correctly from the frozen value.
      */
     void UntickFrame();
 
-    /**
-     * Destroys this controller. Called by Ms3dBundle during cleanup.
-     */
-    virtual ~IAnimationController();
 
     /**
      * Marks the controller for destruction and removes it from the global list.
      */
     void Destroy();
 
-    void UnregisterFromGlobalList();
+    void UnregisterFromGlobalList() const;
     void DestroyAndUnregister(bool freeMemory);
 };
+#pragma pack(pop)
 
 /**
  * Factory function — allocates and constructs an IAnimationController.

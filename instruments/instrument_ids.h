@@ -11,7 +11,11 @@
  * Composite values (e.g. AGOGOS|GUITAR = 0x28) are used as
  * additional piano variant identifiers.
  */
+#if _MSC_VER < 1400
+enum MidiJamInstrumentId
+#else
 enum MidiJamInstrumentId : short
+#endif
 {
     PIANO             = 0x01,
     PERCUSSION        = 0x02,
@@ -57,7 +61,11 @@ enum MidiJamInstrumentId : short
     TELEPHONE         = 0x2B,
 };
 
+#if _MSC_VER < 1400
+enum GM_PERCUSSION
+#else
 enum GM_PERCUSSION : short
+#endif
 {
     HIGH_Q = 0x1B,
     SLAP = 0x1C,

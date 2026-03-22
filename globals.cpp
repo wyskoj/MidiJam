@@ -13,9 +13,9 @@
 
 #include "audio/MidiJamTool.h"
 
-DirectMusicSegmentPlayer* g_DirectMusicSegmentWrapper = nullptr;
+DirectMusicSegmentPlayer* g_directMusicSegmentPlayer = nullptr;
 char g_midiFileNameDisp[260] = {};
-MUSIC_TIME g_midiFile_duration = 0;
+MUSIC_TIME g_midiFileDuration = 0;
 REFERENCE_TIME g_prtStart = 0;
 MUSIC_TIME g_mtStart = 0;
 AnimationControllerNode* g_pAnimationControllerList = nullptr;
@@ -53,7 +53,7 @@ int g_windowCenter_Y;
 __int16 g_windowWidth_0;
 __int16 g_windowHeight_0;
 HANDLE g_hMidiEvent;
-DirectMusicSystem* g_DirectMusicSystem;
+DirectMusicSystem* g_directMusicSystem;
 HWND g_hWnd;
 IDirectMusicPerformance8* g_DirectMusicPerformance;
 IDirectMusicGraph8* g_DirectMusicGraph;
@@ -73,7 +73,11 @@ int g_killApplication = 0;
 int g_isShuttingDown = 0;
 int g_isFadingIn = 0;
 DWORD g_applicationStartTime = 0;
-time_t g_lastUnixEpochTime = 0;
+#if _MSC_VER < 1400
+long        g_lastUnixEpochTime = 0;
+#else
+time_t      g_lastUnixEpochTime = 0;
+#endif
 float g_framesPerSecond = 0.0f;
 int g_framesAlive = 0;
 int g_framesSinceStart = 0;
@@ -105,9 +109,9 @@ float g_playbackSpeed = 1.0f;
 float g_cameraLocation[6] = {};
 int g_rotatingCameraIsActive = 0;
 float g_rotatingCameraAngle = 0.0f;
-ROTATING_CAMERA_DIRECTION g_rotatingCameraDirection = CLOCKWISE;
+RotatingCameraDirection g_rotatingCameraDirection = CLOCKWISE;
 int g_rotatingCameraIdleTime = 0;
-CAMERA_ANGLE g_targetCameraAngle = CAMERA_1A;
+CameraAngle g_targetCameraAngle = CAMERA_1A;
 float g_autoCamDeltaTransform[6] = {};
 int g_autoCamIsIdle = 0;
 int g_autoCamIdleTime = 0;

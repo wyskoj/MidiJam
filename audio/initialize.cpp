@@ -52,7 +52,7 @@ extern __int16 g_windowWidth_0;
 extern __int16 g_windowHeight_0;
 extern HANDLE g_hMidiEvent;
 extern HWND g_hWnd;
-extern DirectMusicSystem* g_DirectMusicSystem;
+extern DirectMusicSystem* g_directMusicSystem;
 extern IDirectMusicPerformance8* g_DirectMusicPerformance;
 extern IDirectMusicGraph8* g_DirectMusicGraph;
 extern MidiJamTool* g_midiJamTool;
@@ -212,7 +212,7 @@ extern char             g_shiftPressed;
 
 // --- Camera ---
 extern float            g_cameraLocation[6];
-extern CAMERA_ANGLE     g_targetCameraAngle;
+extern CameraAngle     g_targetCameraAngle;
 extern int              g_rotatingCameraIsActive;
 extern CameraPosition   CAMERA_POSITIONS[11];
 
@@ -363,7 +363,7 @@ WINDOW_CREATE_STATUS MidiJamMain(
 
     // --- DirectMusic system ---
     DirectMusicSystem* directMusicSystem = new DirectMusicSystem();
-    g_DirectMusicSystem = directMusicSystem;
+    g_directMusicSystem = directMusicSystem;
 
     HRESULT hResult = directMusicSystem->Init(g_hWnd, 128, 8);
     g_DirectMusicPerformance = directMusicSystem->GetPerformance();
@@ -403,7 +403,7 @@ WINDOW_CREATE_STATUS MidiJamMain(
         return FAILURE;
 
     // --- MidiJam tool ---
-    const auto midiJamTool = new MidiJamTool();
+    MidiJamTool* midiJamTool = new MidiJamTool();
     g_midiJamTool = midiJamTool;
     hResult = (g_DirectMusicGraph->InsertTool)(midiJamTool, 0, 0, 0);
 

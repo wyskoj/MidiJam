@@ -14,7 +14,7 @@
 // Routes DMUS_PMSGs through IMidiJamTool__ProcessPMsg.
 // sizeof = 0x24 (vtable ptr + 8 DWORD fields)
 // ---------------------------------------------------------------------------
-struct MidiJamTool : public IDirectMusicTool
+struct MidiJamTool : IDirectMusicTool
 {
     // vtable inherited from IDirectMusicTool
 
@@ -31,7 +31,7 @@ struct MidiJamTool : public IDirectMusicTool
     HRESULT __stdcall ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_PMSG* pPMSG) override;
     HRESULT __stdcall Flush(IDirectMusicPerformance* pPerf, DMUS_PMSG* pPMSG, REFERENCE_TIME rtTime) override;
 
-    ULONG refCount;
+    LONG refCount;
 };
 
 HRESULT __stdcall IMidiJamTool__ProcessPMsg(

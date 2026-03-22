@@ -135,8 +135,8 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     pPerf->GetTime(&rtNow, &mtNow);
                     int duration = noteMsg->mtDuration - g_currentTempo_scaleFactor0_5;
                     if (duration < 0) duration = 10;
-                    int16_t timeDelta = static_cast<int16_t>(msgMtTime - mtNow)
-                        - static_cast<int16_t>(g_currentTempo_scaleFactor0_9);
+                    short timeDelta = static_cast<short>(msgMtTime - mtNow)
+                        - static_cast<short>(g_currentTempo_scaleFactor0_9);
                     if (timeDelta <= 0) timeDelta = 1;
 
                     FIND_SLOT(
@@ -157,8 +157,8 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     pPerf->GetTime(&rtNow, &mtNow);
                     int duration = noteMsg->mtDuration - g_currentTempo_scaleFactor0_5;
                     if (duration < 0) duration = 10;
-                    int16_t timeDelta = static_cast<int16_t>(msgMtTime - mtNow)
-                        - static_cast<int16_t>(g_currentTempo_scaleFactor0_9);
+                    short timeDelta = static_cast<short>(msgMtTime - mtNow)
+                        - static_cast<short>(g_currentTempo_scaleFactor0_9);
                     if (timeDelta <= 0) timeDelta = 1;
 
                     FIND_SLOT(
@@ -178,8 +178,8 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     pPerf->GetTime(&rtNow, &mtNow);
                     int duration = noteMsg->mtDuration - g_currentTempo_scaleFactor0_5;
                     if (duration < 0) duration = 10;
-                    int16_t timeDelta = static_cast<int16_t>(msgMtTime - mtNow)
-                        - static_cast<int16_t>(g_currentTempo_scaleFactor0_9);
+                    short timeDelta = static_cast<short>(msgMtTime - mtNow)
+                        - static_cast<short>(g_currentTempo_scaleFactor0_9);
                     if (timeDelta <= 0) timeDelta = 1;
 
                     FIND_SLOT(

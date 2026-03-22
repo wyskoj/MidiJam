@@ -20,32 +20,29 @@
 void AnsiToUnicode(LPWSTR lpWideCharStr, LPCCH lpMultiByteStr, int a3);
 
 // FUNCTION: MIDIJAM 0x401000
-DirectMusicSystem::DirectMusicSystem()
-{
+// MATCH: APPROXIMATE - extra nop before epilogue, MSVC version difference
+DirectMusicSystem::DirectMusicSystem() {
     pLoader = nullptr;
     pPerformance = nullptr;
     CoInitialize(nullptr);
 }
 
 // FUNCTION: MIDIJAM 0x4010C0
-HRESULT DirectMusicSystem::Init(const HWND hWnd, const int audioParams1, const int audioParams2)
-{
-    HRESULT hr = CoCreateInstance(
-        CLSID_DirectMusicLoader,
-        nullptr,
-        CLSCTX_INPROC_SERVER,
-        IID_IDirectMusicLoader8,
-        reinterpret_cast<void**>(&pLoader));
-    if (FAILED(hr))
+// MATCH: APPROXIMATE -- vtable call codegen (call dword ptr vs mov/call), MSVC version difference
+HRESULT DirectMusicSystem::Init(const HWND hWnd, const int audioParams1, const int audioParams2) {
+    HRESULT hr = CoCreateInstance(CLSID_DirectMusicLoader, nullptr, 3u, IID_IDirectMusicLoader8,
+                                  reinterpret_cast<void**>(&pLoader));
+    if (hr < 0)
         return hr;
 
     hr = CoCreateInstance(
         CLSID_DirectMusicPerformance,
         nullptr,
-        CLSCTX_INPROC_SERVER,
+        3u,
         IID_IDirectMusicPerformance8,
         reinterpret_cast<void**>(&pPerformance));
-    if (FAILED(hr))
+
+    if (hr < 0)
         return hr;
 
     hr = pPerformance->InitAudio(
@@ -54,23 +51,24 @@ HRESULT DirectMusicSystem::Init(const HWND hWnd, const int audioParams1, const i
         hWnd,
         audioParams2,
         audioParams1,
-        DMUS_AUDIOF_ALL,
-        nullptr);
-    if (FAILED(hr))
+        0x3F,
+        nullptr
+    );
+
+    if (hr < 0)
         return hr;
 
     return S_OK;
 }
 
 // FUNCTION: MIDIJAM 0x438EA0
-IDirectMusicPerformance8* DirectMusicSystem::GetPerformance() const
-{
+// MATCH: EXACT
+IDirectMusicPerformance8* DirectMusicSystem::GetPerformance() const {
     return pPerformance;
 }
 
 // FUNCTION: MIDIJAM 0x401160
-IDirectMusicAudioPath* DirectMusicSystem::GetDefaultAudioPath() const
-{
+IDirectMusicAudioPath* DirectMusicSystem::GetDefaultAudioPath() const {
     IDirectMusicAudioPath* pAudioPath = nullptr;
     if (!pPerformance)
         return nullptr;
@@ -79,10 +77,9 @@ IDirectMusicAudioPath* DirectMusicSystem::GetDefaultAudioPath() const
 }
 
 // FUNCTION: MIDIJAM 0x4011A0
-void DirectMusicSystem::CollectLoaderGarbage() const
-{
-    if (pLoader)
-    {
+// MATCH: EXACT
+void DirectMusicSystem::CollectLoaderGarbage() const {
+    if (pLoader) {
         pLoader->CollectGarbage();
     }
 }
@@ -92,8 +89,7 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromPath(
     DirectMusicSegmentPlayer** ppSegmentWrapper,
     const LPCCH midiFilePath,
     const BOOL downloadInstruments,
-    const BOOL setAsStandardMidiFile) const
-{
+    const BOOL setAsStandardMidiFile) const {
     IDirectMusicSegment8* pSegment = nullptr;
     WCHAR midiFilePathUnicode[260];
 
@@ -105,8 +101,7 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromPath(
         midiFilePathUnicode,
         reinterpret_cast<void**>(&pSegment));
 
-    if (SUCCEEDED(hr))
-    {
+    if (SUCCEEDED(hr)) {
         DirectMusicSegmentPlayer* pBlock = new DirectMusicSegmentPlayer(
             pPerformance,
             pLoader,
@@ -114,10 +109,8 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromPath(
 
         *ppSegmentWrapper = pBlock;
 
-        if (*ppSegmentWrapper)
-        {
-            if (setAsStandardMidiFile)
-            {
+        if (*ppSegmentWrapper) {
+            if (setAsStandardMidiFile) {
                 hr = pSegment->SetParam(
                     GUID_StandardMIDIFile,
                     0xFFFFFFFF,
@@ -128,8 +121,7 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromPath(
                     return hr;
             }
 
-            if (downloadInstruments)
-            {
+            if (downloadInstruments) {
                 hr = (*ppSegmentWrapper)->Download(nullptr);
                 if (FAILED(hr))
                     return hr;
@@ -137,17 +129,14 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromPath(
 
             return S_OK;
         }
-        else
-        {
+        else {
             return E_OUTOFMEMORY;
         }
     }
-    else if (hr == static_cast<HRESULT>(DMUS_E_LOADER_FAILEDOPEN))
-    {
+    else if (hr == static_cast<HRESULT>(DMUS_E_LOADER_FAILEDOPEN)) {
         return static_cast<HRESULT>(DMUS_E_LOADER_FAILEDOPEN);
     }
-    else
-    {
+    else {
         return hr;
     }
 }
@@ -158,8 +147,7 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromResource(
     const LPCSTR lpName,
     const LPCSTR lpType,
     const BOOL downloadInstruments,
-    const BOOL setAsStandardMidiFile) const
-{
+    const BOOL setAsStandardMidiFile) const {
     IDirectMusicSegment8* pSegment = nullptr;
 
     HRSRC hResInfo = FindResourceA(nullptr, lpName, lpType);
@@ -185,8 +173,7 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromResource(
         IID_IDirectMusicSegment8,
         reinterpret_cast<void**>(&pSegment));
 
-    if (SUCCEEDED(hr))
-    {
+    if (SUCCEEDED(hr)) {
         DirectMusicSegmentPlayer* pBlock = new DirectMusicSegmentPlayer(
             pPerformance,
             pLoader,
@@ -194,10 +181,8 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromResource(
 
         *ppSegmentWrapper = pBlock;
 
-        if (*ppSegmentWrapper)
-        {
-            if (setAsStandardMidiFile)
-            {
+        if (*ppSegmentWrapper) {
+            if (setAsStandardMidiFile) {
                 hr = pSegment->SetParam(
                     GUID_StandardMIDIFile,
                     static_cast<DWORD>(-1),
@@ -208,8 +193,7 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromResource(
                     return hr;
             }
 
-            if (downloadInstruments)
-            {
+            if (downloadInstruments) {
                 hr = (*ppSegmentWrapper)->Download(nullptr);
                 if (FAILED(hr))
                     return hr;
@@ -217,17 +201,14 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromResource(
 
             return S_OK;
         }
-        else
-        {
+        else {
             return E_OUTOFMEMORY;
         }
     }
-    else if (hr == static_cast<HRESULT>(DMUS_E_LOADER_FAILEDOPEN))
-    {
+    else if (hr == static_cast<HRESULT>(DMUS_E_LOADER_FAILEDOPEN)) {
         return static_cast<HRESULT>(DMUS_E_LOADER_FAILEDOPEN);
     }
-    else
-    {
+    else {
         return hr;
     }
 }
@@ -236,8 +217,7 @@ HRESULT DirectMusicSystem::LoadMidiSegmentFromResource(
 // TODO: verify function name — body loads a IDirectMusicScript, not a DLS collection.
 HRESULT DirectMusicSystem::LoadDlsCollection(
     DlsCollectionWrapper** ppCollection,
-    const LPCCH dlsFilePath) const
-{
+    const LPCCH dlsFilePath) const {
     IDirectMusicScript* pScript = nullptr;
     WCHAR widePath[260];
 
@@ -263,14 +243,9 @@ HRESULT DirectMusicSystem::LoadDlsCollection(
 }
 
 // FUNCTION: MIDIJAM 0x401840
-// TODO: verify function name — may load other object types besides styles.
-HRESULT DirectMusicSystem::LoadStyle(void** ppObject, const LPCCH objectFilePath) const
-{
+// MATCH: EXACT
+HRESULT DirectMusicSystem::LoadStyle(void** ppObject, const LPCCH objectFilePath) const {
     WCHAR widePath[260];
     AnsiToUnicode(widePath, objectFilePath, -1);
-    return pLoader->LoadObjectFromFile(
-        CLSID_DirectMusicStyle,
-        IID_IDirectMusicStyle8,
-        widePath,
-        ppObject);
+    return pLoader->LoadObjectFromFile(CLSID_DirectMusicStyle, IID_IDirectMusicStyle8, widePath, ppObject);
 }

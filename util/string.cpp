@@ -13,19 +13,24 @@
  * The output is always null-terminated within the buffer size.
  */
 // FUNCTION: MIDIJAM 0x4011D0
+// MATCH: EXACT
 // ReSharper disable CppParameterMayBeConst
-static void AnsiToUnicodeImpl(LPWSTR lpWideCharStr, LPCCH lpMultiByteStr, int a3)
+static void AnsiToUnicodeImpl(LPWSTR lpWideCharStr, LPCCH lpMultiByteStr, int cchBuffer)
 // ReSharper restore CppParameterMayBeConst
 {
     // Null checks are redundant when called from AnsiToUnicode, but retained
     // from the original — AnsiToUnicodeImpl may have had other call sites.
     // ReSharper disable CppDFAConstantConditions
-    if (lpWideCharStr && lpMultiByteStr) {
-        // ReSharper restore CppDFAConstantConditions
-        if (a3 == -1)
-            a3 = static_cast<int>(strlen(lpMultiByteStr)) + 1;
-        MultiByteToWideChar(0, 0, lpMultiByteStr, -1, lpWideCharStr, a3 - 1);
-        lpWideCharStr[a3 - 1] = 0;
+    if (lpWideCharStr) {
+        if (!lpMultiByteStr) {
+            // ReSharper restore CppDFAConstantConditions
+        }
+        else {
+            if (cchBuffer == -1)
+                cchBuffer = static_cast<int>(strlen(lpMultiByteStr)) + 1;
+            MultiByteToWideChar(0, 0, lpMultiByteStr, -1, lpWideCharStr, cchBuffer - 1);
+            lpWideCharStr[cchBuffer - 1] = 0;
+        }
     }
 }
 
@@ -37,10 +42,14 @@ static void AnsiToUnicodeImpl(LPWSTR lpWideCharStr, LPCCH lpMultiByteStr, int a3
  * @param a3              Output buffer size in characters, or -1 to auto-detect from input length.
  */
 // FUNCTION: MIDIJAM 0x401230
+// MATCH: EXACT
 // ReSharper disable CppParameterMayBeConst
 void AnsiToUnicode(LPWSTR lpWideCharStr, LPCCH lpMultiByteStr, const int a3)
 // ReSharper restore CppParameterMayBeConst
 {
-    if (lpWideCharStr && lpMultiByteStr)
+    if (lpWideCharStr) {
+        if (!lpMultiByteStr)
+            return;
         AnsiToUnicodeImpl(lpWideCharStr, lpMultiByteStr, a3);
+    }
 }

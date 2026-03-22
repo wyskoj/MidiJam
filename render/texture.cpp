@@ -374,26 +374,19 @@ GLuint LoadTextureFromHwf(
 }
 
 // FUNCTION: MIDIJAM 0x447550
+// MATCH: EXACT
 char* ReadHwfAppendix(char* pHwfAppendix, FILE* hwfStream, unsigned int* nHwfAppendixItems)
 {
-    // Read the item count from the last 4 bytes of the file.
     fseek(hwfStream, 0, SEEK_END);
     fseek(hwfStream, -4, SEEK_CUR);
     fread(nHwfAppendixItems, 4, 1, hwfStream);
-
-    // Allocate 264 bytes per entry.
-    char* hwfAppendixPtr = static_cast<char*>(
-        realloc(pHwfAppendix, 264 * *nHwfAppendixItems));
-
-    // Seek to the start of the appendix table.
+    pHwfAppendix = static_cast<char*>(realloc(pHwfAppendix, 264 * *nHwfAppendixItems));
     fseek(hwfStream, 0, SEEK_END);
     fseek(hwfStream, -4, SEEK_CUR);
-    fseek(hwfStream, -static_cast<int>(264 * *nHwfAppendixItems), SEEK_CUR);
-
+    fseek(hwfStream, (int)*nHwfAppendixItems * 264 * -1, SEEK_CUR);
     for (unsigned int i = 0; i < *nHwfAppendixItems; ++i)
-        fread(&hwfAppendixPtr[264 * i], 264, 1, hwfStream);
-
-    return hwfAppendixPtr;
+        fread(&pHwfAppendix[264 * i], 264, 1, hwfStream);
+    return pHwfAppendix;
 }
 
 // FUNCTION: MIDIJAM 0x447840
@@ -450,7 +443,7 @@ GLuint CreateTextureFromBitmapData(char* bitmapData)
 }
 
 // FUNCTION: MIDIJAM 0x447A00
-BOOL ProcessBitmapFont(char* bitmapFontData, BITMAP_FONT_TYPE bitmapFontType)
+BOOL ProcessBitmapFont(char* bitmapFontData, BitmapFontType bitmapFontType)
 {
     extern int g_fontCellWidth;
     extern int g_charWidthProportional[];

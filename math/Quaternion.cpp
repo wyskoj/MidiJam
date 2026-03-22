@@ -10,6 +10,7 @@
 #include <cstring>
 
 // FUNCTION: MIDIJAM 0x446210
+// MATCH: EXACT
 void SetIdentityQuaternion(Quaternion* quat)
 {
     quat->x = 1.0;
@@ -65,6 +66,7 @@ void QuaternionFromEulerAngles(Quaternion* result, const float pitch, const floa
 }
 
 // FUNCTION: MIDIJAM 0x446040
+// MATCH: APPROXIMATE - stack over-allocation (0x80 vs 0x20) and rep movsd vs memcpy call, MSVC version difference
 void QuaternionMultiply(Quaternion* result, Quaternion* q1, Quaternion* q2)
 {
     Quaternion temp;
