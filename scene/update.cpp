@@ -22,6 +22,7 @@
 #include "instruments/Bass.h"
 #include "instruments/Harp.h"
 #include "instruments/StageHorn.h"
+#include "instruments/StageString.h"
 
 // ---------------------------------------------------------------------------
 // Extern globals
@@ -94,7 +95,6 @@ extern void* g_ds_popBottle;
 extern void* g_ds_agogos;
 extern void* g_ds_woodblocks;
 extern void* g_ds_stageChoir;
-extern void* g_ds_stageString;
 extern void* g_ds_pizzicatoStrings;
 extern void* g_ds_ocarina;
 extern void* g_ds_xylophone;
@@ -310,11 +310,6 @@ static inline void I_StageChoir() {
 }
 
 static inline bool I_StageChoir_MM(MUSIC_TIME) { return false; }
-
-static inline void I_StageString() {
-}
-
-static inline bool I_StageString_MM(MUSIC_TIME) { return false; }
 
 static inline void I_PizzicatoStrings() {
 }
@@ -551,7 +546,7 @@ BOOL UpdateMidiJam() {
     if (g_ds_woodblocks) I_Woodblock();
     if (g_ds_stageChoir) I_StageChoir();
     if (g_accordion) RenderAccordion();
-    if (g_ds_stageString) I_StageString();
+    if (g_stageString) RenderStageString();
     if (g_ds_pizzicatoStrings) I_PizzicatoStrings();
     if (g_ds_ocarina) I_Ocarina();
 
@@ -709,7 +704,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
     if (g_ds_taiko && I_Taiko_MM(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_telephone && I_Telephone_MM(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_tubularBells && I_TubularBells_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_stageString && I_StageString_MM(pmtNow)) anyInstrumentActive = 1;
+    if (g_stageString && UpdateStageString(pmtNow)) anyInstrumentActive = 1;
     if (g_ds_pizzicatoStrings && I_PizzicatoStrings_MM(pmtNow)) anyInstrumentActive = 1;
 
     UpdateAllRecoils(recoil_scale_factor);

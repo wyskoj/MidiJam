@@ -12,6 +12,7 @@
 #include "instruments/Bass.h"
 #include "instruments/Harp.h"
 #include "instruments/StageHorn.h"
+#include "instruments/StageString.h"
 
 // Finds the first empty slot and executes body with slot variable in scope.
 // Slot field is the expression used to test for empty (== 0).
@@ -237,6 +238,23 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     }
                     break;
                 }
+                    
+                case STAGE_STRINGS: {
+                    const auto v99 = (noteMsg->wMusicValue + 3) % 12;
+                    int i5 = 0;
+                    while (g_stageString[g_stageStringChannel[noteMsg->dwPChannel]].field_64[v99][i5] && i5 < 16) ++i5;
+                    if ( i5 < 16 )
+                    {
+                        g_stageString[g_stageStringChannel[noteMsg->dwPChannel]].field_64[v99][i5] = noteMsg->mtDuration;
+                        if ( g_stageString[g_stageStringChannel[noteMsg->dwPChannel]].field_64[v99][i5] < 0 )
+                            g_stageString[g_stageStringChannel[noteMsg->dwPChannel]].field_64[v99][i5] = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_stageString[g_stageStringChannel[noteMsg->dwPChannel]].field_364[v99][i5] = noteMsg->mtTime - mtNow;
+                        g_stageString[g_stageStringChannel[noteMsg->dwPChannel]].field_364[v99][i5] -= g_currentTempo_scaleFactor0_9;
+                        if ( g_stageString[g_stageStringChannel[noteMsg->dwPChannel]].field_364[v99][i5] <= 0 )
+                            g_stageString[g_stageStringChannel[noteMsg->dwPChannel]].field_364[v99][i5] = 1;
+                    }
+                }
 
                 default:
                     break;
@@ -286,6 +304,10 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                 case STAGE_HORN: {
                     ALLOC_INST(stageHorn, StageHornState);
                     break;
+                }
+
+                case STAGE_STRINGS: {
+                    ALLOC_INST(stageString, StageStringState);
                 }
 
                 default:

@@ -102,6 +102,8 @@ add_executable(MidiJam WIN32
         util/guid.cpp
         util/string.cpp
         compat/vs2003.h
+        instruments/StageString.cpp
+        instruments/StageString.h
 )
 
 # ---------------------------------------------------------------------------

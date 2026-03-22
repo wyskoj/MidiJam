@@ -21,6 +21,7 @@
 #include "instruments/Harp.h"
 #include "instruments/Piano.h"
 #include "instruments/StageHorn.h"
+#include "instruments/StageString.h"
 #include "scene/update.h"
 
 
@@ -126,7 +127,6 @@ extern short            g_ialloc_harmonica;
 extern short            g_ialloc_popBottle;
 extern short            g_ialloc_agogo;
 extern short            g_ialloc_woodblocks;
-extern short            g_ialloc_stageString;
 extern short            g_ialloc_pizzicatoStrings;
 extern short            g_ialloc_musicBox;
 extern short            g_ialloc_melodicTom;
@@ -166,7 +166,6 @@ extern short            g_harmonica_assignment[300];
 extern short            g_popBottle_assignment[300];
 extern short            g_agogos_assignment[300];
 extern short            g_woodblocks_assignment[300];
-extern short            g_stageStrings_assignment[300];
 extern short            g_pizzicatoStrings_assignment[300];
 extern short            g_musicBox_assignment[300];
 extern short            g_melodicTom_assignment[300];
@@ -476,7 +475,7 @@ void MidiJamInitialize()
     g_ialloc_popBottle      = 0;
     g_ialloc_agogo          = 0;
     g_ialloc_woodblocks     = 0;
-    g_ialloc_stageString    = 0;
+    g_stageStringCount    = 0;
     g_ialloc_pizzicatoStrings = 0;
     g_ialloc_musicBox       = 0;
     g_ialloc_melodicTom     = 0;
@@ -577,7 +576,7 @@ void MidiJamInitialize()
         g_popBottle_assignment[slot]     = -1;
         g_agogos_assignment[slot]        = -1;
         g_woodblocks_assignment[slot]    = -1;
-        g_stageStrings_assignment[slot]  = -1;
+        g_stageStringChannel[slot]  = -1;
         g_pizzicatoStrings_assignment[slot] = -1;
         g_musicBox_assignment[slot]      = -1;
         g_melodicTom_assignment[slot]    = -1;
