@@ -23,6 +23,7 @@
 #include "instruments/Harp.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/Xylophone.h"
 
 // ---------------------------------------------------------------------------
 // Extern globals
@@ -37,15 +38,11 @@ extern int g_rotatingCameraIdleTime;
 extern Ms3dBundle* g_screenGradient_ms3d;
 extern Ms3dBundle* g_stage_ms3d;
 extern Ms3dBundle* g_pianoShadow_ms3d;
-extern Ms3dBundle* g_xylophoneShadow_ms3d;
 extern Ms3dBundle* g_bassShadow_ms3d;
 extern Ms3dBundle* g_guitarShadow_ms3d;
 extern Ms3dBundle* g_drumShadow_ms3d;
 extern Ms3dBundle* g_songFillbarBox_ms3d;
 extern Ms3dBundle* g_songFillbar_ms3d;
-extern short g_inst_visible_xylophone;
-extern short g_inst_visible_guitar;
-extern short g_inst_visible_drumset;
 extern int g_show_percussion;
 extern GLfloat g_fadeFactor;
 extern GLfloat g_songFillbarScale;
@@ -71,42 +68,6 @@ extern float g_autoCamDeltaTransform[6];
 extern int g_autoCamIsIdle;
 extern int g_autoCamIdleTime;
 extern int g_autoCameraIsActive;
-
-// Instrument data pointers — non-piano ones are opaque void* until transcribed
-extern void* g_ds_trombone;
-extern void* g_ds_trumpet;
-extern void* g_ds_frenchHorn;
-extern void* g_ds_baritoneSax;
-extern void* g_ds_tenorSax;
-extern void* g_ds_sapranoSax;
-extern void* g_ds_altoSax;
-extern void* g_ds_recorder;
-extern void* g_ds_piccolo;
-extern void* g_ds_flute;
-extern void* g_ds_tuba;
-extern void* g_ds_whistles;
-extern void* g_ds_panPipe;
-extern void* g_ds_harmonica;
-extern void* g_ds_violin;
-extern void* g_ds_viola;
-extern void* g_ds_cello;
-extern void* g_ds_doubleBass;
-extern void* g_ds_popBottle;
-extern void* g_ds_agogos;
-extern void* g_ds_woodblocks;
-extern void* g_ds_stageChoir;
-extern void* g_ds_pizzicatoStrings;
-extern void* g_ds_ocarina;
-extern void* g_ds_xylophone;
-extern void* g_ds_musicBox;
-extern void* g_ds_melodicTom;
-extern void* g_ds_synthDrum;
-extern void* g_ds_steelDrum;
-extern void* g_ds_timpani;
-extern void* g_ds_taiko;
-extern void* g_ds_telephone;
-extern void* g_ds_tubularBells;
-extern void* g_ds_guitar;
 
 // Percussion globals
 extern int g_percussion_time_queue[88][32];
@@ -200,177 +161,6 @@ bool UpdatePiano(MUSIC_TIME pmtNow);
 static inline void RenderPercussion() {
 }
 
-// Stubs — will be replaced as each instrument is transcribed
-static inline void I_Trombone() {
-}
-
-static inline bool I_Trombone_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Trumpet() {
-}
-
-static inline bool I_Trumpet_MM(MUSIC_TIME) { return false; }
-
-static inline void I_FrenchHorn() {
-}
-
-static inline bool I_FrenchHorn_MM(MUSIC_TIME) { return false; }
-
-static inline void I_BaritoneSax() {
-}
-
-static inline bool I_BaritoneSax_MM(MUSIC_TIME) { return false; }
-
-static inline void I_TenorSax() {
-}
-
-static inline bool I_TenorSax_MM(MUSIC_TIME) { return false; }
-
-static inline void I_SapranoSax() {
-}
-
-static inline bool I_SapranoSax_MM(MUSIC_TIME) { return false; }
-
-static inline void I_AltoSax() {
-}
-
-static inline bool I_AltoSax_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Recorder() {
-}
-
-static inline bool I_Recorder_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Piccolo() {
-}
-
-static inline bool I_Piccolo_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Flute() {
-}
-
-static inline bool I_Flute_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Tuba() {
-}
-
-static inline bool I_Tuba_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Whistles() {
-}
-
-static inline bool I_Whistles_MM(MUSIC_TIME) { return false; }
-
-static inline void I_PanPipe() {
-}
-
-static inline bool I_PanPipe_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Harmonica() {
-}
-
-static inline bool I_Harmonica_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Violin() {
-}
-
-static inline bool I_Violin_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Viola() {
-}
-
-static inline bool I_Viola_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Cello() {
-}
-
-static inline bool I_Cello_MM(MUSIC_TIME) { return false; }
-
-static inline void I_DoubleBass() {
-}
-
-static inline bool I_DoubleBass_MM(MUSIC_TIME) { return false; }
-
-static inline void I_PopBottle() {
-}
-
-static inline bool I_PopBottle_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Agogo() {
-}
-
-static inline bool I_Agogo_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Woodblock() {
-}
-
-static inline bool I_Woodblocks_MM(MUSIC_TIME) { return false; }
-
-static inline void I_StageChoir() {
-}
-
-static inline bool I_StageChoir_MM(MUSIC_TIME) { return false; }
-
-static inline void I_PizzicatoStrings() {
-}
-
-static inline bool I_PizzicatoStrings_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Ocarina() {
-}
-
-static inline bool I_Ocarina_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Xylophone() {
-}
-
-static inline bool I_Xylophone_MM(MUSIC_TIME) { return false; }
-
-static inline void I_MusicBox() {
-}
-
-static inline bool I_MusicBox_MM(MUSIC_TIME) { return false; }
-
-static inline void I_MelodicTom() {
-}
-
-static inline bool I_MelodicTom_MM(MUSIC_TIME) { return false; }
-
-static inline void I_SynthDrum() {
-}
-
-static inline bool I_SynthDrum_MM(MUSIC_TIME) { return false; }
-
-static inline void I_SteelDrum() {
-}
-
-static inline bool I_SteelDrum_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Timpani() {
-}
-
-static inline bool I_Timpani_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Taiko() {
-}
-
-static inline bool I_Taiko_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Telephone() {
-}
-
-static inline bool I_Telephone_MM(MUSIC_TIME) { return false; }
-
-static inline void I_TubularBells() {
-}
-
-static inline bool I_TubularBells_MM(MUSIC_TIME) { return false; }
-
-static inline void I_Guitar() {
-}
-
-static inline bool I_Guitar_MM(MUSIC_TIME) { return false; }
-
 static inline void UpdateSteamPuffers() {
 }
 
@@ -456,12 +246,12 @@ BOOL UpdateMidiJam() {
         glPopMatrix();
     }
 
-    if (g_inst_visible_xylophone > 0) {
+    if (g_xylophoneVisible > 0) {
         glPushMatrix();
         glTranslatef(-22.0f, -32.0f, 10.0f);
         glRotatef(32.0f, 0.0f, 1.0f, 0.0f);
         glScalef(0.64999998f, 0.64999998f, 0.64999998f);
-        for (i = 0; i < g_inst_visible_xylophone; ++i) {
+        for (i = 0; i < g_xylophoneVisible; ++i) {
             if (i > 0) {
                 glTranslatef(-2.0f, 0.0f, 0.0f);
                 glRotatef(-18.0f, 0.0f, 1.0f, 0.0f);
@@ -484,24 +274,24 @@ BOOL UpdateMidiJam() {
         }
     }
 
-    if (g_inst_visible_guitar > 0) {
-        for (k = 0; k < g_inst_visible_guitar; ++k) {
-            glPushMatrix();
-            shadowZ = k * -5.0f + -5.0f;
-            shadowX = k * 5.0f + 43.0f;
-            glTranslatef(shadowX, -32.0f, shadowZ);
-            glRotatef(-50.0f, 0.0f, 1.0f, 0.0f);
-            g_guitarShadow_ms3d->RenderModel();
-            glPopMatrix();
-        }
-    }
+    // if (g_guitarVisible > 0) {
+    //     for (k = 0; k < g_guitarVisible; ++k) {
+    //         glPushMatrix();
+    //         shadowZ = k * -5.0f + -5.0f;
+    //         shadowX = k * 5.0f + 43.0f;
+    //         glTranslatef(shadowX, -32.0f, shadowZ);
+    //         glRotatef(-50.0f, 0.0f, 1.0f, 0.0f);
+    //         g_guitarShadow_ms3d->RenderModel();
+    //         glPopMatrix();
+    //     }
+    // }
 
-    if (g_inst_visible_drumset > 0) {
-        glPushMatrix();
-        glTranslatef(0.0f, -32.0f, -95.0f);
-        g_drumShadow_ms3d->RenderModel();
-        glPopMatrix();
-    }
+    // if (g_drumsetVisible > 0) {
+    //     glPushMatrix();
+    //     glTranslatef(0.0f, -32.0f, -95.0f);
+    //     g_drumShadow_ms3d->RenderModel();
+    //     glPopMatrix();
+    // }
 
     if (g_harpVisible > 0) {
         for (m = 0; m < g_harpVisible; ++m) {
@@ -522,44 +312,44 @@ BOOL UpdateMidiJam() {
         RenderHarp();
         glPopMatrix();
     }
-    if (g_ds_trombone) I_Trombone();
-    if (g_ds_trumpet) I_Trumpet();
-    if (g_ds_frenchHorn) I_FrenchHorn();
-    if (g_ds_baritoneSax) I_BaritoneSax();
-    if (g_ds_tenorSax) I_TenorSax();
-    if (g_ds_sapranoSax) I_SapranoSax();
-    if (g_ds_altoSax) I_AltoSax();
-    if (g_ds_recorder) I_Recorder();
-    if (g_ds_piccolo) I_Piccolo();
-    if (g_ds_flute) I_Flute();
-    if (g_ds_tuba) I_Tuba();
+    // if (g_trombone) RenderTrombone();
+    // if (g_trumpet) RenderTrumpet();
+    // if (g_frenchHorn) RenderFrenchHorn();
+    // if (g_baritoneSax) RenderBaritoneSax();
+    // if (g_tenorSax) RenderTenorSax();
+    // if (g_sapranoSax) RenderSapranoSax();
+    // if (g_altoSax) RenderAltoSax();
+    // if (g_recorder) RenderRecorder();
+    // if (g_piccolo) RenderPiccolo();
+    // if (g_flute) RenderFlute();
+    // if (g_tuba) RenderTuba();
     if (g_stageHorn) RenderStageHorn();
-    if (g_ds_whistles) I_Whistles();
-    if (g_ds_panPipe) I_PanPipe();
-    if (g_ds_harmonica) I_Harmonica();
-    if (g_ds_violin) I_Violin();
-    if (g_ds_viola) I_Viola();
-    if (g_ds_cello) I_Cello();
-    if (g_ds_doubleBass) I_DoubleBass();
-    if (g_ds_popBottle) I_PopBottle();
-    if (g_ds_agogos) I_Agogo();
-    if (g_ds_woodblocks) I_Woodblock();
-    if (g_ds_stageChoir) I_StageChoir();
+    // if (g_whistles) RenderWhistles();
+    // if (g_panPipe) RenderPanPipe();
+    // if (g_harmonica) RenderHarmonica();
+    // if (g_violin) RenderViolin();
+    // if (g_viola) RenderViola();
+    // if (g_cello) RenderCello();
+    // if (g_doubleBass) RenderDoubleBass();
+    // if (g_popBottle) RenderPopBottle();
+    // if (g_agogos) RenderAgogo();
+    // if (g_woodblocks) RenderWoodblock();
+    // if (g_stageChoir) RenderStageChoir();
     if (g_accordion) RenderAccordion();
     if (g_stageString) RenderStageString();
-    if (g_ds_pizzicatoStrings) I_PizzicatoStrings();
-    if (g_ds_ocarina) I_Ocarina();
+    // if (g_pizzicatoStrings) RenderPizzicatoStrings();
+    // if (g_ocarina) RenderOcarina();
 
-    if (g_ds_xylophone) {
+    if (g_xylophone) {
         glPushMatrix();
         glTranslatef(-22.0f, -10.0f, 10.0f);
         glRotatef(32.0f, 0.0f, 1.0f, 0.0f);
         glScalef(0.64999998f, 0.64999998f, 0.64999998f);
-        I_Xylophone();
+        RenderXylophone();
         glPopMatrix();
     }
 
-    if (g_ds_musicBox) I_MusicBox();
+    // if (g_musicBox) RenderMusicBox();
 
     if (g_piano) {
         glPushMatrix();
@@ -576,22 +366,22 @@ BOOL UpdateMidiJam() {
         glPopMatrix();
     }
 
-    if (g_ds_melodicTom) I_MelodicTom();
-    if (g_ds_synthDrum) I_SynthDrum();
-    if (g_ds_steelDrum) I_SteelDrum();
-    if (g_ds_timpani) I_Timpani();
-    if (g_ds_taiko) I_Taiko();
-    if (g_ds_telephone) I_Telephone();
-    if (g_ds_tubularBells) I_TubularBells();
+    // if (g_melodicTom) RenderMelodicTom();
+    // if (g_synthDrum) RenderSynthDrum();
+    // if (g_steelDrum) RenderSteelDrum();
+    // if (g_timpani) RenderTimpani();
+    // if (g_taiko) RenderTaiko();
+    // if (g_telephone) RenderTelephone();
+    // if (g_tubularBells) RenderTubularBells();
 
-    if (g_ds_guitar) {
-        glPushMatrix();
-        glTranslatef(43.0f, 4.0f, -5.0f);
-        glRotatef(-50.0f, 0.0f, 1.0f, 0.0f);
-        glRotatef(-60.0f, 0.0f, 0.0f, 1.0f);
-        I_Guitar();
-        glPopMatrix();
-    }
+    // if (g_guitar) {
+    //     glPushMatrix();
+    //     glTranslatef(43.0f, 4.0f, -5.0f);
+    //     glRotatef(-50.0f, 0.0f, 1.0f, 0.0f);
+    //     glRotatef(-60.0f, 0.0f, 0.0f, 1.0f);
+    //     RenderGuitar();
+    //     glPopMatrix();
+    // }
 
     if (g_bass) {
         glPushMatrix();
@@ -666,46 +456,46 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
     if (g_accordion && UpdateAccordion(pmtNow)) anyInstrumentActive = 1;
     if (g_harp && UpdateHarp(pmtNow)) anyInstrumentActive = 1;
     if (g_piano && UpdatePiano(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_xylophone && I_Xylophone_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_violin && I_Violin_MM(pmtNow) == 1) anyInstrumentActive = 1;
-    if (g_ds_viola && I_Viola_MM(pmtNow) == 1) anyInstrumentActive = 1;
-    if (g_ds_cello && I_Cello_MM(pmtNow) == 1) anyInstrumentActive = 1;
-    if (g_ds_doubleBass && I_DoubleBass_MM(pmtNow) == 1) anyInstrumentActive = 1;
+    if (g_xylophone && UpdateXylophone(pmtNow)) anyInstrumentActive = 1;
+    // if (g_violin && UpdateViolin(pmtNow) == 1) anyInstrumentActive = 1;
+    // if (g_viola && UpdateViola(pmtNow) == 1) anyInstrumentActive = 1;
+    // if (g_cello && UpdateCello(pmtNow) == 1) anyInstrumentActive = 1;
+    // if (g_doubleBass && UpdateDoubleBass(pmtNow) == 1) anyInstrumentActive = 1;
     if (g_bass && UpdateBass(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_guitar && I_Guitar_MM(pmtNow)) anyInstrumentActive = 1;
+    // if (g_guitar && UpdateGuitar(pmtNow)) anyInstrumentActive = 1;
     if (g_stageHorn && UpdateStageHorn(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_whistles && I_Whistles_MM(pmtNow)) anyInstrumentActive = 1;
+    // if (g_whistles && UpdateWhistles(pmtNow)) anyInstrumentActive = 1;
 
     UpdateSteamPuffers();
 
-    if (g_ds_panPipe && I_PanPipe_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_harmonica && I_Harmonica_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_popBottle && I_PopBottle_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_agogos && I_Agogo_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_woodblocks && I_Woodblocks_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_trombone && I_Trombone_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_tuba && I_Tuba_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_frenchHorn && I_FrenchHorn_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_ocarina && I_Ocarina_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_baritoneSax && I_BaritoneSax_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_tenorSax && I_TenorSax_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_sapranoSax && I_SapranoSax_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_altoSax && I_AltoSax_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_flute && I_Flute_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_piccolo && I_Piccolo_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_recorder && I_Recorder_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_trumpet && I_Trumpet_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_stageChoir && I_StageChoir_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_musicBox && I_MusicBox_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_melodicTom && I_MelodicTom_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_synthDrum && I_SynthDrum_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_steelDrum && I_SteelDrum_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_timpani && I_Timpani_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_taiko && I_Taiko_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_telephone && I_Telephone_MM(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_tubularBells && I_TubularBells_MM(pmtNow)) anyInstrumentActive = 1;
+    // if (g_panPipe && UpdatePanPipe(pmtNow)) anyInstrumentActive = 1;
+    // if (g_harmonica && UpdateHarmonica(pmtNow)) anyInstrumentActive = 1;
+    // if (g_popBottle && UpdatePopBottle(pmtNow)) anyInstrumentActive = 1;
+    // if (g_agogos && UpdateAgogo(pmtNow)) anyInstrumentActive = 1;
+    // if (g_woodblocks && UpdateWoodblocks(pmtNow)) anyInstrumentActive = 1;
+    // if (g_trombone && UpdateTrombone(pmtNow)) anyInstrumentActive = 1;
+    // if (g_tuba && UpdateTuba(pmtNow)) anyInstrumentActive = 1;
+    // if (g_frenchHorn && UpdateFrenchHorn(pmtNow)) anyInstrumentActive = 1;
+    // if (g_ocarina && UpdateOcarina(pmtNow)) anyInstrumentActive = 1;
+    // if (g_baritoneSax && UpdateBaritoneSax(pmtNow)) anyInstrumentActive = 1;
+    // if (g_tenorSax && UpdateTenorSax(pmtNow)) anyInstrumentActive = 1;
+    // if (g_sapranoSax && UpdateSapranoSax(pmtNow)) anyInstrumentActive = 1;
+    // if (g_altoSax && UpdateAltoSax(pmtNow)) anyInstrumentActive = 1;
+    // if (g_flute && UpdateFlute(pmtNow)) anyInstrumentActive = 1;
+    // if (g_piccolo && UpdatePiccolo(pmtNow)) anyInstrumentActive = 1;
+    // if (g_recorder && UpdateRecorder(pmtNow)) anyInstrumentActive = 1;
+    // if (g_trumpet && UpdateTrumpet(pmtNow)) anyInstrumentActive = 1;
+    // if (g_stageChoir && UpdateStageChoir(pmtNow)) anyInstrumentActive = 1;
+    // if (g_musicBox && UpdateMusicBox(pmtNow)) anyInstrumentActive = 1;
+    // if (g_melodicTom && UpdateMelodicTom(pmtNow)) anyInstrumentActive = 1;
+    // if (g_synthDrum && UpdateSynthDrum(pmtNow)) anyInstrumentActive = 1;
+    // if (g_steelDrum && UpdateSteelDrum(pmtNow)) anyInstrumentActive = 1;
+    // if (g_timpani && UpdateTimpani(pmtNow)) anyInstrumentActive = 1;
+    // if (g_taiko && UpdateTaiko(pmtNow)) anyInstrumentActive = 1;
+    // if (g_telephone && UpdateTelephone(pmtNow)) anyInstrumentActive = 1;
+    // if (g_tubularBells && UpdateTubularBells(pmtNow)) anyInstrumentActive = 1;
     if (g_stageString && UpdateStageString(pmtNow)) anyInstrumentActive = 1;
-    if (g_ds_pizzicatoStrings && I_PizzicatoStrings_MM(pmtNow)) anyInstrumentActive = 1;
+    // if (g_pizzicatoStrings && UpdatePizzicatoStrings(pmtNow)) anyInstrumentActive = 1;
 
     UpdateAllRecoils(recoil_scale_factor);
 
@@ -924,10 +714,10 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             }
         }
 
-        if (!anyPercussionActive && ++g_percussion_framesWithEmptyQueue > 1000) {
-            g_show_percussion = 0;
-            g_inst_visible_drumset = 0;
-        }
+        // if (!anyPercussionActive && ++g_percussion_framesWithEmptyQueue > 1000) {
+        //     g_show_percussion = 0;
+        //     g_drumsetVisible = 0;
+        // }
     }
 
     // --- Phase 3: Shutdown / fade ---

@@ -22,6 +22,7 @@
 #include "instruments/Piano.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/Xylophone.h"
 #include "scene/update.h"
 
 
@@ -157,7 +158,6 @@ extern short            g_doubleBass_assignment[300];
 extern short            g_doubleBass_playingStyle[300];
 extern short            g_xylophone_types[300];
 extern short            g_guitar_assignment[300];
-extern short            g_xylophone_assignment[300];
 extern short            g_stateChoir_assignment[300];
 extern short            g_whistles_assignment[300];
 extern short            g_panPipe_assignment[300];
@@ -556,48 +556,48 @@ void MidiJamInitialize()
     // --- Per-channel assignment init ---
     for (short slot = 0; slot < 300; ++slot)
     {
-        g_violin_assignment[slot]        = 0;
-        g_viola_assignment[slot]         = 0;
-        g_cello_assignment[slot]         = 0;
-        g_doubleBass_assignment[slot]    = 0;
+        // g_violinChannel[slot]        = 0;
+        // g_violaChannel[slot]         = 0;
+        // g_celloChannel[slot]         = 0;
+        // g_doubleBassChannel[slot]    = 0;
         g_doubleBass_playingStyle[slot]  = -1;
         g_midiJamInstrumentIds[slot]     = static_cast<MidiJamInstrumentId>(0);
         g_xylophone_types[slot]          = 0;
         g_pianoChannel[slot]         = -1;
         g_bassChannel[slot]          = -1;
-        g_guitar_assignment[slot]        = -1;
-        g_xylophone_assignment[slot]     = -1;
-        g_stateChoir_assignment[slot]    = -1;
+        // g_guitarChannel[slot]        = -1;
+        g_xylophoneChannel[slot]     = -1;
+        // g_stateChoirChannel[slot]    = -1;
         g_stageHornChannel[slot]     = -1;
-        g_whistles_assignment[slot]      = -1;
-        g_panPipe_assignment[slot]       = -1;
+        // g_whistlesChannel[slot]      = -1;
+        // g_panPipeChannel[slot]       = -1;
         g_isPanPipeCalliope[slot]        = -1;
-        g_harmonica_assignment[slot]     = -1;
-        g_popBottle_assignment[slot]     = -1;
-        g_agogos_assignment[slot]        = -1;
-        g_woodblocks_assignment[slot]    = -1;
+        // g_harmonicaChannel[slot]     = -1;
+        // g_popBottleChannel[slot]     = -1;
+        // g_agogosChannel[slot]        = -1;
+        // g_woodblocksChannel[slot]    = -1;
         g_stageStringChannel[slot]  = -1;
-        g_pizzicatoStrings_assignment[slot] = -1;
-        g_musicBox_assignment[slot]      = -1;
-        g_melodicTom_assignment[slot]    = -1;
-        g_synthDrum_assignment[slot]     = -1;
-        g_steelDrum_assignment[slot]     = -1;
-        g_timpani_assignment[slot]       = -1;
-        g_taiko_assignment[slot]         = -1;
-        g_tubularBells_assignment[slot]  = -1;
-        g_telephone_assignment[slot]     = -1;
-        g_trombone_assignment[slot]      = -1;
-        g_tuba_assignment[slot]          = -1;
-        g_ocarina_assignment[slot]       = -1;
-        g_frenchHorn_assignment[slot]    = -1;
-        g_baritoneSax_assignment[slot]   = -1;
-        g_tenorSax_assignment[slot]      = -1;
-        g_sapranoSax_assignment[slot]    = -1;
-        g_altoSax_assignment[slot]       = -1;
-        g_recorder_assignment[slot]      = -1;
-        g_piccolo_assignment[slot]       = -1;
-        g_flute_assignment[slot]         = -1;
-        g_trumpet_assignment[slot]       = -1;
+        // g_pizzicatoStringsChannel[slot] = -1;
+        // g_musicBoxChannel[slot]      = -1;
+        // g_melodicTomChannel[slot]    = -1;
+        // g_synthDrumChannel[slot]     = -1;
+        // g_steelDrumChannel[slot]     = -1;
+        // g_timpaniChannel[slot]       = -1;
+        // g_taikoChannel[slot]         = -1;
+        // g_tubularBellsChannel[slot]  = -1;
+        // g_telephoneChannel[slot]     = -1;
+        // g_tromboneChannel[slot]      = -1;
+        // g_tubaChannel[slot]          = -1;
+        // g_ocarinaChannel[slot]       = -1;
+        // g_frenchHornChannel[slot]    = -1;
+        // g_baritoneSaxChannel[slot]   = -1;
+        // g_tenorSaxChannel[slot]      = -1;
+        // g_sapranoSaxChannel[slot]    = -1;
+        // g_altoSaxChannel[slot]       = -1;
+        // g_recorderChannel[slot]      = -1;
+        // g_piccoloChannel[slot]       = -1;
+        // g_fluteChannel[slot]         = -1;
+        // g_trumpetChannel[slot]       = -1;
         g_harpChannel[slot]          = -1;
     }
 

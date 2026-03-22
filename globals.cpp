@@ -129,7 +129,6 @@ int g_vibratingString_frame = 0;
 // ---------------------------------------------------------------------------
 int g_show_percussion = 0;
 short g_inst_visible_drumset = 0;
-short g_inst_visible_xylophone = 0;
 short g_inst_visible_guitar = 0;
 int g_percussion_time_queue[88][32] = {};
 int g_percussion_velocity_queue[88][32] = {};
@@ -246,44 +245,6 @@ void* g_ds_particles = nullptr;
 GLfloat g_songFillbarScale = 0.0f;
 
 // ---------------------------------------------------------------------------
-// Instrument data pointers — non-piano; nullptr until transcribed
-// ---------------------------------------------------------------------------
-void* g_ds_trombone = nullptr;
-void* g_ds_trumpet = nullptr;
-void* g_ds_frenchHorn = nullptr;
-void* g_ds_baritoneSax = nullptr;
-void* g_ds_tenorSax = nullptr;
-void* g_ds_sapranoSax = nullptr;
-void* g_ds_altoSax = nullptr;
-void* g_ds_recorder = nullptr;
-void* g_ds_piccolo = nullptr;
-void* g_ds_flute = nullptr;
-void* g_ds_tuba = nullptr;
-void* g_ds_whistles = nullptr;
-void* g_ds_panPipe = nullptr;
-void* g_ds_harmonica = nullptr;
-void* g_ds_violin = nullptr;
-void* g_ds_viola = nullptr;
-void* g_ds_cello = nullptr;
-void* g_ds_doubleBass = nullptr;
-void* g_ds_popBottle = nullptr;
-void* g_ds_agogos = nullptr;
-void* g_ds_woodblocks = nullptr;
-void* g_ds_stageChoir = nullptr;
-void* g_ds_pizzicatoStrings = nullptr;
-void* g_ds_ocarina = nullptr;
-void* g_ds_xylophone = nullptr;
-void* g_ds_musicBox = nullptr;
-void* g_ds_melodicTom = nullptr;
-void* g_ds_synthDrum = nullptr;
-void* g_ds_steelDrum = nullptr;
-void* g_ds_timpani = nullptr;
-void* g_ds_taiko = nullptr;
-void* g_ds_telephone = nullptr;
-void* g_ds_tubularBells = nullptr;
-void* g_ds_guitar = nullptr;
-
-// ---------------------------------------------------------------------------
 // Scene models — shadow and stage
 // ---------------------------------------------------------------------------
 Ms3dBundle* g_screenGradient_ms3d = nullptr;
@@ -291,7 +252,6 @@ Ms3dBundle* g_songFillbarBox_ms3d = nullptr;
 Ms3dBundle* g_songFillbar_ms3d = nullptr;
 Ms3dBundle* g_stage_ms3d = nullptr;
 Ms3dBundle* g_pianoShadow_ms3d = nullptr;
-Ms3dBundle* g_xylophoneShadow_ms3d = nullptr;
 Ms3dBundle* g_guitarShadow_ms3d = nullptr;
 Ms3dBundle* g_drumShadow_ms3d = nullptr;
 
@@ -384,16 +344,6 @@ Ms3dBundle* g_tubularBellMallet_ms3d = nullptr;
 
 // Choir / accordion
 Ms3dBundle* g_stageChoir_ms3d = nullptr;
-
-// Xylophone
-Ms3dBundle* g_xylophoneMalletWhite_ms3d = nullptr;
-Ms3dBundle* g_malletHitShadow_ms3d = nullptr;
-Ms3dBundle* g_xylophoneLegs_ms3d = nullptr;
-Ms3dBundle* g_xylophoneCase_ms3d = nullptr;
-Ms3dBundle* g_xylophoneWhiteBar_ms3d[4] = {};
-Ms3dBundle* g_xylophoneWhiteBarDown_ms3d[4] = {};
-Ms3dBundle* g_xylophoneBlackBar_ms3d[4] = {};
-Ms3dBundle* g_xylophoneBlackBarDown_ms3d[4] = {};
 
 // Sax
 Ms3dBundle* g_baritoneSaxBody_ms3d = nullptr;
@@ -542,9 +492,7 @@ short g_viola_assignment[300] = {};
 short g_cello_assignment[300] = {};
 short g_doubleBass_assignment[300] = {};
 short g_doubleBass_playingStyle[300] = {};
-short g_xylophone_types[300] = {};
 short g_guitar_assignment[300] = {};
-short g_xylophone_assignment[300] = {};
 short g_stateChoir_assignment[300] = {};
 short g_whistles_assignment[300] = {};
 short g_panPipe_assignment[300] = {};

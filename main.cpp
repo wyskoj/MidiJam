@@ -21,6 +21,7 @@
 #include "instruments/Harp.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/Xylophone.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
 #include "render/window.h"
@@ -45,7 +46,7 @@ extern int g_worldReady;
 extern int g_killApplication_0;
 extern DWORD g_applicationStartTime;
 #if _MSC_VER < 1400
-extern long   g_lastUnixEpochTime;
+extern long g_lastUnixEpochTime;
 #else
 extern time_t g_lastUnixEpochTime;
 #endif
@@ -125,7 +126,6 @@ extern Ms3dBundle* g_songFillbarBox_ms3d;
 extern Ms3dBundle* g_songFillbar_ms3d;
 extern Ms3dBundle* g_stage_ms3d;
 extern Ms3dBundle* g_pianoShadow_ms3d;
-extern Ms3dBundle* g_xylophoneShadow_ms3d;
 
 extern Ms3dBundle* g_guitarShadow_ms3d;
 extern Ms3dBundle* g_drumShadow_ms3d;
@@ -216,17 +216,6 @@ extern Ms3dBundle* g_tubularBellMallet_ms3d;
 
 // Choir
 extern Ms3dBundle* g_stageChoir_ms3d;
-
-// Xylophone
-extern Ms3dBundle* g_xylophoneMalletWhite_ms3d;
-extern Ms3dBundle* g_malletHitShadow_ms3d;
-extern Ms3dBundle* g_xylophoneLegs_ms3d;
-extern Ms3dBundle* g_xylophoneCase_ms3d;
-extern Ms3dBundle* g_xylophoneWhiteBar_ms3d[4];
-extern Ms3dBundle* g_xylophoneWhiteBarDown_ms3d[4];
-extern Ms3dBundle* g_xylophoneBlackBar_ms3d[4];
-extern Ms3dBundle* g_xylophoneBlackBarDown_ms3d[4];
-
 // Sax
 extern Ms3dBundle* g_baritoneSaxBody_ms3d;
 extern Ms3dBundle* g_baritoneSaxHorn_ms3d;
@@ -639,18 +628,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         "XylophoneBar.bmp", "GlockenspielBar.bmp", "VibesBar.bmp", "MarimbaBar.bmp"
     };
     for (short i = 0; i < 4; ++i) {
-        LOAD_MODEL(g_xylophoneWhiteBar_ms3d[i], "XylophoneWhiteBar.ms3d");
+        g_xylophoneModels[i] = new XylophoneModels{};
+    }
+    for (short i = 0; i < 4; ++i) {
+        LOAD_MODEL(g_xylophoneModels[i]->xylophoneWhiteBar, "XylophoneWhiteBar.ms3d");
         if (i > 0)
-            REPLACE_TEX(g_xylophoneWhiteBar_ms3d[i], xyloBarTextures[0], xyloBarTextures[i]);
-        LOAD_MODEL(g_xylophoneWhiteBarDown_ms3d[i], "XylophoneWhiteBarDown.ms3d");
+            REPLACE_TEX(g_xylophoneModels[i]->xylophoneWhiteBar, xyloBarTextures[0], xyloBarTextures[i]);
+        LOAD_MODEL(g_xylophoneModels[i]->xylophoneWhiteBarDown, "XylophoneWhiteBarDown.ms3d");
         if (i > 0)
-            REPLACE_TEX(g_xylophoneWhiteBarDown_ms3d[i], xyloBarTextures[0], xyloBarTextures[i]);
-        LOAD_MODEL(g_xylophoneBlackBar_ms3d[i], "XylophoneBlackBar.ms3d");
+            REPLACE_TEX(g_xylophoneModels[i]->xylophoneWhiteBarDown, xyloBarTextures[0], xyloBarTextures[i]);
+        LOAD_MODEL(g_xylophoneModels[i]->xylophoneBlackBar, "XylophoneBlackBar.ms3d");
         if (i > 0)
-            REPLACE_TEX(g_xylophoneBlackBar_ms3d[i], xyloBarTextures[0], xyloBarTextures[i]);
-        LOAD_MODEL(g_xylophoneBlackBarDown_ms3d[i], "XylophoneBlackBarDown.ms3d");
+            REPLACE_TEX(g_xylophoneModels[i]->xylophoneBlackBar, xyloBarTextures[0], xyloBarTextures[i]);
+        LOAD_MODEL(g_xylophoneModels[i]->xylophoneBlackBarDown, "XylophoneBlackBarDown.ms3d");
         if (i > 0)
-            REPLACE_TEX(g_xylophoneBlackBarDown_ms3d[i], xyloBarTextures[0], xyloBarTextures[i]);
+            REPLACE_TEX(g_xylophoneModels[i]->xylophoneBlackBarDown, xyloBarTextures[0], xyloBarTextures[i]);
     }
 
     LOAD_MODEL(g_baritoneSaxBody_ms3d, "BaritoneSaxBody.ms3d");
@@ -930,10 +922,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(g_xylophoneLegs_ms3d);
     APPLY_TEX(g_xylophoneCase_ms3d);
     for (short i = 0; i < 4; ++i) {
-        APPLY_TEX(g_xylophoneWhiteBar_ms3d[i]);
-        APPLY_TEX(g_xylophoneWhiteBarDown_ms3d[i]);
-        APPLY_TEX(g_xylophoneBlackBar_ms3d[i]);
-        APPLY_TEX(g_xylophoneBlackBarDown_ms3d[i]);
+        APPLY_TEX(g_xylophoneModels[i]->xylophoneWhiteBar)
+        APPLY_TEX(g_xylophoneModels[i]->xylophoneWhiteBarDown)
+        APPLY_TEX(g_xylophoneModels[i]->xylophoneBlackBar)
+        APPLY_TEX(g_xylophoneModels[i]->xylophoneBlackBarDown)
     }
     APPLY_TEX(g_baritoneSaxBody_ms3d);
     APPLY_TEX(g_baritoneSaxHorn_ms3d);
