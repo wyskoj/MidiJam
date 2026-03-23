@@ -397,8 +397,6 @@ Ms3dBundle* g_trumpetMute_ms3d = nullptr;
 Ms3dBundle* g_trumpetKey1_ms3d = nullptr;
 Ms3dBundle* g_trumpetKey2_ms3d = nullptr;
 Ms3dBundle* g_trumpetKey3_ms3d = nullptr;
-Ms3dBundle* g_trombone_ms3d = nullptr;
-Ms3dBundle* g_tromboneSlide_ms3d = nullptr;
 
 // Bass / guitar
 Ms3dBundle* guitar_ms3d = nullptr;

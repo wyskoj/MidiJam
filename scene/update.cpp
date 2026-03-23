@@ -24,6 +24,7 @@
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
 #include "instruments/Xylophone.h"
+#include "instruments/Trombone.h"
 
 // ---------------------------------------------------------------------------
 // Extern globals
@@ -312,7 +313,7 @@ BOOL UpdateMidiJam() {
         RenderHarp();
         glPopMatrix();
     }
-    // if (g_trombone) RenderTrombone();
+    if (g_trombone) RenderTrombone();
     // if (g_trumpet) RenderTrumpet();
     // if (g_frenchHorn) RenderFrenchHorn();
     // if (g_baritoneSax) RenderBaritoneSax();
@@ -473,7 +474,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
     // if (g_popBottle && UpdatePopBottle(pmtNow)) anyInstrumentActive = 1;
     // if (g_agogos && UpdateAgogo(pmtNow)) anyInstrumentActive = 1;
     // if (g_woodblocks && UpdateWoodblocks(pmtNow)) anyInstrumentActive = 1;
-    // if (g_trombone && UpdateTrombone(pmtNow)) anyInstrumentActive = 1;
+    if (g_trombone && UpdateTrombone(pmtNow)) anyInstrumentActive = 1;
     // if (g_tuba && UpdateTuba(pmtNow)) anyInstrumentActive = 1;
     // if (g_frenchHorn && UpdateFrenchHorn(pmtNow)) anyInstrumentActive = 1;
     // if (g_ocarina && UpdateOcarina(pmtNow)) anyInstrumentActive = 1;

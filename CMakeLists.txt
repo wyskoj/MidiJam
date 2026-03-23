@@ -106,6 +106,8 @@ add_executable(MidiJam WIN32
         instruments/StageString.h
         instruments/Xylophone.cpp
         instruments/Xylophone.h
+        instruments/Trombone.cpp
+        instruments/Trombone.h
 )
 
 # ---------------------------------------------------------------------------

@@ -13,6 +13,7 @@
 #include "instruments/Harp.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/Trombone.h"
 #include "instruments/Xylophone.h"
 
 // Finds the first empty slot and executes body with slot variable in scope.
@@ -259,26 +260,50 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     }
                     break;
                 }
-                    
+
                 case XYLOPHONE: {
                     const auto v140 = noteMsg->wMusicValue - 21;
-                    if ( v140 < 0x58u )
-                    {
+                    if (v140 < 0x58u) {
                         int ii = 0;
-                        while (g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] && ii < 16) ++ii;
-                        if ( ii < 16 )
-                        {
-                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] = noteMsg->mtDuration;
-                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_18C6[v140][ii] = noteMsg->bVelocity;
-                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] = g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] - g_currentTempo_scaleFactor0_5;
-                            if ( g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] < 0 )
+                        while (g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] && ii < 16) ++
+                            ii;
+                        if (ii < 16) {
+                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] = noteMsg->
+                                mtDuration;
+                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_18C6[v140][ii] = noteMsg->
+                                bVelocity;
+                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] = g_xylophone[
+                                    g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] -
+                                g_currentTempo_scaleFactor0_5;
+                            if (g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] < 0)
                                 g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] = 10;
                             (pPerf->GetTime)(&rtNow, &mtNow);
-                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].queue[v140][ii] = noteMsg->mtTime - mtNow;
-                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].queue[v140][ii] -= g_currentTempo_scaleFactor0_9;
-                            if ( g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].queue[v140][ii] <= 0 )
+                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].queue[v140][ii] = noteMsg->mtTime -
+                                mtNow;
+                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].queue[v140][ii] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].queue[v140][ii] <= 0)
                                 g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].queue[v140][ii] = 1;
                         }
+                    }
+                    break;
+                }
+
+                case TROMBONE: {
+                    const auto v46 = (noteMsg->wMusicValue + 3) % 12;
+                    int i18 = 0;
+                    while (g_trombone[g_tromboneChannel[noteMsg->dwPChannel]].field_64[v46][i18] && i18 < 16) ++i18;
+                    if (i18 < 16) {
+                        g_trombone[g_tromboneChannel[noteMsg->dwPChannel]].field_64[v46][i18] = noteMsg->mtDuration;
+                        if (g_trombone[g_tromboneChannel[noteMsg->dwPChannel]].field_64[v46][i18] < 0)
+                            g_trombone[g_tromboneChannel[noteMsg->dwPChannel]].field_64[v46][i18] = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_trombone[g_tromboneChannel[noteMsg->dwPChannel]].field_364[v46][i18] = noteMsg->mtTime -
+                            mtNow;
+                        g_trombone[g_tromboneChannel[noteMsg->dwPChannel]].field_364[v46][i18] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_trombone[g_tromboneChannel[noteMsg->dwPChannel]].field_364[v46][i18] <= 0)
+                            g_trombone[g_tromboneChannel[noteMsg->dwPChannel]].field_364[v46][i18] = 1;
                     }
                     break;
                 }
@@ -364,6 +389,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                             break;
                     }
                     ++g_xylophoneCount;
+                    break;
+                }
+
+                case TROMBONE: {
+                    ALLOC_INST(trombone, TromboneState);
                     break;
                 }
 
