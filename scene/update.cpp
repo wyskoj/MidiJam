@@ -19,6 +19,7 @@
 #include "camera.h"
 #include "audio/playback.h"
 #include "instruments/Accordion.h"
+#include "instruments/Agogos.h"
 #include "instruments/Bass.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
@@ -166,8 +167,7 @@ static inline void RenderPercussion() {
 static inline void UpdateSteamPuffers() {
 }
 
-static inline void UpdateAllRecoils(float) {
-}
+void UpdateAllRecoils(const float scale);
 
 // FUNCTION: MIDIJAM 0x402A00
 BOOL UpdateMidiJam() {
@@ -339,7 +339,7 @@ BOOL UpdateMidiJam() {
         // if (g_cello) RenderCello();
         // if (g_doubleBass) RenderDoubleBass();
         // if (g_popBottle) RenderPopBottle();
-        // if (g_agogos) RenderAgogo();
+        if (g_agogos) RenderAgogos();
         // if (g_woodblocks) RenderWoodblock();
         // if (g_stageChoir) RenderStageChoir();
         if (g_accordion) RenderAccordion();
@@ -439,13 +439,13 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
     MUSIC_TIME pmtNow; // [esp+50h] [ebp-18h] BYREF
     DWORD globalTimeMs; // [esp+54h] [ebp-14h]
     __int16 patch; // [esp+58h] [ebp-10h]
-    float recoil_scale_factor; // [esp+5Ch] [ebp-Ch]
+    // [esp+5Ch] [ebp-Ch]
     __int16 anyInstrumentActive; // [esp+60h] [ebp-8h]
     __int16 cameraTransformComponentsAtTarget; // [esp+64h] [ebp-4h]
 
     if (g_worldReady == 1) // this function no-ops if world not ready
     {
-        //     recoil_scale_factor = RECOIL_SCALE_FACTOR * 0.25;
+        float recoil_scale_factor = RECOIL_SCALE_FACTOR * 0.25;
         prtNow = 0;
         pmtNow = 0;
         if (g_directMusicSegmentPlayer->IsPlaying()) {
@@ -484,8 +484,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         if (g_bass && UpdateBass(pmtNow))
             anyInstrumentActive = 1;
-        if ( g_guitar && UpdateGuitar(pmtNow) )
-          anyInstrumentActive = 1;
+        if (g_guitar && UpdateGuitar(pmtNow))
+            anyInstrumentActive = 1;
         if (g_stageHorn && UpdateStageHorn(pmtNow))
             anyInstrumentActive = 1;
         //     if ( g_whistles && UpdateWhistles(pmtNow) )
@@ -497,12 +497,12 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_popBottle && UpdatePopBottle(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_agogos && UpdateAgogo(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if (g_agogos && UpdateAgogos(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_woodblocks && UpdateWoodblocks(pmtNow) )
         //       anyInstrumentActive = 1;
-        if ( g_trombone && UpdateTrombone(pmtNow) )
-          anyInstrumentActive = 1;
+        if (g_trombone && UpdateTrombone(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_tuba && UpdateTuba(pmtNow) )
         //       anyInstrumentActive = 1;
         //     if ( g_frenchHorn && UpdateFrenchHorn(pmtNow) )
@@ -547,7 +547,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         //     if ( g_pizzicatoStrings && UpdatePizzicatoStrings(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     UpdateAllRecoils(recoil_scale_factor);
+        UpdateAllRecoils(recoil_scale_factor);
         //     anyPercussionActive = 0;
         //     if ( g_show_percussion == 1 )
         //     {
@@ -908,7 +908,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
                 if (g_cameraLocation[patch] <= *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch)) {
                     if (g_cameraLocation[patch] == *(&CAMERA_POSITIONS[g_targetCameraAngle].cameraX + patch))
                         ++cameraTransformComponentsAtTarget;
-                } else {
+                }
+                else {
                     // adjust camera transform to reach target
                     g_cameraLocation[patch] = g_cameraLocation[patch] + g_autoCamDeltaTransform[patch];
                     // check for equality
@@ -917,7 +918,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
                         ++cameraTransformComponentsAtTarget;
                     }
                 }
-            } else {
+            }
+            else {
                 // adjust camera transform to reach target
                 g_cameraLocation[patch] = g_cameraLocation[patch] + g_autoCamDeltaTransform[patch];
                 // check for equality
@@ -1097,5 +1099,17 @@ void HandleKeyPresses() {
     if (g_mouseWheelMoved) {
         g_mouseWheelDelta = 0;
         g_mouseWheelMoved = 0;
+    }
+}
+
+void UpdateAllRecoils(const float scale) {
+    const float recoil_scale_factor = 0.05 * scale;
+
+    for (short k = 0; k < g_agogosCount; ++k) {
+        for (short m = 0; m < 12; ++m) {
+            g_agogos[k].recoilOffset[m] = g_agogos[k].recoilOffset[m] - recoil_scale_factor;
+            if (g_agogos[k].recoilOffset[m] < 0.0)
+                g_agogos[k].recoilOffset[m] = 0.0;
+        }
     }
 }

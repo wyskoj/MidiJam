@@ -9,6 +9,7 @@
 #include <cstdlib>
 
 #include "instruments/Accordion.h"
+#include "instruments/Agogos.h"
 #include "instruments/Bass.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
@@ -336,6 +337,25 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case AGOGOS: {
+                    const auto v115 = (noteMsg->wMusicValue + 3) % 12;
+                    int i2 = 0;
+                    while (g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededHitDurationMs[v115][i2] && i2 < 16) ++i2;
+                    if (i2 < 16) {
+                        g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededHitDurationMs[v115][i2] = noteMsg->mtDuration;
+                        if (g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededHitDurationMs[v115][i2] < 0)
+                            g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededHitDurationMs[v115][i2] = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededStartDelayMs[v115][i2] = noteMsg->mtTime - mtNow;
+                        g_agogos[g_agogosChannel[noteMsg->dwPChannel]].queuedVelocity[v115][i2] = noteMsg->bVelocity;
+                        g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededStartDelayMs[v115][i2] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededStartDelayMs[v115][i2] <= 0)
+                            g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededStartDelayMs[v115][i2] = 1;
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -427,6 +447,12 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case GUITAR: {
                     ALLOC_INST(guitar, GuitarState);
+                    break;
+                }
+
+                case AGOGOS: {
+                    ALLOC_INST(agogos, AgogosState);
+                    break;
                 }
 
                 default:

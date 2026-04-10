@@ -18,6 +18,7 @@
 #include "instruments/keys.h"
 #include "macros.h"
 #include "instruments/Accordion.h"
+#include "instruments/Agogos.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/StageHorn.h"
@@ -130,7 +131,6 @@ extern Ms3dBundle* g_pianoShadow_ms3d;
 extern Ms3dBundle* g_guitarShadow_ms3d;
 extern Ms3dBundle* g_drumShadow_ms3d;
 extern Ms3dBundle* g_pianoStand_ms3d;
-extern Ms3dBundle* g_agogoSingle_ms3d;
 extern Ms3dBundle* g_woodBlockSingle_ms3d;
 
 // Drum set models

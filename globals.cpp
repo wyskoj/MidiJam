@@ -138,7 +138,7 @@ short g_cymbal_patches[7] = {};
 // Recoil / physics constants (values populated from binary data; zeroed for now)
 // ---------------------------------------------------------------------------
 float RECOIL_SCALE_FACTOR = 5.0f;
-float MAX_RECOIL = 0.0f;
+float MAX_RECOIL = 3.0f;
 float CYMBAL_LOC_X[7] = {};
 float CYMBAL_LOC_Z[7] = {};
 float g_cymbal_rot_y[7] = {};
@@ -251,7 +251,6 @@ Ms3dBundle* g_pianoShadow_ms3d = nullptr;
 Ms3dBundle* g_guitarShadow_ms3d = nullptr;
 Ms3dBundle* g_drumShadow_ms3d = nullptr;
 
-Ms3dBundle* g_agogoSingle_ms3d = nullptr;
 Ms3dBundle* g_woodBlockSingle_ms3d = nullptr;
 
 // Drum set

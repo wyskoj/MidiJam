@@ -111,6 +111,8 @@ add_executable(MidiJam WIN32
         instruments/Guitar.cpp
         instruments/Guitar.h
         scene/camera.cpp
+        instruments/Agogos.cpp
+        instruments/Agogos.h
 )
 
 # ---------------------------------------------------------------------------

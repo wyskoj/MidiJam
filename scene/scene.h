@@ -12,4 +12,9 @@
 extern MUSIC_TIME g_currentGlobalTime;
 extern GLfloat STAGE_BASE_Z;
 
+extern float EAST_SPIRAL_X;
+extern float EAST_SPIRAL_Y;
+extern float EAST_SPIRAL_Z;
+extern float WHISTLES_ROTATION_FACTOR;
+
 #endif //MIDIJAM_SCENE_H
