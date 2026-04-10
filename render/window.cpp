@@ -32,31 +32,39 @@ extern short g_mouseWheelDelta;
 
 // FUNCTION: MIDIJAM 0x446450
 LRESULT CALLBACK HandleWindowBehavior(const HWND hWnd, const UINT Msg, const WPARAM wParam, const LPARAM lParam) {
-    if (Msg > WM_LBUTTONDOWN) {
+    LRESULT result; // eax
+
+    if (Msg > static_cast<unsigned int>(WM_LBUTTONDOWN)) {
         switch (Msg) {
             case WM_LBUTTONUP:
                 g_leftButtonDown = 0;
-                return 0;
+                result = 0;
+                break;
             case WM_RBUTTONDOWN:
                 if (!g_rightButtonDown)
                     g_rightButtonClicked = 1;
                 g_rightButtonDown = 1;
-                return 0;
+                result = 0;
+                break;
             case WM_RBUTTONUP:
                 g_rightButtonDown = 0;
-                return 0;
+                result = 0;
+                break;
             case WM_MBUTTONDOWN:
                 if (!g_middleButtonDown)
                     g_middleButtonClicked = 1;
                 g_middleButtonDown = 1;
-                return 0;
+                result = 0;
+                break;
             case WM_MBUTTONUP:
                 g_middleButtonDown = 0;
-                return 0;
+                result = 0;
+                break;
             case WM_MOUSEWHEEL:
                 g_mouseWheelMoved = 1;
-                g_mouseWheelDelta += static_cast<short>(HIWORD(wParam));
-                return 0;
+                g_mouseWheelDelta += HIWORD(wParam);
+                result = 0;
+                break;
             default:
                 return DefWindowProcA(hWnd, Msg, wParam, lParam);
         }
@@ -68,19 +76,19 @@ LRESULT CALLBACK HandleWindowBehavior(const HWND hWnd, const UINT Msg, const WPA
         return 0;
     }
     else {
-        if (Msg > WM_KEYDOWN) {
+        if (static_cast<unsigned int>(Msg) > WM_KEYDOWN) {
             switch (Msg) {
                 case WM_KEYUP:
                     g_keyStateArray[wParam] = 0;
                     return 0;
                 case WM_SYSCOMMAND:
                     if (wParam == SC_SCREENSAVE || wParam == SC_MONITORPOWER)
-                        return 0;
+                        return 0; // Prevent screensaver or monitor power-off while game is running?
                     break;
                 case WM_MOUSEMOVE:
                     g_mouseMoved = 1;
-                    g_mouseY = static_cast<short>(HIWORD(lParam));
-                    g_mouseX = static_cast<short>(LOWORD(lParam));
+                    g_mouseY = HIWORD(wParam);
+                    g_mouseX = wParam;
                     return 0;
             }
         }
@@ -88,20 +96,21 @@ LRESULT CALLBACK HandleWindowBehavior(const HWND hWnd, const UINT Msg, const WPA
             switch (Msg) {
                 case WM_KEYDOWN:
                     g_keyStateArray[wParam] = 1;
-                    g_lastKeyPressed = static_cast<char>(wParam);
+                    g_lastKeyPressed = wParam;
                     return 0;
                 case WM_SIZE:
                     return 0;
                 case WM_ACTIVATE:
-                    g_isWindowActive = (HIWORD(wParam) == 0);
+                    g_isWindowActive = HIWORD(wParam) == 0;
                     return 0;
-                case WM_CLOSE:
-                    PostQuitMessage(0);
+                case WM_CLOSE: // User clicked the X button on the window
+                    PostQuitMessage(0); // Kill app
                     return 0;
             }
         }
         return DefWindowProcA(hWnd, Msg, wParam, lParam);
     }
+    return result;
 }
 
 // FUNCTION: MIDIJAM 0x446690
@@ -124,7 +133,7 @@ bool __cdecl CreateMidijamWindow(const LPCSTR lpWindowName, const HINSTANCE hIns
     g_fullscreen = isFullscreen;
     g_hInstance = GetModuleHandleA(0);
     WndClass.style = 35; // CS_HREDRAW | CS_VREDRAW | CS_OWNDC
-    WndClass.lpfnWndProc = HandleWindowBehavior;
+    WndClass.lpfnWndProc = static_cast<WNDPROC>(HandleWindowBehavior);
     WndClass.cbClsExtra = 0;
     WndClass.cbWndExtra = 0;
     WndClass.hInstance = g_hInstance;
@@ -147,7 +156,7 @@ bool __cdecl CreateMidijamWindow(const LPCSTR lpWindowName, const HINSTANCE hIns
         // Set fullscreen
         if (ChangeDisplaySettingsA(&DevMode, CDS_FULLSCREEN)) {
             PostQuitMessage(0);
-            return false;
+            return 0;
         }
         else {
         LABEL_8:

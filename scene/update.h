@@ -8,16 +8,6 @@
 #include <windows.h>
 #include <mmsystem.h>
 
-struct CameraPosition
-{
-    float cameraX;
-    float cameraY;
-    float cameraZ;
-    float lookAtX;
-    float lookAtY;
-    float lookAtZ;
-};
-
 BOOL UpdateMidiJam();
 void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2);
 void HandleKeyPresses();

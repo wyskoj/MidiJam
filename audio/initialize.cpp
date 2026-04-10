@@ -212,7 +212,7 @@ extern char             g_shiftPressed;
 // --- Camera ---
 extern float            g_cameraLocation[6];
 extern CameraAngle     g_targetCameraAngle;
-extern int              g_rotatingCameraIsActive;
+extern short              g_rotatingCameraIsActive;
 extern CameraPosition   CAMERA_POSITIONS[11];
 
 extern GLfloat g_fadeFactor;

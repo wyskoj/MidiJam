@@ -5,6 +5,15 @@
 #ifndef MIDIJAM_CAMERA_H
 #define MIDIJAM_CAMERA_H
 
+struct CameraPosition {
+    float cameraX;
+    float cameraY;
+    float cameraZ;
+    float lookAtX;
+    float lookAtY;
+    float lookAtZ;
+};
+
 #if _MSC_VER < 1400
 enum CameraAngle
 #else
@@ -33,5 +42,14 @@ enum RotatingCameraDirection : short
     CLOCKWISE = 0,
     ANTI_CLOCKWISE = 1,
 };
+
+void TriggerAutoCam();
+void MoveCameraToAngle(CameraAngle angle, short isAutocamEnabled);
+
+bool IsCameraAngleViable_2();
+bool IsCameraAngleViable_3();
+bool IsCameraAngleViable_4();
+bool IsCameraAngleViable_5();
+bool IsCameraAngleViable_6();
 
 #endif //MIDIJAM_CAMERA_H

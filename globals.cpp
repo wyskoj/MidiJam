@@ -45,7 +45,7 @@ char g_keyStateArray[256] = {};
 char g_lastKeyPressed = 0;
 char g_isWindowActive = 0;
 
-GLfloat g_fadeFactor;
+
 CHAR g_workingDirectory[1000];
 bool g_fullscreen;
 int g_windowCenter_X;
@@ -106,16 +106,13 @@ float g_playbackSpeed = 1.0f;
 // ---------------------------------------------------------------------------
 // Camera
 // ---------------------------------------------------------------------------
-float g_cameraLocation[6] = {};
-int g_rotatingCameraIsActive = 0;
+
+short g_rotatingCameraIsActive = 0;
 float g_rotatingCameraAngle = 0.0f;
 RotatingCameraDirection g_rotatingCameraDirection = CLOCKWISE;
 int g_rotatingCameraIdleTime = 0;
-CameraAngle g_targetCameraAngle = CAMERA_1A;
-float g_autoCamDeltaTransform[6] = {};
-int g_autoCamIsIdle = 0;
-int g_autoCamIdleTime = 0;
-int g_autoCameraIsActive = 0;
+
+
 
 // ---------------------------------------------------------------------------
 // Animation
@@ -397,27 +394,7 @@ Ms3dBundle* g_trumpetKey1_ms3d = nullptr;
 Ms3dBundle* g_trumpetKey2_ms3d = nullptr;
 Ms3dBundle* g_trumpetKey3_ms3d = nullptr;
 
-// Camera positions — populated by MidiJamInitialize
-// Size: 11 entries (CAMERA_1A through CAMERA_6)
-struct CameraPosition
-{
-    float cameraX, cameraY, cameraZ;
-    float lookAtX, lookAtY, lookAtZ;
-};
 
-CameraPosition CAMERA_POSITIONS[11] = {
-    {-2.0f, 60.0f, 120.0f, -2.0f, 20.0f, 0.0f}, // CAMERA_1A
-    {60.0f, 60.0f, 110.0f, 10.0f, 20.0f, 0.0f}, // CAMERA_1B
-    {-60.0f, 60.0f, 80.0f, -20.0f, 20.0f, 0.0f}, // CAMERA_1C
-    {0.0f, 40.0f, 30.0f, -50.0f, 20.0f, -20.0f}, // CAMERA_2A
-    {0.0f, 50.0f, 20.0f, 50.0f, 24.0f, -25.0f}, // CAMERA_4A
-    {0.0f, 30.0f, 25.0f, 0.0f, 5.0f, -65.0f}, // CAMERA_3A
-    {5.0f, 400.0f, 10.0f, 5.0f, 0.0f, -40.0f}, // CAMERA_5
-    {-35.0f, 45.0f, 20.0f, -50.0f, -25.0f, -25.0f}, // CAMERA_2B
-    {35.0f, -5.0f, -30.0f, 55.0f, 25.0f, -40.0f}, // CAMERA_4B
-    {-20.0f, 45.0f, -10.0f, 5.0f, 0.0f, -95.0f}, // CAMERA_3B
-    {17.0f, -1.0f, 30.0f, 42.0f, 4.0f, -5.0f}, // CAMERA_6
-};
 
 // DirectMusic GUID
 GUID GUID_PERF_MASTER_TEMPO = {

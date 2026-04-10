@@ -8,7 +8,6 @@
 #include "../model/Ms3dBundle.h"
 #include "instrument.h"
 
-#include <cstdint>
 #include <dmusici.h>
 
 // ---------------------------------------------------------------------------

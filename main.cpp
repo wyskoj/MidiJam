@@ -289,9 +289,7 @@ extern void* g_ds_particles; // TODO: type when transcribed
 
 extern __int16 word_46CEE0[23][6];
 
-// ---------------------------------------------------------------------------
-// FUNCTION: MIDIJAM 0x421610
-// ---------------------------------------------------------------------------
+// FUNCTION: MIDIJAM 0x413920
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
     g_killApplication_0 = 0;
     g_worldReady = 0;
@@ -300,7 +298,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // --- Latin square init ---
     for (short i = 0; i < 6; ++i)
         for (short j = 0; j < 6; ++j)
-             g_latinSquare[i][j] = (i + j) % 6;
+            g_latinSquare[i][j] = (i + j) % 6;
 
     g_keysOffset = 0.0f;
 
@@ -317,26 +315,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         g_bassNotes[i][1] = i + 12;
         g_bassNotes[i][2] = i + 17;
         g_bassNotes[i][3] = i + 22;
-        flt_468BF4[i + 1] = BASS_FRET_HEIGHTS[i + 1] / -46.081001f;
+        flt_468BF4[i + 1] = BASS_FRET_HEIGHTS[i + 1] / -46.081001;
         word_46CEE0[i][0] = i + 19;
         word_46CEE0[i][1] = i + 24;
         word_46CEE0[i][2] = i + 29;
         word_46CEE0[i][3] = i + 34;
         word_46CEE0[i][4] = i + 38;
         word_46CEE0[i][5] = i + 43;
-        flt_4654A0[i] = flt_45EAD0[i] / -34.700001f;
+        flt_4654A0[i] = flt_45EAD0[i] / -34.700001;
     }
 
-    // --- String instrument note table init ---
     for (short i = 0; i < 18; ++i) {
-        word_46B2D0[4 * i + 0] = i + 34;
-        word_46B2D0[4 * i + 1] = i + 41;
-        word_46B2D0[4 * i + 2] = i + 48;
-        word_46B2D0[4 * i + 3] = i + 55;
-        word_4688C0[4 * i + 0] = i + 27;
-        word_4688C0[4 * i + 1] = i + 34;
-        word_4688C0[4 * i + 2] = i + 41;
-        word_4688C0[4 * i + 3] = i + 48;
+        // word_46B2D0[4 * i] = i + 34;
+        // word_46B2D2[4 * i] = i + 41;
+        // word_46B2D4[4 * i] = i + 48;
+        // word_46B2D6[4 * i] = i + 55;
+        // word_4688C0[4 * i] = i + 27;
+        // word_4688C2[4 * i] = i + 34;
+        // word_4688C4[4 * i] = i + 41;
+        // word_4688C6[4 * i] = i + 48;
     }
 
     // --- Wind instrument note table init ---
@@ -624,7 +621,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         "XylophoneBar.bmp", "GlockenspielBar.bmp", "VibesBar.bmp", "MarimbaBar.bmp"
     };
     for (short i = 0; i < 4; ++i) {
-        g_xylophoneModels[i] = new XylophoneModels{};
+        g_xylophoneModels[i] = new XylophoneModels();
     }
     for (short i = 0; i < 4; ++i) {
         LOAD_MODEL(g_xylophoneModels[i]->xylophoneWhiteBar, "XylophoneWhiteBar.ms3d");
@@ -1005,56 +1002,52 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     // --- Timer and MIDI startup ---
+    int v613 = 0;
     RECOIL_SCALE_FACTOR = 5.0f;
     g_timerEventId = timeSetEvent(5u, 0, UpdateMidiJamMM, 0, TIME_PERIODIC);
 
     // --- MIDI file from command line ---
     if (strlen(lpCmdLine) > 4) {
-        short m = 0;
-        while (m < static_cast<short>(strlen(lpCmdLine) - 4)
-            && !(lpCmdLine[m] == '.' && lpCmdLine[m + 1] == 'M' && lpCmdLine[m + 2] == 'I' && lpCmdLine[m + 3] == 'D')
-            && !(lpCmdLine[m] == '.' && lpCmdLine[m + 1] == 'R' && lpCmdLine[m + 2] == 'M' && lpCmdLine[m + 3] ==
-                'I')) {
+        // Copy in midi file name (without extension)
+        short m;
+        for (m = 0; m < static_cast<__int16>(strlen(lpCmdLine) - 4) && (lpCmdLine[m] != '.' || lpCmdLine[m + 1] != 'M'
+                 || lpCmdLine[m + 2] != 'I' || lpCmdLine[m + 3] != 'D' || lpCmdLine[m] != '.' || lpCmdLine[m + 1] != 'R'
+                 || lpCmdLine[m + 2] != 'M' || lpCmdLine[m + 3] != 'I'); ++m) {
             g_midiFileName[m] = lpCmdLine[m];
-            ++m;
         }
+        // Copy in file extension
         g_midiFileName[m] = lpCmdLine[m];
         g_midiFileName[m + 1] = lpCmdLine[m + 1];
         g_midiFileName[m + 2] = lpCmdLine[m + 2];
         g_midiFileName[m + 3] = lpCmdLine[m + 3];
         g_midiFileName[m + 4] = 0;
-
-        // Strip leading quote if present
+        // Remove quotes if it has any
         if (g_midiFileName[0] == '"') {
-            short n = 0;
-            while (g_midiFileName[n]) {
+            short n;
+            for (n = 0; g_midiFileName[n]; ++n) {
                 g_midiFileName[n] = g_midiFileName[n + 1];
-                ++n;
             }
-            if (byte_461DD6[n] == '"')
+            if (byte_461DD6[n] == '"') // replace beginning quote with null terminator
                 byte_461DD6[n] = 0;
         }
     }
-
-    // --- Load and play ---
     if (strlen(lpCmdLine) <= 4) {
+        // no midi file passed, load default song
         if (LoadAndPlayMidiFile("rocky_1.mid") == 1)
             g_killApplication_0 = 1;
     }
-    else {
-        if (LoadAndPlayMidiFile(g_midiFileName) == 1)
-            g_killApplication_0 = 1;
+    // load custom midi file
+    else if (LoadAndPlayMidiFile(g_midiFileName) == 1) {
+        g_killApplication_0 = 1;
     }
-
     g_worldReady = 1;
-
-    // --- Main loop ---
-    int frameCount = 0;
     MSG Msg = {};
+
     while (!g_killApplication_0) {
-        if (PeekMessageA(&Msg, nullptr, 0, 0, PM_REMOVE)) {
-            if (Msg.message == WM_QUIT)
+        if (PeekMessageA(&Msg, 0, 0, 0, 1u)) {
+            if (Msg.message == WM_QUIT) {
                 g_killApplication_0 = 1;
+            }
             else {
                 TranslateMessage(&Msg);
                 DispatchMessageA(&Msg);
@@ -1062,20 +1055,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         }
         else if (!g_isWindowActive || UpdateMidiJam()) {
             SwapBuffers_0();
-            ++frameCount;
-            if (time(nullptr) > g_lastUnixEpochTime) {
-                g_framesPerSecond = static_cast<float>(frameCount);
-                frameCount = 0;
-                g_lastUnixEpochTime = time(nullptr);
+            ++v613;
+            // run once per second
+            if (time(0) > g_lastUnixEpochTime) {
+                g_framesPerSecond = static_cast<double>(v613);
+                v613 = 0;
+                g_lastUnixEpochTime = time(0);
             }
         }
         else {
             g_killApplication_0 = 1;
         }
     }
-
     timeKillEvent(g_timerEventId);
     MidiJamWindowCleanup();
     fclose(g_hwfStream);
-    return static_cast<int>(Msg.wParam);
+    return Msg.wParam; // End of WinMain in normal scenario
 }

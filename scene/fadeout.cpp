@@ -4,7 +4,7 @@
 
 #include "fadeout.h"
 
-extern GLfloat g_fadeFactor;
+GLfloat g_fadeFactor = 0.0f;
 
 // FUNCTION: MIDIJAM 0x438B80
 // MATCH: EXACT

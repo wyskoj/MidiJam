@@ -110,6 +110,7 @@ add_executable(MidiJam WIN32
         instruments/Trombone.h
         instruments/Guitar.cpp
         instruments/Guitar.h
+        scene/camera.cpp
 )
 
 # ---------------------------------------------------------------------------
