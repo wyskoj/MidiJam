@@ -115,6 +115,8 @@ add_executable(MidiJam WIN32
         instruments/Agogos.h
         instruments/Woodblocks.cpp
         instruments/Woodblocks.h
+        instruments/StageChoir.cpp
+        instruments/StageChoir.h
 )
 
 # ---------------------------------------------------------------------------

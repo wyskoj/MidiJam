@@ -13,6 +13,7 @@
 #include "instruments/Bass.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
+#include "instruments/StageChoir.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
 #include "instruments/Trombone.h"
@@ -263,6 +264,24 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     }
                     break;
                 }
+                    
+                case STAGE_CHOIR: {
+                    const auto v50 = (noteMsg->wMusicValue + 3) % 12;
+                    int i17 =0;
+                    while (g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_64[v50][i17] && i17 < 16) ++i17;
+                    if ( i17 < 16 )
+                    {
+                        g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_64[v50][i17] = noteMsg->mtDuration;
+                        if ( g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_64[v50][i17] < 0 )
+                            g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_64[v50][i17] = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_364[v50][i17] = noteMsg->mtTime - mtNow;
+                        g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_364[v50][i17] -= g_currentTempo_scaleFactor0_9;
+                        if ( g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_364[v50][i17] <= 0 )
+                            g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_364[v50][i17] = 1;
+                    }
+                    break;
+                }
 
                 case XYLOPHONE: {
                     const auto v140 = noteMsg->wMusicValue - 21;
@@ -441,6 +460,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case STAGE_STRINGS: {
                     ALLOC_INST(stageString, StageStringState);
+                    break;
+                }
+
+                case STAGE_CHOIR: {
+                    ALLOC_INST(stageChoir, StageChoirState);
                     break;
                 }
 

@@ -23,6 +23,7 @@
 #include "instruments/Bass.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
+#include "instruments/StageChoir.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
 #include "instruments/Xylophone.h"
@@ -342,7 +343,7 @@ BOOL UpdateMidiJam() {
         // if (g_popBottle) RenderPopBottle();
         if (g_agogos) RenderAgogos();
         if (g_woodblocks) RenderWoodblocks();
-        // if (g_stageChoir) RenderStageChoir();
+        if (g_stageChoir) RenderStageChoir();
         if (g_accordion) RenderAccordion();
         if (g_stageString) RenderStageString();
         // if (g_pizzicatoStrings) RenderPizzicatoStrings();
@@ -526,8 +527,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_trumpet && UpdateTrumpet(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_stageChoir && UpdateStageChoir(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_stageChoir && UpdateStageChoir(pmtNow) )
+          anyInstrumentActive = 1;
         //     if ( g_musicBox && UpdateMusicBox(pmtNow) )
         //       anyInstrumentActive = 1;
         //     if ( g_melodicTom && UpdateMelodicTom(pmtNow) )

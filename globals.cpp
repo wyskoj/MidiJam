@@ -335,9 +335,6 @@ Ms3dBundle* g_tubularBell_ms3d = nullptr;
 Ms3dBundle* g_tubularBellDark_ms3d = nullptr;
 Ms3dBundle* g_tubularBellMallet_ms3d = nullptr;
 
-// Choir / accordion
-Ms3dBundle* g_stageChoir_ms3d = nullptr;
-
 // Sax
 Ms3dBundle* g_baritoneSaxBody_ms3d = nullptr;
 Ms3dBundle* g_baritoneSaxHorn_ms3d = nullptr;
