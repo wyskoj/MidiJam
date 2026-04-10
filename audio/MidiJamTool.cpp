@@ -16,6 +16,7 @@
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
 #include "instruments/Trombone.h"
+#include "instruments/Woodblocks.h"
 #include "instruments/Xylophone.h"
 
 // Finds the first empty slot and executes body with slot variable in scope.
@@ -340,18 +341,50 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                 case AGOGOS: {
                     const auto v115 = (noteMsg->wMusicValue + 3) % 12;
                     int i2 = 0;
-                    while (g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededHitDurationMs[v115][i2] && i2 < 16) ++i2;
+                    while (g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededHitDurationMs[v115][i2] && i2 < 16)
+                        ++
+                            i2;
                     if (i2 < 16) {
-                        g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededHitDurationMs[v115][i2] = noteMsg->mtDuration;
+                        g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededHitDurationMs[v115][i2] = noteMsg->
+                            mtDuration;
                         if (g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededHitDurationMs[v115][i2] < 0)
                             g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededHitDurationMs[v115][i2] = 10;
                         (pPerf->GetTime)(&rtNow, &mtNow);
-                        g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededStartDelayMs[v115][i2] = noteMsg->mtTime - mtNow;
+                        g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededStartDelayMs[v115][i2] = noteMsg->mtTime -
+                            mtNow;
                         g_agogos[g_agogosChannel[noteMsg->dwPChannel]].queuedVelocity[v115][i2] = noteMsg->bVelocity;
                         g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededStartDelayMs[v115][i2] -=
                             g_currentTempo_scaleFactor0_9;
                         if (g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededStartDelayMs[v115][i2] <= 0)
                             g_agogos[g_agogosChannel[noteMsg->dwPChannel]].quededStartDelayMs[v115][i2] = 1;
+                    }
+                    break;
+                }
+
+                case WOODBLOCKS: {
+                    const auto v111 = (noteMsg->wMusicValue + 3) % 12;
+                    int i3 = 0;
+                    while (g_woodblocks[g_woodblocksChannel[noteMsg->dwPChannel]].quededHitDurationMs[v111][i3]
+                        && i3 < 16)
+                        i3++;
+                    if (i3 < 16) {
+                        g_woodblocks[g_woodblocksChannel[noteMsg->dwPChannel]].quededHitDurationMs[v111][i3] =
+                            noteMsg->mtDuration;
+                        if (g_woodblocks[g_woodblocksChannel[noteMsg->dwPChannel]].quededHitDurationMs[v111][i3]
+                            < 0)
+                            g_woodblocks[g_woodblocksChannel[noteMsg->dwPChannel]].quededHitDurationMs[v111][i3]
+                                = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_woodblocks[g_woodblocksChannel[noteMsg->dwPChannel]].quededStartDelayMs[v111][i3] =
+                            noteMsg->mtTime - mtNow;
+                        g_woodblocks[g_woodblocksChannel[noteMsg->dwPChannel]].queuedVelocity[v111][i3] = noteMsg->
+                            bVelocity;
+                        g_woodblocks[g_woodblocksChannel[noteMsg->dwPChannel]].quededStartDelayMs[v111][i3] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_woodblocks[g_woodblocksChannel[noteMsg->dwPChannel]].quededStartDelayMs[v111][i3]
+                            <= 0)
+                            g_woodblocks[g_woodblocksChannel[noteMsg->dwPChannel]].quededStartDelayMs[v111][i3]
+                                = 1;
                     }
                     break;
                 }
@@ -452,6 +485,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case AGOGOS: {
                     ALLOC_INST(agogos, AgogosState);
+                    break;
+                }
+
+                case WOODBLOCKS: {
+                    ALLOC_INST(woodblocks, WoodblocksState);
                     break;
                 }
 

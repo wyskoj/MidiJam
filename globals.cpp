@@ -251,8 +251,6 @@ Ms3dBundle* g_pianoShadow_ms3d = nullptr;
 Ms3dBundle* g_guitarShadow_ms3d = nullptr;
 Ms3dBundle* g_drumShadow_ms3d = nullptr;
 
-Ms3dBundle* g_woodBlockSingle_ms3d = nullptr;
-
 // Drum set
 Ms3dBundle* g_drumSet_Stick_ms3d = nullptr;
 Ms3dBundle* g_cowbell_ms3d = nullptr;

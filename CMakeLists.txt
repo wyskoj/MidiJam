@@ -113,6 +113,8 @@ add_executable(MidiJam WIN32
         scene/camera.cpp
         instruments/Agogos.cpp
         instruments/Agogos.h
+        instruments/Woodblocks.cpp
+        instruments/Woodblocks.h
 )
 
 # ---------------------------------------------------------------------------

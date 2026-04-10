@@ -27,6 +27,7 @@
 #include "instruments/StageString.h"
 #include "instruments/Xylophone.h"
 #include "instruments/Trombone.h"
+#include "instruments/Woodblocks.h"
 
 // ---------------------------------------------------------------------------
 // Extern globals
@@ -340,7 +341,7 @@ BOOL UpdateMidiJam() {
         // if (g_doubleBass) RenderDoubleBass();
         // if (g_popBottle) RenderPopBottle();
         if (g_agogos) RenderAgogos();
-        // if (g_woodblocks) RenderWoodblock();
+        if (g_woodblocks) RenderWoodblocks();
         // if (g_stageChoir) RenderStageChoir();
         if (g_accordion) RenderAccordion();
         if (g_stageString) RenderStageString();
@@ -499,8 +500,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         if (g_agogos && UpdateAgogos(pmtNow))
             anyInstrumentActive = 1;
-        //     if ( g_woodblocks && UpdateWoodblocks(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if (g_woodblocks && UpdateWoodblocks(pmtNow))
+            anyInstrumentActive = 1;
         if (g_trombone && UpdateTrombone(pmtNow))
             anyInstrumentActive = 1;
         //     if ( g_tuba && UpdateTuba(pmtNow) )
@@ -1105,11 +1106,19 @@ void HandleKeyPresses() {
 void UpdateAllRecoils(const float scale) {
     const float recoil_scale_factor = 0.05 * scale;
 
-    for (short k = 0; k < g_agogosCount; ++k) {
-        for (short m = 0; m < 12; ++m) {
-            g_agogos[k].recoilOffset[m] = g_agogos[k].recoilOffset[m] - recoil_scale_factor;
-            if (g_agogos[k].recoilOffset[m] < 0.0)
-                g_agogos[k].recoilOffset[m] = 0.0;
+    for (short i = 0; i < g_agogosCount; ++i) {
+        for (short j = 0; j < 12; ++j) {
+            g_agogos[i].recoilOffset[j] = g_agogos[i].recoilOffset[j] - recoil_scale_factor;
+            if (g_agogos[i].recoilOffset[j] < 0.0)
+                g_agogos[i].recoilOffset[j] = 0.0;
+        }
+    }
+
+    for (short i = 0; i < g_woodblocksCount; ++i) {
+        for (short j = 0; j < 12; ++j) {
+            g_woodblocks[i].recoilOffset[j] = g_woodblocks[i].recoilOffset[j] - recoil_scale_factor;
+            if (g_woodblocks[i].recoilOffset[j] < 0.0)
+                g_woodblocks[i].recoilOffset[j] = 0.0;
         }
     }
 }
