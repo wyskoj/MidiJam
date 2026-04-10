@@ -10,6 +10,7 @@
 
 #include "instruments/Accordion.h"
 #include "instruments/Bass.h"
+#include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
@@ -265,8 +266,9 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     const auto v140 = noteMsg->wMusicValue - 21;
                     if (v140 < 0x58u) {
                         int ii = 0;
-                        while (g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] && ii < 16) ++
-                            ii;
+                        while (g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] && ii < 16)
+                            ++
+                                ii;
                         if (ii < 16) {
                             g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] = noteMsg->
                                 mtDuration;
@@ -304,6 +306,32 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                             g_currentTempo_scaleFactor0_9;
                         if (g_trombone[g_tromboneChannel[noteMsg->dwPChannel]].field_364[v46][i18] <= 0)
                             g_trombone[g_tromboneChannel[noteMsg->dwPChannel]].field_364[v46][i18] = 1;
+                    }
+                    break;
+                }
+
+                case GUITAR: {
+                    const auto v55 = noteMsg->wMusicValue - 21;
+                    if (v55 < 0x58u) {
+                        int i16 = 0;
+                        while (g_guitar[g_guitarChannel[noteMsg->dwPChannel]].field_2D2[v55][i16] && i16 < 16) {
+                            ++i16;
+                        }
+                        if (i16 < 16) {
+                            g_guitar[g_guitarChannel[noteMsg->dwPChannel]].field_2D2[v55][i16] = noteMsg->mtDuration;
+                            g_guitar[g_guitarChannel[noteMsg->dwPChannel]].field_2D2[v55][i16] = g_guitar[
+                                    g_guitarChannel[noteMsg->dwPChannel]].field_2D2[v55][i16]
+                                - g_currentTempo_scaleFactor0_5;
+                            if (g_guitar[g_guitarChannel[noteMsg->dwPChannel]].field_2D2[v55][i16] < 0)
+                                g_guitar[g_guitarChannel[noteMsg->dwPChannel]].field_2D2[v55][i16] = 10;
+                            (pPerf->GetTime)(&rtNow, &mtNow);
+                            g_guitar[g_guitarChannel[noteMsg->dwPChannel]].field_18D2[v55][i16] = noteMsg->mtTime -
+                                mtNow;
+                            g_guitar[g_guitarChannel[noteMsg->dwPChannel]].field_18D2[v55][i16] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_guitar[g_guitarChannel[noteMsg->dwPChannel]].field_18D2[v55][i16] <= 0)
+                                g_guitar[g_guitarChannel[noteMsg->dwPChannel]].field_18D2[v55][i16] = 1;
+                        }
                     }
                     break;
                 }
@@ -395,6 +423,10 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                 case TROMBONE: {
                     ALLOC_INST(trombone, TromboneState);
                     break;
+                }
+
+                case GUITAR: {
+                    ALLOC_INST(guitar, GuitarState);
                 }
 
                 default:

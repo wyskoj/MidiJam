@@ -200,14 +200,13 @@ float g_recoil_hihat = 0.0f;
 // Instrument data tables (sized from binary analysis; zeroed for now)
 // TODO: populate from binary when each instrument is transcribed
 // ---------------------------------------------------------------------------
-int g_latinSquare[36] = {};
+short g_latinSquare[6][6] = {};
 int VIBRATING_STRING_ANIM_SEQUENCE[8] = {};
 short word_46CEE0[23 * 6] = {};
 short word_46B2D0[18 * 4] = {};
 short word_4688C0[18 * 4] = {};
 short word_46BBB0[28 * 4] = {};
 short word_468258[49 * 4] = {};
-float flt_4654A0[23] = {};
 float flt_45EAD0[23] = {};
 float flt_4679E0[49] = {};
 
@@ -397,14 +396,6 @@ Ms3dBundle* g_trumpetMute_ms3d = nullptr;
 Ms3dBundle* g_trumpetKey1_ms3d = nullptr;
 Ms3dBundle* g_trumpetKey2_ms3d = nullptr;
 Ms3dBundle* g_trumpetKey3_ms3d = nullptr;
-
-// Bass / guitar
-Ms3dBundle* guitar_ms3d = nullptr;
-Ms3dBundle* dword_462FA8 = nullptr;
-Ms3dBundle* guitarStringLow_ms3d = nullptr;
-Ms3dBundle* guitarLowStringBottomX_ms3d = nullptr;
-Ms3dBundle* guitarHighStringBottomX_ms3d = nullptr;
-Ms3dBundle* guitarNoteFinger_ms3d = nullptr;
 
 // Camera positions — populated by MidiJamInitialize
 // Size: 11 entries (CAMERA_1A through CAMERA_6)

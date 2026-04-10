@@ -20,6 +20,7 @@
 #include "audio/playback.h"
 #include "instruments/Accordion.h"
 #include "instruments/Bass.h"
+#include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
@@ -275,17 +276,17 @@ BOOL UpdateMidiJam() {
         }
     }
 
-    // if (g_guitarVisible > 0) {
-    //     for (k = 0; k < g_guitarVisible; ++k) {
-    //         glPushMatrix();
-    //         shadowZ = k * -5.0f + -5.0f;
-    //         shadowX = k * 5.0f + 43.0f;
-    //         glTranslatef(shadowX, -32.0f, shadowZ);
-    //         glRotatef(-50.0f, 0.0f, 1.0f, 0.0f);
-    //         g_guitarShadow_ms3d->RenderModel();
-    //         glPopMatrix();
-    //     }
-    // }
+    if (g_guitarVisible > 0) {
+        for (k = 0; k < g_guitarVisible; ++k) {
+            glPushMatrix();
+            shadowZ = k * -5.0f + -5.0f;
+            shadowX = k * 5.0f + 43.0f;
+            glTranslatef(shadowX, -32.0f, shadowZ);
+            glRotatef(-50.0f, 0.0f, 1.0f, 0.0f);
+            g_guitarShadow_ms3d->RenderModel();
+            glPopMatrix();
+        }
+    }
 
     // if (g_drumsetVisible > 0) {
     //     glPushMatrix();
@@ -375,14 +376,14 @@ BOOL UpdateMidiJam() {
     // if (g_telephone) RenderTelephone();
     // if (g_tubularBells) RenderTubularBells();
 
-    // if (g_guitar) {
-    //     glPushMatrix();
-    //     glTranslatef(43.0f, 4.0f, -5.0f);
-    //     glRotatef(-50.0f, 0.0f, 1.0f, 0.0f);
-    //     glRotatef(-60.0f, 0.0f, 0.0f, 1.0f);
-    //     RenderGuitar();
-    //     glPopMatrix();
-    // }
+    if (g_guitar) {
+        glPushMatrix();
+        glTranslatef(43.0f, 4.0f, -5.0f);
+        glRotatef(-50.0f, 0.0f, 1.0f, 0.0f);
+        glRotatef(-60.0f, 0.0f, 0.0f, 1.0f);
+        RenderGuitar();
+        glPopMatrix();
+    }
 
     if (g_bass) {
         glPushMatrix();
@@ -463,7 +464,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
     // if (g_cello && UpdateCello(pmtNow) == 1) anyInstrumentActive = 1;
     // if (g_doubleBass && UpdateDoubleBass(pmtNow) == 1) anyInstrumentActive = 1;
     if (g_bass && UpdateBass(pmtNow)) anyInstrumentActive = 1;
-    // if (g_guitar && UpdateGuitar(pmtNow)) anyInstrumentActive = 1;
+    if (g_guitar && UpdateGuitar(pmtNow)) anyInstrumentActive = 1;
     if (g_stageHorn && UpdateStageHorn(pmtNow)) anyInstrumentActive = 1;
     // if (g_whistles && UpdateWhistles(pmtNow)) anyInstrumentActive = 1;
 

@@ -18,6 +18,7 @@
 #include "instruments/keys.h"
 #include "macros.h"
 #include "instruments/Accordion.h"
+#include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
@@ -82,7 +83,7 @@ extern float CYMBAL_LOC_X[7];
 extern float CYMBAL_LOC_Z[7];
 extern float g_cymbal_rot_y[7];
 extern float g_cymbalRestingAngle[7];
-extern int g_latinSquare[36];
+extern short g_latinSquare[6][6];
 
 // Piano key geometry
 extern GLfloat g_pianoKeyOffsetX[14];
@@ -95,7 +96,6 @@ extern int g_vibratingString_frameIndex;
 extern int g_isEvenFrame;
 
 // Instrument-specific data tables (named when transcribed)
-extern short word_46CEE0[];
 extern short word_46B2D0[];
 extern short word_4688C0[];
 extern short word_46BBB0[];
@@ -279,19 +279,15 @@ extern Ms3dBundle* g_trumpetKey3_ms3d;
 extern Ms3dBundle* g_trombone_ms3d;
 extern Ms3dBundle* g_tromboneSlide_ms3d;
 
-// Guitar
-extern Ms3dBundle* guitar_ms3d;
-extern Ms3dBundle* dword_462FA8; // GuitarStringHigh — TODO: name
-extern Ms3dBundle* guitarStringLow_ms3d;
-extern Ms3dBundle* guitarLowStringBottomX_ms3d; // [0..4] via pointer arithmetic
-extern Ms3dBundle* guitarHighStringBottomX_ms3d; // [0..4] via pointer arithmetic
-extern Ms3dBundle* guitarNoteFinger_ms3d;
-
 // Piano
 extern PianoModels g_pianoModels[4];
 
 // Particle system
 extern void* g_ds_particles; // TODO: type when transcribed
+
+//
+
+extern __int16 word_46CEE0[23][6];
 
 // ---------------------------------------------------------------------------
 // FUNCTION: MIDIJAM 0x421610
@@ -304,7 +300,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // --- Latin square init ---
     for (short i = 0; i < 6; ++i)
         for (short j = 0; j < 6; ++j)
-            g_latinSquare[6 * i + j] = (i + j) % 6;
+             g_latinSquare[i][j] = (i + j) % 6;
 
     g_keysOffset = 0.0f;
 
@@ -322,12 +318,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         g_bassNotes[i][2] = i + 17;
         g_bassNotes[i][3] = i + 22;
         flt_468BF4[i + 1] = BASS_FRET_HEIGHTS[i + 1] / -46.081001f;
-        word_46CEE0[6 * i + 0] = i + 19;
-        word_46CEE0[6 * i + 1] = i + 24;
-        word_46CEE0[6 * i + 2] = i + 29;
-        word_46CEE0[6 * i + 3] = i + 34;
-        word_46CEE0[6 * i + 4] = i + 38;
-        word_46CEE0[6 * i + 5] = i + 43;
+        word_46CEE0[i][0] = i + 19;
+        word_46CEE0[i][1] = i + 24;
+        word_46CEE0[i][2] = i + 29;
+        word_46CEE0[i][3] = i + 34;
+        word_46CEE0[i][4] = i + 38;
+        word_46CEE0[i][5] = i + 43;
         flt_4654A0[i] = flt_45EAD0[i] / -34.700001f;
     }
 
@@ -776,9 +772,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     LOAD_MODEL(g_bassNoteFinger_ms3d, "BassNoteFinger.ms3d");
 
-    LOAD_MODEL(guitar_ms3d, "Guitar.ms3d");
-    LOAD_MODEL(dword_462FA8, "GuitarStringHigh.ms3d");
-    LOAD_MODEL(guitarStringLow_ms3d, "GuitarStringLow.ms3d");
+    LOAD_MODEL(g_guitar_ms3d, "Guitar.ms3d");
+    LOAD_MODEL(g_guitarStringHigh_ms3d, "GuitarStringHigh.ms3d");
+    LOAD_MODEL(g_guitarStringLow_ms3d, "GuitarStringLow.ms3d");
     static const char* guitarLowBottomFiles[5] = {
         "GuitarLowStringBottom0.ms3d", "GuitarLowStringBottom1.ms3d", "GuitarLowStringBottom2.ms3d",
         "GuitarLowStringBottom3.ms3d", "GuitarLowStringBottom4.ms3d"
@@ -788,10 +784,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         "GuitarHighStringBottom3.ms3d", "GuitarHighStringBottom4.ms3d"
     };
     for (short i = 0; i < 5; ++i) {
-        LOAD_MODEL((&guitarLowStringBottomX_ms3d)[i], guitarLowBottomFiles[i]);
-        LOAD_MODEL((&guitarHighStringBottomX_ms3d)[i], guitarHighBottomFiles[i]);
+        LOAD_MODEL(g_guitarLowStringBottomX_ms3d[i], guitarLowBottomFiles[i]);
+        LOAD_MODEL(g_guitarHighStringBottomX_ms3d[i], guitarHighBottomFiles[i]);
     }
-    LOAD_MODEL(guitarNoteFinger_ms3d, "GuitarNoteFinger.ms3d");
+    LOAD_MODEL(g_guitarNoteFinger_ms3d, "GuitarNoteFinger.ms3d");
 
     // Piano models (4 variants: standard, honky-tonk/wood, synth, harpsichord)
     for (short i = 0; i < 4; ++i) {
@@ -990,14 +986,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     for (short i = 0; i < 5; ++i)
         APPLY_TEX(g_bassStringBottomX_ms3d[i]);
     APPLY_TEX(g_bassNoteFinger_ms3d);
-    APPLY_TEX(guitar_ms3d);
-    APPLY_TEX(guitarStringLow_ms3d);
-    APPLY_TEX(dword_462FA8);
+    APPLY_TEX(g_guitar_ms3d);
+    APPLY_TEX(g_guitarStringLow_ms3d);
+    APPLY_TEX(g_guitarStringHigh_ms3d);
     for (short i = 0; i < 5; ++i) {
-        APPLY_TEX((&guitarLowStringBottomX_ms3d)[i]);
-        APPLY_TEX((&guitarHighStringBottomX_ms3d)[i]);
+        APPLY_TEX(g_guitarLowStringBottomX_ms3d[i]);
+        APPLY_TEX(g_guitarHighStringBottomX_ms3d[i]);
     }
-    APPLY_TEX(guitarNoteFinger_ms3d);
+    APPLY_TEX(g_guitarNoteFinger_ms3d);
     for (short i = 0; i < 4; ++i) {
         APPLY_TEX(g_pianoModels[i].pianoCase);
         APPLY_TEX(g_pianoModels[i].pianoKeyBlack);
