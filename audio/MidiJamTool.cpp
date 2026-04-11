@@ -21,6 +21,7 @@
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
 #include "instruments/TenorSax.h"
+#include "instruments/Timpani.h"
 #include "instruments/Trombone.h"
 #include "instruments/Trumpet.h"
 #include "instruments/Tuba.h"
@@ -557,22 +558,43 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case FRENCH_HORN: {
                     const auto v35 = noteMsg->wMusicValue - 36;
-                    if ( v35 < 0x24u )
-                    {
+                    if (v35 < 0x24u) {
                         int i21 = 0;
                         while (g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_124[v35][i21] && i21 < 16)
                             i21++;
-                        if ( i21 < 16 )
-                        {
-                            g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_124[v35][i21] = noteMsg->mtDuration;
-                            if ( g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_124[v35][i21] < 0 )
+                        if (i21 < 16) {
+                            g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_124[v35][i21] = noteMsg->
+                                mtDuration;
+                            if (g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_124[v35][i21] < 0)
                                 g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_124[v35][i21] = 10;
                             (pPerf->GetTime)(&rtNow, &mtNow);
-                            g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_A24[v35][i21] = noteMsg->mtTime - mtNow;
-                            g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_A24[v35][i21] -= g_currentTempo_scaleFactor0_9;
-                            if ( g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_A24[v35][i21] <= 0 )
+                            g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_A24[v35][i21] = noteMsg->mtTime
+                                - mtNow;
+                            g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_A24[v35][i21] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_A24[v35][i21] <= 0)
                                 g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_A24[v35][i21] = 1;
                         }
+                    }
+                    break;
+                }
+
+                case TIMPANI: {
+                    const auto v79 = (noteMsg->wMusicValue + 3) % 12;
+                    int i10 = 0;
+                    while (g_timpani[g_timpaniChannel[noteMsg->dwPChannel]].field_68[v79][i10] && i10 < 32)
+                        i10++;
+                    if (i10 < 32) {
+                        g_timpani[g_timpaniChannel[noteMsg->dwPChannel]].field_68[v79][i10] = noteMsg->mtDuration;
+                        if (g_timpani[g_timpaniChannel[noteMsg->dwPChannel]].field_68[v79][i10] < 0)
+                            g_timpani[g_timpaniChannel[noteMsg->dwPChannel]].field_68[v79][i10] = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_timpani[g_timpaniChannel[noteMsg->dwPChannel]].field_668[v79][i10] = noteMsg->mtTime - mtNow;
+                        g_timpani[g_timpaniChannel[noteMsg->dwPChannel]].field_998[v79][i10] = noteMsg->bVelocity;
+                        g_timpani[g_timpaniChannel[noteMsg->dwPChannel]].field_668[v79][i10] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_timpani[g_timpaniChannel[noteMsg->dwPChannel]].field_668[v79][i10] <= 0)
+                            g_timpani[g_timpaniChannel[noteMsg->dwPChannel]].field_668[v79][i10] = 1;
                     }
                     break;
                 }
@@ -725,6 +747,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case FRENCH_HORN: {
                     ALLOC_INST(frenchHorn, FrenchHornState);
+                    break;
+                }
+
+                case TIMPANI: {
+                    ALLOC_INST(timpani, TimpaniState);
                     break;
                 }
 

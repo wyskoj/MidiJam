@@ -285,8 +285,6 @@ Ms3dBundle* g_drumSet_BassDrumBeaterHolder_ms3d = nullptr;
 Ms3dBundle* g_drumSet_BassDrumPedal_ms3d = nullptr;
 
 // Percussion / melodic drums
-Ms3dBundle* g_timpaniBody_ms3d = nullptr;
-Ms3dBundle* g_timpaniHead_ms3d = nullptr;
 Ms3dBundle* g_synthDrum_ms3d = nullptr;
 Ms3dBundle* g_steelDrum_recoil = nullptr;
 Ms3dBundle* g_steelDrumMallet_ms3d = nullptr;

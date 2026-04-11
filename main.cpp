@@ -28,6 +28,7 @@
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
 #include "instruments/TenorSax.h"
+#include "instruments/Timpani.h"
 #include "instruments/Trumpet.h"
 #include "instruments/Tuba.h"
 #include "instruments/Xylophone.h"
@@ -174,8 +175,6 @@ extern Ms3dBundle* g_drumSet_BassDrumBeaterHolder_ms3d;
 extern Ms3dBundle* g_drumSet_BassDrumPedal_ms3d;
 
 // Percussion / melodic drums
-extern Ms3dBundle* g_timpaniBody_ms3d;
-extern Ms3dBundle* g_timpaniHead_ms3d;
 extern Ms3dBundle* g_synthDrum_ms3d;
 extern Ms3dBundle* g_steelDrum_recoil; // IDA named this confusingly; it's the steel drum body model
 extern Ms3dBundle* g_steelDrumMallet_ms3d;

@@ -31,6 +31,7 @@
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
 #include "instruments/TenorSax.h"
+#include "instruments/Timpani.h"
 #include "instruments/Xylophone.h"
 #include "instruments/Trombone.h"
 #include "instruments/Trumpet.h"
@@ -385,7 +386,7 @@ BOOL UpdateMidiJam() {
         // if (g_melodicTom) RenderMelodicTom();
         // if (g_synthDrum) RenderSynthDrum();
         // if (g_steelDrum) RenderSteelDrum();
-        // if (g_timpani) RenderTimpani();
+        if (g_timpani) RenderTimpani();
         // if (g_taiko) RenderTaiko();
         // if (g_telephone) RenderTelephone();
         // if (g_tubularBells) RenderTubularBells();
@@ -512,10 +513,10 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         if (g_trombone && UpdateTrombone(pmtNow))
             anyInstrumentActive = 1;
-        if ( g_tuba && UpdateTuba(pmtNow) )
-          anyInstrumentActive = 1;
-        if ( g_frenchHorn && UpdateFrenchHorn(pmtNow) )
-          anyInstrumentActive = 1;
+        if (g_tuba && UpdateTuba(pmtNow))
+            anyInstrumentActive = 1;
+        if (g_frenchHorn && UpdateFrenchHorn(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_ocarina && UpdateOcarina(pmtNow) )
         //       anyInstrumentActive = 1;
         if (g_baritoneSax && UpdateBaritoneSax(pmtNow))
@@ -532,8 +533,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_recorder && UpdateRecorder(pmtNow) )
         //       anyInstrumentActive = 1;
-        if ( g_trumpet && UpdateTrumpet(pmtNow) )
-          anyInstrumentActive = 1;
+        if (g_trumpet && UpdateTrumpet(pmtNow))
+            anyInstrumentActive = 1;
         if (g_stageChoir && UpdateStageChoir(pmtNow))
             anyInstrumentActive = 1;
         //     if ( g_musicBox && UpdateMusicBox(pmtNow) )
@@ -544,8 +545,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_steelDrum && UpdateSteelDrum(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_timpani && UpdateTimpani(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if (g_timpani && UpdateTimpani(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_taiko && UpdateTaiko(pmtNow) )
         //       anyInstrumentActive = 1;
         //     if ( g_telephone && UpdateTelephone(pmtNow) )
@@ -1128,5 +1129,11 @@ void UpdateAllRecoils(const float scale) {
             if (g_woodblocks[i].recoilOffset[j] < 0.0)
                 g_woodblocks[i].recoilOffset[j] = 0.0;
         }
+    }
+
+    for (short i = 0; i < g_timpaniCount; ++i) {
+        g_timpani[i].recoilOffset = g_timpani[i].recoilOffset - recoil_scale_factor;
+        if (g_timpani[i].recoilOffset < 0.0)
+            g_timpani[i].recoilOffset = 0.0;
     }
 }
