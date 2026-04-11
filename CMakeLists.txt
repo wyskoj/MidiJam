@@ -131,6 +131,8 @@ add_executable(MidiJam WIN32
         instruments/Trumpet.h
         instruments/Tuba.cpp
         instruments/Tuba.h
+        instruments/FrenchHorn.cpp
+        instruments/FrenchHorn.h
 )
 
 # ---------------------------------------------------------------------------

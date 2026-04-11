@@ -23,6 +23,7 @@
 #include "instruments/AltoSax.h"
 #include "instruments/Bass.h"
 #include "instruments/BaritoneSax.h"
+#include "instruments/FrenchHorn.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/SapranoSax.h"
@@ -329,7 +330,7 @@ BOOL UpdateMidiJam() {
         }
         if (g_trombone) RenderTrombone();
         if (g_trumpet) RenderTrumpet();
-        // if (g_frenchHorn) RenderFrenchHorn();
+        if (g_frenchHorn) RenderFrenchHorn();
         if (g_baritoneSax) RenderBaritoneSax();
         if (g_tenorSax) RenderTenorSax();
         if (g_sapranoSax) RenderSapranoSax();
@@ -513,8 +514,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         if ( g_tuba && UpdateTuba(pmtNow) )
           anyInstrumentActive = 1;
-        //     if ( g_frenchHorn && UpdateFrenchHorn(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_frenchHorn && UpdateFrenchHorn(pmtNow) )
+          anyInstrumentActive = 1;
         //     if ( g_ocarina && UpdateOcarina(pmtNow) )
         //       anyInstrumentActive = 1;
         if (g_baritoneSax && UpdateBaritoneSax(pmtNow))

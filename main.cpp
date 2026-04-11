@@ -21,6 +21,7 @@
 #include "instruments/Agogos.h"
 #include "instruments/AltoSax.h"
 #include "instruments/BaritoneSax.h"
+#include "instruments/FrenchHorn.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/SapranoSax.h"
@@ -246,14 +247,6 @@ extern Ms3dBundle* dword_46D264;
 // Ocarina
 extern Ms3dBundle* g_ocarina_ms3d;
 extern Ms3dBundle* g_ocarinaHandX_ms3d; // [0..11] via pointer arithmetic
-
-// French horn
-extern Ms3dBundle* g_frenchHornBody_ms3d;
-extern Ms3dBundle* g_frenchHornHorn_ms3d;
-extern Ms3dBundle* g_frenchHornKey1_ms3d;
-extern Ms3dBundle* g_frenchHornKey2_ms3d;
-extern Ms3dBundle* g_frenchHornKey3_ms3d;
-extern Ms3dBundle* g_frenchHornTrigger_ms3d;
 
 // Trombone
 extern Ms3dBundle* g_trombone_ms3d;

@@ -357,14 +357,6 @@ Ms3dBundle* dword_46D264 = nullptr;
 Ms3dBundle* g_ocarina_ms3d = nullptr;
 Ms3dBundle* g_ocarinaHandX_ms3d = nullptr;
 
-// Brass
-Ms3dBundle* g_frenchHornBody_ms3d = nullptr;
-Ms3dBundle* g_frenchHornHorn_ms3d = nullptr;
-Ms3dBundle* g_frenchHornKey1_ms3d = nullptr;
-Ms3dBundle* g_frenchHornKey2_ms3d = nullptr;
-Ms3dBundle* g_frenchHornKey3_ms3d = nullptr;
-Ms3dBundle* g_frenchHornTrigger_ms3d = nullptr;
-
 // DirectMusic GUID
 GUID GUID_PERF_MASTER_TEMPO = {
     0x54344c80, 0xddc3, 0x11d1,

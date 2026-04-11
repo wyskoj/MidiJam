@@ -13,6 +13,7 @@
 #include "instruments/AltoSax.h"
 #include "instruments/Bass.h"
 #include "instruments/BaritoneSax.h"
+#include "instruments/FrenchHorn.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/SapranoSax.h"
@@ -554,6 +555,28 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case FRENCH_HORN: {
+                    const auto v35 = noteMsg->wMusicValue - 36;
+                    if ( v35 < 0x24u )
+                    {
+                        int i21 = 0;
+                        while (g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_124[v35][i21] && i21 < 16)
+                            i21++;
+                        if ( i21 < 16 )
+                        {
+                            g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_124[v35][i21] = noteMsg->mtDuration;
+                            if ( g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_124[v35][i21] < 0 )
+                                g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_124[v35][i21] = 10;
+                            (pPerf->GetTime)(&rtNow, &mtNow);
+                            g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_A24[v35][i21] = noteMsg->mtTime - mtNow;
+                            g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_A24[v35][i21] -= g_currentTempo_scaleFactor0_9;
+                            if ( g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_A24[v35][i21] <= 0 )
+                                g_frenchHorn[g_frenchHornChannel[noteMsg->dwPChannel]].field_A24[v35][i21] = 1;
+                        }
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -697,6 +720,12 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case TUBA: {
                     ALLOC_INST(tuba, TubaState);
+                    break;
+                }
+
+                case FRENCH_HORN: {
+                    ALLOC_INST(frenchHorn, FrenchHornState);
+                    break;
                 }
 
                 default:
