@@ -35,13 +35,15 @@ static_assert(sizeof(GuitarState) == 0x23D2, "GuitarState layout mismatch");
 // ---------------------------------------------------------------------------
 DECL_INST_DS(guitar, GuitarState)
 
-// TODO: model pointer externs
 extern Ms3dBundle* g_guitar_ms3d;
 extern Ms3dBundle* g_guitarStringLow_ms3d;
 extern Ms3dBundle* g_guitarLowStringBottomX_ms3d[5];
 extern Ms3dBundle* g_guitarHighStringBottomX_ms3d[5];
 extern Ms3dBundle* g_guitarStringHigh_ms3d;
 extern Ms3dBundle* g_guitarNoteFinger_ms3d;
+
+extern GLfloat GUITAR_FRET_HEIGHTS[25];
+extern GLfloat GUITAR_FRET_HEIGHTS_AS_PERCENT[23];
 
 // ---------------------------------------------------------------------------
 // Functions

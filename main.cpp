@@ -302,7 +302,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         word_46CEE0[i][3] = i + 34;
         word_46CEE0[i][4] = i + 38;
         word_46CEE0[i][5] = i + 43;
-        flt_4654A0[i] = flt_45EAD0[i] / -34.700001;
+        GUITAR_FRET_HEIGHTS_AS_PERCENT[i] = GUITAR_FRET_HEIGHTS[i + 1] / -34.700001;
     }
 
     for (short i = 0; i < 18; ++i) {
