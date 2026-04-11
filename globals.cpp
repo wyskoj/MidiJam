@@ -291,13 +291,6 @@ Ms3dBundle* metronome_ms3d = nullptr;
 Ms3dBundle* metronomePendjulum1_ms3d = nullptr;
 Ms3dBundle* metronomePendjulum2_ms3d = nullptr;
 
-// Music box
-Ms3dBundle* g_musicBoxSpindle_ms3d = nullptr;
-Ms3dBundle* g_musicBoxPoint_ms3d = nullptr;
-Ms3dBundle* g_musicBoxKey_ms3d = nullptr;
-Ms3dBundle* g_musicBoxTopBlade_ms3d = nullptr;
-Ms3dBundle* g_musicBoxCase_ms3d = nullptr;
-
 // Strings / winds
 Ms3dBundle* whistle_ms3d = nullptr;
 Ms3dBundle* g_panPipe_ms3d = nullptr;

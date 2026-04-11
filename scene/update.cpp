@@ -27,6 +27,7 @@
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/MelodicTom.h"
+#include "instruments/MusicBox.h"
 #include "instruments/PizzicatoStrings.h"
 #include "instruments/SapranoSax.h"
 #include "instruments/StageChoir.h"
@@ -371,7 +372,7 @@ BOOL UpdateMidiJam() {
             glPopMatrix();
         }
 
-        // if (g_musicBox) RenderMusicBox();
+        if (g_musicBox) RenderMusicBox();
 
         if (g_piano) {
             glPushMatrix();
@@ -542,8 +543,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         if (g_stageChoir && UpdateStageChoir(pmtNow))
             anyInstrumentActive = 1;
-        //     if ( g_musicBox && UpdateMusicBox(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_musicBox && UpdateMusicBox(pmtNow) )
+          anyInstrumentActive = 1;
         if (g_melodicTom && UpdateMelodicTom(pmtNow))
             anyInstrumentActive = 1;
         if (g_synthDrum && UpdateSynthDrum(pmtNow))

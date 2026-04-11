@@ -17,6 +17,7 @@
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/MelodicTom.h"
+#include "instruments/MusicBox.h"
 #include "instruments/PizzicatoStrings.h"
 #include "instruments/SapranoSax.h"
 #include "instruments/StageChoir.h"
@@ -708,6 +709,26 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case MUSIC_BOX: {
+                    const auto v95 = (noteMsg->wMusicValue + 3) % 12;
+                    int i6 = 0;
+                    while (g_musicBox[g_musicBoxChannel[noteMsg->dwPChannel]].field_68[v95][i6] && i6 < 16)
+                        ++i6;
+                    if (i6 < 16) {
+                        g_musicBox[g_musicBoxChannel[noteMsg->dwPChannel]].field_68[v95][i6] = noteMsg->mtDuration;
+                        if (g_musicBox[g_musicBoxChannel[noteMsg->dwPChannel]].field_68[v95][i6] < 0)
+                            g_musicBox[g_musicBoxChannel[noteMsg->dwPChannel]].field_68[v95][i6] = 10;
+                        pPerf->GetTime(&rtNow, &mtNow);
+                        g_musicBox[g_musicBoxChannel[noteMsg->dwPChannel]].field_368[v95][i6] = noteMsg->mtTime - mtNow;
+                        g_musicBox[g_musicBoxChannel[noteMsg->dwPChannel]].field_818[v95][i6] = noteMsg->bVelocity;
+                        g_musicBox[g_musicBoxChannel[noteMsg->dwPChannel]].field_368[v95][i6] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_musicBox[g_musicBoxChannel[noteMsg->dwPChannel]].field_368[v95][i6] <= 0)
+                            g_musicBox[g_musicBoxChannel[noteMsg->dwPChannel]].field_368[v95][i6] = 1;
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -887,6 +908,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case TUBULAR_BELLS: {
                     ALLOC_INST(tubularBells, TubularBellsState);
+                    break;
+                }
+
+                case MUSIC_BOX: {
+                    ALLOC_INST(musicBox, MusicBoxState);
                     break;
                 }
 

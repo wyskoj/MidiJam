@@ -25,6 +25,7 @@
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/MelodicTom.h"
+#include "instruments/MusicBox.h"
 #include "instruments/PizzicatoStrings.h"
 #include "instruments/SapranoSax.h"
 #include "instruments/StageHorn.h"
@@ -185,13 +186,6 @@ extern Ms3dBundle* g_steelDrumMallet_ms3d;
 extern Ms3dBundle* metronome_ms3d;
 extern Ms3dBundle* metronomePendjulum1_ms3d;
 extern Ms3dBundle* metronomePendjulum2_ms3d;
-
-// Music box
-extern Ms3dBundle* g_musicBoxSpindle_ms3d;
-extern Ms3dBundle* g_musicBoxPoint_ms3d;
-extern Ms3dBundle* g_musicBoxKey_ms3d;
-extern Ms3dBundle* g_musicBoxTopBlade_ms3d;
-extern Ms3dBundle* g_musicBoxCase_ms3d;
 
 // String instruments
 extern Ms3dBundle* whistle_ms3d;
