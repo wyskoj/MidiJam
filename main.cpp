@@ -28,6 +28,7 @@
 #include "instruments/StageString.h"
 #include "instruments/TenorSax.h"
 #include "instruments/Trumpet.h"
+#include "instruments/Tuba.h"
 #include "instruments/Xylophone.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
@@ -253,14 +254,6 @@ extern Ms3dBundle* g_frenchHornKey1_ms3d;
 extern Ms3dBundle* g_frenchHornKey2_ms3d;
 extern Ms3dBundle* g_frenchHornKey3_ms3d;
 extern Ms3dBundle* g_frenchHornTrigger_ms3d;
-
-// Tuba
-extern Ms3dBundle* g_tubaBody_ms3d;
-extern Ms3dBundle* g_tubaHorn_ms3d;
-extern Ms3dBundle* g_tubaKey_1_ms3d;
-extern Ms3dBundle* g_tubaKey_2_ms3d;
-extern Ms3dBundle* g_tubaKey_3_ms3d;
-extern Ms3dBundle* g_tubaKey_4_ms3d;
 
 // Trombone
 extern Ms3dBundle* g_trombone_ms3d;
@@ -935,8 +928,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         APPLY_TEX(g_altoSaxKeyX_ms3d[i][1]);
     }
     APPLY_TEX(g_ocarina_ms3d);
-    for (short i = 0; i < 12; ++i)
-        APPLY_TEX((&g_ocarinaHandX_ms3d)[i]);
+    // for (short i = 0; i < 12; ++i)
+    //     APPLY_TEX((&g_ocarinaHandX_ms3d)[i]);
     APPLY_TEX(g_frenchHornBody_ms3d);
     APPLY_TEX(g_frenchHornHorn_ms3d);
     APPLY_TEX(g_frenchHornKey1_ms3d);

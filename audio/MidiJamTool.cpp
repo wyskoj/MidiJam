@@ -22,6 +22,7 @@
 #include "instruments/TenorSax.h"
 #include "instruments/Trombone.h"
 #include "instruments/Trumpet.h"
+#include "instruments/Tuba.h"
 #include "instruments/Woodblocks.h"
 #include "instruments/Xylophone.h"
 
@@ -532,6 +533,27 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case TUBA: {
+                    const auto v39 = noteMsg->wMusicValue - 16;
+                    if (v39 < 0x2Cu) {
+                        int i20 = 0;
+                        while (g_tuba[g_tubaChannel[noteMsg->dwPChannel]].field_164[v39][i20] && i20 < 16)
+                            i20++;
+                        if (i20 < 16) {
+                            g_tuba[g_tubaChannel[noteMsg->dwPChannel]].field_164[v39][i20] = noteMsg->mtDuration;
+                            if (g_tuba[g_tubaChannel[noteMsg->dwPChannel]].field_164[v39][i20] < 0)
+                                g_tuba[g_tubaChannel[noteMsg->dwPChannel]].field_164[v39][i20] = 10;
+                            (pPerf->GetTime)(&rtNow, &mtNow);
+                            g_tuba[g_tubaChannel[noteMsg->dwPChannel]].field_C64[v39][i20] = noteMsg->mtTime - mtNow;
+                            g_tuba[g_tubaChannel[noteMsg->dwPChannel]].field_C64[v39][i20] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_tuba[g_tubaChannel[noteMsg->dwPChannel]].field_C64[v39][i20] <= 0)
+                                g_tuba[g_tubaChannel[noteMsg->dwPChannel]].field_C64[v39][i20] = 1;
+                        }
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -673,6 +695,10 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case TUBA: {
+                    ALLOC_INST(tuba, TubaState);
+                }
+
                 default:
                     break;
             }
@@ -695,8 +721,7 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
 // FUNCTION: MIDIJAM 0x445790
 bool IsGmPercussionSupported(const GM_PERCUSSION patch) {
-    switch ( patch )
-    {
+    switch (patch) {
         case ACOUSTIC_SNARE:
         case ELECTRIC_SNARE:
         case SIDE_STICK:

@@ -364,12 +364,6 @@ Ms3dBundle* g_frenchHornKey1_ms3d = nullptr;
 Ms3dBundle* g_frenchHornKey2_ms3d = nullptr;
 Ms3dBundle* g_frenchHornKey3_ms3d = nullptr;
 Ms3dBundle* g_frenchHornTrigger_ms3d = nullptr;
-Ms3dBundle* g_tubaBody_ms3d = nullptr;
-Ms3dBundle* g_tubaHorn_ms3d = nullptr;
-Ms3dBundle* g_tubaKey_1_ms3d = nullptr;
-Ms3dBundle* g_tubaKey_2_ms3d = nullptr;
-Ms3dBundle* g_tubaKey_3_ms3d = nullptr;
-Ms3dBundle* g_tubaKey_4_ms3d = nullptr;
 
 // DirectMusic GUID
 GUID GUID_PERF_MASTER_TEMPO = {

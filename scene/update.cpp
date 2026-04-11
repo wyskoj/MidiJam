@@ -33,6 +33,7 @@
 #include "instruments/Xylophone.h"
 #include "instruments/Trombone.h"
 #include "instruments/Trumpet.h"
+#include "instruments/Tuba.h"
 #include "instruments/Woodblocks.h"
 
 // ---------------------------------------------------------------------------
@@ -336,7 +337,7 @@ BOOL UpdateMidiJam() {
         // if (g_recorder) RenderRecorder();
         // if (g_piccolo) RenderPiccolo();
         // if (g_flute) RenderFlute();
-        // if (g_tuba) RenderTuba();
+        if (g_tuba) RenderTuba();
         if (g_stageHorn) RenderStageHorn();
         // if (g_whistles) RenderWhistles();
         // if (g_panPipe) RenderPanPipe();
@@ -510,8 +511,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         if (g_trombone && UpdateTrombone(pmtNow))
             anyInstrumentActive = 1;
-        //     if ( g_tuba && UpdateTuba(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_tuba && UpdateTuba(pmtNow) )
+          anyInstrumentActive = 1;
         //     if ( g_frenchHorn && UpdateFrenchHorn(pmtNow) )
         //       anyInstrumentActive = 1;
         //     if ( g_ocarina && UpdateOcarina(pmtNow) )
