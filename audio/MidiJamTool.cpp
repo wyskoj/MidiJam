@@ -25,31 +25,6 @@
 #include "instruments/Woodblocks.h"
 #include "instruments/Xylophone.h"
 
-// Finds the first empty slot and executes body with slot variable in scope.
-// Slot field is the expression used to test for empty (== 0).
-#define FIND_SLOT(slotTest, maxSlots, slotVar, body) \
-do { \
-short slotVar = 0; \
-while ((slotTest) && (slotVar) < (maxSlots)) ++(slotVar); \
-if ((slotVar) < (maxSlots)) { body } \
-} while(0)
-
-#define QUEUE_NOTE(state, noteIndex, maxNotes, duration, velocity, timeDelta) \
-do { \
-short _slot = 0; \
-while ((state).queue[(noteIndex)][_slot] && _slot < 16) \
-++_slot; \
-if (_slot < 16) \
-{ \
-(state).queue[(noteIndex)][_slot] = (duration); \
-(state).velocities[(noteIndex)][_slot]     = (velocity); \
-(state).timeDeltas[(noteIndex)][_slot]     = (timeDelta); \
-} \
-} while(0)
-
-#define MIDI_NOTE_INDEX(wMusicValue, offset, max, outIndex) \
-const unsigned short outIndex = (wMusicValue) - (offset); \
-if ((outIndex) >= (unsigned short)(max)) break;
 
 #define ALLOC_INST(name, type) \
 do { \
@@ -72,51 +47,73 @@ extern int g_currentTempo_scaleFactor0_9;
 extern int g_currentTempo_scaleFactor1_15;
 extern double g_currentTempo;
 
-ULONG __stdcall MidiJamTool::AddRef() { return InterlockedIncrement(&refCount); }
+// FUNCTION: MIDIJAM 0x43C470
+// MATCH: EXACT
+ULONG __stdcall MidiJamTool::AddRef() {
+    return InterlockedIncrement(&refCount);
+}
 
-HRESULT __stdcall MidiJamTool::Flush(IDirectMusicPerformance*, DMUS_PMSG*, REFERENCE_TIME) { return E_NOTIMPL; }
+// FUNCTION: MIDIJAM 0x445A50
+// MATCH: EXACT
+HRESULT __stdcall MidiJamTool::Flush(IDirectMusicPerformance*, DMUS_PMSG*, REFERENCE_TIME) {
+    return E_NOTIMPL;
+}
 
+// FUNCTION: MIDIJAM 0x43C510
+// MATCH: EXACT
 HRESULT __stdcall MidiJamTool::GetMediaTypeArraySize(DWORD* pdwNumElements) {
     *pdwNumElements = 4;
     return S_OK;
 }
 
+// FUNCTION: MIDIJAM 0x43C530
+// MATCH: EXACT
 HRESULT __stdcall MidiJamTool::GetMediaTypes(DWORD** padwMediaTypes, const DWORD dwNumElements) {
-    if (dwNumElements != 4)
-        return E_FAIL;
-    (*padwMediaTypes)[0] = DMUS_PMSGT_NOTE;
-    (*padwMediaTypes)[1] = DMUS_PMSGT_MIDI;
-    (*padwMediaTypes)[2] = DMUS_PMSGT_PATCH;
-    (*padwMediaTypes)[3] = DMUS_PMSGT_TEMPO;
-    return S_OK;
+    if (dwNumElements == 4) {
+        (*padwMediaTypes)[0] = DMUS_PMSGT_NOTE;
+        (*padwMediaTypes)[1] = DMUS_PMSGT_MIDI;
+        (*padwMediaTypes)[2] = DMUS_PMSGT_PATCH;
+        (*padwMediaTypes)[3] = DMUS_PMSGT_TEMPO;
+        return S_OK;
+    }
+    return E_FAIL;
 }
 
+// FUNCTION: MIDIJAM 0x43C4F0
+// MATCH: EXACT
 HRESULT __stdcall MidiJamTool::GetMsgDeliveryType(DWORD* pdwDeliveryType) {
     *pdwDeliveryType = DMUS_PMSGF_TOOL_IMMEDIATE;
     return S_OK;
 }
 
-HRESULT __stdcall MidiJamTool::Init(IDirectMusicGraph*) { return E_NOTIMPL; }
+// FUNCTION: MIDIJAM 0x43C4E0
+HRESULT __stdcall MidiJamTool::Init(IDirectMusicGraph*) {
+    return E_NOTIMPL;
+}
 
+
+// FUNCTION: MIDIJAM 0x43C410
 HRESULT __stdcall MidiJamTool::QueryInterface(REFIID riid, void** ppv) {
-    if (IsEqualGUID(riid, IID_IUnknown) || IsEqualGUID(riid, IID_IDirectMusicTool)) {
-        *ppv = this;
-        AddRef();
-        return S_OK;
+    if (!(IsEqualGUID(riid, IID_IUnknown) || IsEqualGUID(riid, IID_IDirectMusicTool))) {
+        *ppv = nullptr;
+        return E_NOINTERFACE;
     }
-
-    *ppv = nullptr;
-    return E_NOINTERFACE;
+    *ppv = this;
+    AddRef();
+    return S_OK;
 }
 
+// FUNCTION: MIDIJAM 0x43C490
 ULONG __stdcall MidiJamTool::Release() {
-    if (InterlockedDecrement(&refCount))
-        return refCount;
-    if (this)
-        delete this;
-    return 0;
+    if (!InterlockedDecrement(&refCount)) {
+        if (this)
+            delete this;
+        return 0;
+    }
+    return refCount;
 }
 
+// FUNCTION: MIDIJAM 0x43C580
 HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_PMSG* pPMSG) {
     REFERENCE_TIME rtNow;
     MUSIC_TIME mtNow;
@@ -141,7 +138,8 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
             switch (g_midiJamInstrumentIds[msgChannel]) {
                 case PIANO: {
-                    MIDI_NOTE_INDEX(noteMsg->wMusicValue, 21, 88, keyIndex);
+                    const unsigned short keyIndex = (noteMsg->wMusicValue) - (21);
+                    if ((keyIndex) >= (unsigned short)(88)) break;;
                     PianoState& inst = g_piano[g_pianoChannel[msgChannel]];
 
                     pPerf->GetTime(&rtNow, &mtNow);
@@ -151,19 +149,21 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                         - static_cast<short>(g_currentTempo_scaleFactor0_9);
                     if (timeDelta <= 0) timeDelta = 1;
 
-                    FIND_SLOT(
-                        inst.queue[keyIndex][slot], 16, slot,
+                    short slot = 0;
+                    while ((inst.queue[keyIndex][slot]) && (slot) < (16)) ++(slot);
+                    if ((slot) < (16)) {
                         {
-                        inst.queue[keyIndex][slot] = duration;
-                        inst.velocities[keyIndex][slot] = noteMsg->bVelocity;
-                        inst.timeDeltas[keyIndex][slot] = timeDelta;
+                            inst.queue[keyIndex][slot] = duration;
+                            inst.velocities[keyIndex][slot] = noteMsg->bVelocity;
+                            inst.timeDeltas[keyIndex][slot] = timeDelta;
                         }
-                    );
+                    }
                     break;
                 }
 
                 case BASS: {
-                    MIDI_NOTE_INDEX(noteMsg->wMusicValue, 21, 88, bassNote);
+                    const unsigned short bassNote = (noteMsg->wMusicValue) - (21);
+                    if ((bassNote) >= (unsigned short)(88)) break;;
                     BassState& inst = g_bass[g_bassChannel[msgChannel]];
 
                     pPerf->GetTime(&rtNow, &mtNow);
@@ -173,13 +173,14 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                         - static_cast<short>(g_currentTempo_scaleFactor0_9);
                     if (timeDelta <= 0) timeDelta = 1;
 
-                    FIND_SLOT(
-                        inst.queue[bassNote][slot], 16, slot,
+                    short slot = 0;
+                    while ((inst.queue[bassNote][slot]) && (slot) < (16)) ++(slot);
+                    if ((slot) < (16)) {
                         {
-                        inst.queue[bassNote][slot] = duration;
-                        inst.field_18CC[bassNote][slot] = timeDelta;
+                            inst.queue[bassNote][slot] = duration;
+                            inst.field_18CC[bassNote][slot] = timeDelta;
                         }
-                    );
+                    }
                     break;
                 }
 
@@ -194,13 +195,14 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                         - static_cast<short>(g_currentTempo_scaleFactor0_9);
                     if (timeDelta <= 0) timeDelta = 1;
 
-                    FIND_SLOT(
-                        inst.queue[noteIndex][slot], 16, slot,
+                    short slot = 0;
+                    while ((inst.queue[noteIndex][slot]) && (slot) < (16)) ++(slot);
+                    if ((slot) < (16)) {
                         {
-                        inst.queue[noteIndex][slot] = duration;
-                        inst.timeDeltas[noteIndex][slot] = timeDelta;
+                            inst.queue[noteIndex][slot] = duration;
+                            inst.timeDeltas[noteIndex][slot] = timeDelta;
                         }
-                    );
+                    }
                     break;
                 }
 
@@ -691,58 +693,97 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
     return DMUS_S_REQUEUE;
 }
 
-// FUNCTION: MIDIJAM 0x43C2D0
+// FUNCTION: MIDIJAM 0x445790
 bool IsGmPercussionSupported(const GM_PERCUSSION patch) {
-    switch (patch) {
+    switch ( patch )
+    {
         case ACOUSTIC_SNARE:
         case ELECTRIC_SNARE:
         case SIDE_STICK:
+            return true;
         case LOW_MID_TOM:
+            return true;
         case LOW_TOM:
+            return true;
         case HIGH_FLOOR_TOM:
+            return true;
         case ACOUSTIC_BASS_DRUM:
         case ELECTRIC_BASS_DRUM:
+            return true;
         case OPEN_HI_HAT:
+            return true;
         case PEDAL_HI_HAT:
+            return true;
         case CLOSED_HI_HAT:
+            return true;
         case RIDE_BELL:
         case RIDE_CYMBAL_1:
         case RIDE_CYMBAL_2:
-        case CRASH_CYMBAL_2:
-        case CRASH_CYMBAL_1:
-        case CHINESE_CYMBAL:
-        case SPLASH_CYMBAL:
-        case COWBELL:
-        case HAND_CLAP:
-        case LOW_TIMBALE:
-        case HIGH_TIMBALE:
-        case SHORT_WHISTLE:
-        case LONG_WHISTLE:
-        case LOW_BONGO:
-        case HIGH_BONGO:
-        case LOW_CONGA:
-        case OPEN_HIGH_CONGA:
-        case MUTE_HIGH_CONGA:
-        case TAMBOURINE:
-        case STICKS:
-        case CLAVES:
-        case CASTANETS:
-        case JINGLE_BELL:
-        case SHAKER:
-        case HIGH_Q:
-        case SQUARE_CLICK:
-        case METRONOME_CLICK:
-        case METRONOME_BELL:
-        case MARACAS:
-        case CABASA:
-        case HIGH_WOODBLOCK:
-        case OPEN_TRIANGLE:
-        case MUTE_TRIANGLE:
-        case LOW_WOODBLOCK:
-        case HIGH_AGOGO:
-        case LOW_AGOGO:
             return true;
-        default:
-            return false;
+        case CRASH_CYMBAL_2:
+            return true;
+        case CRASH_CYMBAL_1:
+            return true;
+        case CHINESE_CYMBAL:
+            return true;
+        case SPLASH_CYMBAL:
+            return true;
+        case COWBELL:
+            return true;
+        case HAND_CLAP:
+            return true;
+        case LOW_TIMBALE:
+            return true;
+        case HIGH_TIMBALE:
+            return true;
+        case SHORT_WHISTLE:
+            return true;
+        case LONG_WHISTLE:
+            return true;
+        case LOW_BONGO:
+            return true;
+        case HIGH_BONGO:
+            return true;
+        case LOW_CONGA:
+            return true;
+        case OPEN_HIGH_CONGA:
+            return true;
+        case MUTE_HIGH_CONGA:
+            return true;
+        case TAMBOURINE:
+            return true;
+        case STICKS:
+            return true;
+        case CLAVES:
+            return true;
+        case CASTANETS:
+            return true;
+        case JINGLE_BELL:
+            return true;
+        case SHAKER:
+            return true;
+        case HIGH_Q:
+            return true;
+        case SQUARE_CLICK:
+            return true;
+        case METRONOME_CLICK:
+            return true;
+        case METRONOME_BELL:
+            return true;
+        case MARACAS:
+            return true;
+        case CABASA:
+            return true;
+        case HIGH_WOODBLOCK:
+            return true;
+        case OPEN_TRIANGLE:
+            return true;
+        case MUTE_TRIANGLE:
+            return true;
+        case LOW_WOODBLOCK:
+            return true;
+        case HIGH_AGOGO:
+            return true;
     }
+    return patch == LOW_AGOGO;
 }
