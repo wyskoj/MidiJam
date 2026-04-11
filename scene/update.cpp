@@ -22,11 +22,14 @@
 #include "instruments/Agogos.h"
 #include "instruments/AltoSax.h"
 #include "instruments/Bass.h"
+#include "instruments/BaritoneSax.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
+#include "instruments/SapranoSax.h"
 #include "instruments/StageChoir.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/TenorSax.h"
 #include "instruments/Xylophone.h"
 #include "instruments/Trombone.h"
 #include "instruments/Woodblocks.h"
@@ -325,9 +328,9 @@ BOOL UpdateMidiJam() {
         if (g_trombone) RenderTrombone();
         // if (g_trumpet) RenderTrumpet();
         // if (g_frenchHorn) RenderFrenchHorn();
-        // if (g_baritoneSax) RenderBaritoneSax();
-        // if (g_tenorSax) RenderTenorSax();
-        // if (g_sapranoSax) RenderSapranoSax();
+        if (g_baritoneSax) RenderBaritoneSax();
+        if (g_tenorSax) RenderTenorSax();
+        if (g_sapranoSax) RenderSapranoSax();
         if (g_altoSax) RenderAltoSax();
         // if (g_recorder) RenderRecorder();
         // if (g_piccolo) RenderPiccolo();
@@ -512,12 +515,12 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_ocarina && UpdateOcarina(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_baritoneSax && UpdateBaritoneSax(pmtNow) )
-        //       anyInstrumentActive = 1;
-        //     if ( g_tenorSax && UpdateTenorSax(pmtNow) )
-        //       anyInstrumentActive = 1;
-        //     if ( g_sapranoSax && UpdateSapranoSax(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if (g_baritoneSax && UpdateBaritoneSax(pmtNow))
+            anyInstrumentActive = 1;
+        if (g_tenorSax && UpdateTenorSax(pmtNow))
+            anyInstrumentActive = 1;
+        if (g_sapranoSax && UpdateSapranoSax(pmtNow))
+            anyInstrumentActive = 1;
         if (g_altoSax && UpdateAltoSax(pmtNow))
             anyInstrumentActive = 1;
         //     if ( g_flute && UpdateFlute(pmtNow) )

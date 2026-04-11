@@ -12,11 +12,14 @@
 #include "instruments/Agogos.h"
 #include "instruments/AltoSax.h"
 #include "instruments/Bass.h"
+#include "instruments/BaritoneSax.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
+#include "instruments/SapranoSax.h"
 #include "instruments/StageChoir.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/TenorSax.h"
 #include "instruments/Trombone.h"
 #include "instruments/Woodblocks.h"
 #include "instruments/Xylophone.h"
@@ -62,7 +65,7 @@ __int16 word_45EC60[12] = {
     0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6
 };
 
-extern MidiJamInstrumentId g_midiJamInstrumentIds[1000];
+extern MidiJamInstrumentId g_midiJamInstrumentIds[300];
 extern int g_currentTempo_scaleFactor0_5;
 extern int g_currentTempo_scaleFactor0_9;
 extern int g_currentTempo_scaleFactor1_15;
@@ -429,6 +432,78 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                                 g_altoSax[g_altoSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] = 1;
                         }
                     }
+                    break;
+                }
+
+                case TENOR_SAX: {
+                    const auto v19 = noteMsg->wMusicValue - 56;
+                    if (v19 < 0x21u) {
+                        int i25 = 0;
+                        while (g_tenorSax[g_tenorSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] && i25 < 16)
+                            i25++;
+                        if (i25 < 16) {
+                            g_tenorSax[g_tenorSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] = noteMsg->
+                                mtDuration;
+                            if (g_tenorSax[g_tenorSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] < 0)
+                                g_tenorSax[g_tenorSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] = 10;
+                            (pPerf->GetTime)(&rtNow, &mtNow);
+                            g_tenorSax[g_tenorSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] = noteMsg->mtTime -
+                                mtNow;
+                            g_tenorSax[g_tenorSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_tenorSax[g_tenorSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] <= 0)
+                                g_tenorSax[g_tenorSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] = 1;
+                        }
+                    }
+                    break;
+                }
+
+                case BARITONE_SAX: {
+                    const auto v19 = noteMsg->wMusicValue - 37;
+                    if (v19 < 0x21u) {
+                        int i25 = 0;
+                        while (g_baritoneSax[g_baritoneSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] && i25 < 16)
+                            i25++;
+                        if (i25 < 16) {
+                            g_baritoneSax[g_baritoneSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] = noteMsg->
+                                mtDuration;
+                            if (g_baritoneSax[g_baritoneSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] < 0)
+                                g_baritoneSax[g_baritoneSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] = 10;
+                            (pPerf->GetTime)(&rtNow, &mtNow);
+                            g_baritoneSax[g_baritoneSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] = noteMsg->
+                                mtTime -
+                                mtNow;
+                            g_baritoneSax[g_baritoneSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_baritoneSax[g_baritoneSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] <= 0)
+                                g_baritoneSax[g_baritoneSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] = 1;
+                        }
+                    }
+                    break;
+                }
+
+                case SAPRANO_SAX: {
+                    const auto v19 = noteMsg->wMusicValue - 44;
+                    if (v19 < 0x21u) {
+                        int i25 = 0;
+                        while (g_sapranoSax[g_sapranoSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] && i25 < 16)
+                            i25++;
+                        if (i25 < 16) {
+                            g_sapranoSax[g_sapranoSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] = noteMsg->
+                                mtDuration;
+                            if (g_sapranoSax[g_sapranoSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] < 0)
+                                g_sapranoSax[g_sapranoSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] = 10;
+                            (pPerf->GetTime)(&rtNow, &mtNow);
+                            g_sapranoSax[g_sapranoSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] = noteMsg->mtTime
+                                -
+                                mtNow;
+                            g_sapranoSax[g_sapranoSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_sapranoSax[g_sapranoSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] <= 0)
+                                g_sapranoSax[g_sapranoSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] = 1;
+                        }
+                    }
+                    break;
                 }
 
                 default:
@@ -542,6 +617,21 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case ALTO_SAX: {
                     ALLOC_INST(altoSax, AltoSaxState);
+                    break;
+                }
+
+                case BARITONE_SAX: {
+                    ALLOC_INST(baritoneSax, BaritoneSaxState);
+                    break;
+                }
+
+                case TENOR_SAX: {
+                    ALLOC_INST(tenorSax, TenorSaxState);
+                    break;
+                }
+
+                case SAPRANO_SAX: {
+                    ALLOC_INST(sapranoSax, SapranoSaxState);
                     break;
                 }
 

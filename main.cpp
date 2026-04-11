@@ -20,10 +20,13 @@
 #include "instruments/Accordion.h"
 #include "instruments/Agogos.h"
 #include "instruments/AltoSax.h"
+#include "instruments/BaritoneSax.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
+#include "instruments/SapranoSax.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/TenorSax.h"
 #include "instruments/Xylophone.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
@@ -217,13 +220,6 @@ extern Ms3dBundle* g_tubularBellMallet_ms3d;
 
 // Choir
 extern Ms3dBundle* g_stageChoir_ms3d;
-// Sax
-extern Ms3dBundle* g_baritoneSaxBody_ms3d;
-extern Ms3dBundle* g_baritoneSaxHorn_ms3d;
-extern Ms3dBundle* g_tenorSaxBody_ms3d;
-extern Ms3dBundle* g_tenorSaxHorn_ms3d;
-extern Ms3dBundle* g_sapranoSaxBody_ms3d;
-extern Ms3dBundle* g_sapranoSaxHorn_ms3d;
 
 // Flute / piccolo / recorder
 extern Ms3dBundle* g_flute_ms3d;

@@ -119,6 +119,12 @@ add_executable(MidiJam WIN32
         instruments/StageChoir.h
         instruments/AltoSax.cpp
         instruments/AltoSax.h
+        instruments/BaritoneSax.cpp
+        instruments/BaritoneSax.h
+        instruments/TenorSax.cpp
+        instruments/TenorSax.h
+        instruments/SapranoSax.cpp
+        instruments/SapranoSax.h
         instruments/sax.h
         instruments/sax.cpp
 )
