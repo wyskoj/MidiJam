@@ -24,9 +24,12 @@
 #include "instruments/FrenchHorn.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
+#include "instruments/MelodicTom.h"
 #include "instruments/SapranoSax.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/SynthDrum.h"
+#include "instruments/Taiko.h"
 #include "instruments/TenorSax.h"
 #include "instruments/Timpani.h"
 #include "instruments/Trumpet.h"
@@ -175,12 +178,8 @@ extern Ms3dBundle* g_drumSet_BassDrumBeaterHolder_ms3d;
 extern Ms3dBundle* g_drumSet_BassDrumPedal_ms3d;
 
 // Percussion / melodic drums
-extern Ms3dBundle* g_synthDrum_ms3d;
 extern Ms3dBundle* g_steelDrum_recoil; // IDA named this confusingly; it's the steel drum body model
 extern Ms3dBundle* g_steelDrumMallet_ms3d;
-extern Ms3dBundle* g_melodicTom_ms3d;
-extern Ms3dBundle* g_taiko_ms3d;
-extern Ms3dBundle* g_taikoStick_ms3d;
 extern Ms3dBundle* metronome_ms3d;
 extern Ms3dBundle* metronomePendjulum1_ms3d;
 extern Ms3dBundle* metronomePendjulum2_ms3d;

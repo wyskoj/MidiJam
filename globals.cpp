@@ -285,12 +285,8 @@ Ms3dBundle* g_drumSet_BassDrumBeaterHolder_ms3d = nullptr;
 Ms3dBundle* g_drumSet_BassDrumPedal_ms3d = nullptr;
 
 // Percussion / melodic drums
-Ms3dBundle* g_synthDrum_ms3d = nullptr;
 Ms3dBundle* g_steelDrum_recoil = nullptr;
 Ms3dBundle* g_steelDrumMallet_ms3d = nullptr;
-Ms3dBundle* g_melodicTom_ms3d = nullptr;
-Ms3dBundle* g_taiko_ms3d = nullptr;
-Ms3dBundle* g_taikoStick_ms3d = nullptr;
 Ms3dBundle* metronome_ms3d = nullptr;
 Ms3dBundle* metronomePendjulum1_ms3d = nullptr;
 Ms3dBundle* metronomePendjulum2_ms3d = nullptr;

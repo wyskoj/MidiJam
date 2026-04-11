@@ -16,10 +16,13 @@
 #include "instruments/FrenchHorn.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
+#include "instruments/MelodicTom.h"
 #include "instruments/SapranoSax.h"
 #include "instruments/StageChoir.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/SynthDrum.h"
+#include "instruments/Taiko.h"
 #include "instruments/TenorSax.h"
 #include "instruments/Timpani.h"
 #include "instruments/Trombone.h"
@@ -599,6 +602,66 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case MELODIC_TOM: {
+                    const auto v79 = (noteMsg->wMusicValue + 3) % 12;
+                    int i10 = 0;
+                    while (g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_68[v79][i10] && i10 < 32)
+                        i10++;
+                    if (i10 < 32) {
+                        g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_68[v79][i10] = noteMsg->mtDuration;
+                        if (g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_68[v79][i10] < 0)
+                            g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_68[v79][i10] = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_668[v79][i10] = noteMsg->mtTime - mtNow;
+                        g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_998[v79][i10] = noteMsg->bVelocity;
+                        g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_668[v79][i10] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_668[v79][i10] <= 0)
+                            g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_668[v79][i10] = 1;
+                    }
+                    break;
+                }
+
+                case SYNTH_DRUM: {
+                    const auto v79 = (noteMsg->wMusicValue + 3) % 12;
+                    int i10 = 0;
+                    while (g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_68[v79][i10] && i10 < 32)
+                        i10++;
+                    if (i10 < 32) {
+                        g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_68[v79][i10] = noteMsg->mtDuration;
+                        if (g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_68[v79][i10] < 0)
+                            g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_68[v79][i10] = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] = noteMsg->mtTime - mtNow;
+                        g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_998[v79][i10] = noteMsg->bVelocity;
+                        g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] <= 0)
+                            g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] = 1;
+                    }
+                    break;
+                }
+
+                case TAIKO: {
+                    const auto v79 = (noteMsg->wMusicValue + 3) % 12;
+                    int i10 = 0;
+                    while (g_taiko[g_taikoChannel[noteMsg->dwPChannel]].field_68[v79][i10] && i10 < 32)
+                        i10++;
+                    if (i10 < 32) {
+                        g_taiko[g_taikoChannel[noteMsg->dwPChannel]].field_68[v79][i10] = noteMsg->mtDuration;
+                        if (g_taiko[g_taikoChannel[noteMsg->dwPChannel]].field_68[v79][i10] < 0)
+                            g_taiko[g_taikoChannel[noteMsg->dwPChannel]].field_68[v79][i10] = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_taiko[g_taikoChannel[noteMsg->dwPChannel]].field_668[v79][i10] = noteMsg->mtTime - mtNow;
+                        g_taiko[g_taikoChannel[noteMsg->dwPChannel]].field_998[v79][i10] = noteMsg->bVelocity;
+                        g_taiko[g_taikoChannel[noteMsg->dwPChannel]].field_668[v79][i10] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_taiko[g_taikoChannel[noteMsg->dwPChannel]].field_668[v79][i10] <= 0)
+                            g_taiko[g_taikoChannel[noteMsg->dwPChannel]].field_668[v79][i10] = 1;
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -752,6 +815,21 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case TIMPANI: {
                     ALLOC_INST(timpani, TimpaniState);
+                    break;
+                }
+
+                case MELODIC_TOM: {
+                    ALLOC_INST(melodicTom, MelodicTomState);
+                    break;
+                }
+
+                case SYNTH_DRUM: {
+                    ALLOC_INST(synthDrum, SynthDrumState);
+                    break;
+                }
+
+                case TAIKO: {
+                    ALLOC_INST(taiko, TaikoState);
                     break;
                 }
 

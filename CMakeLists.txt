@@ -133,6 +133,12 @@ add_executable(MidiJam WIN32
         instruments/Tuba.h
         instruments/FrenchHorn.cpp
         instruments/FrenchHorn.h
+        instruments/MelodicTom.h
+        instruments/MelodicTom.cpp
+        instruments/SynthDrum.h
+        instruments/SynthDrum.cpp
+        instruments/Taiko.h
+        instruments/Taiko.cpp
         instruments/Timpani.h
         instruments/Timpani.cpp
 )

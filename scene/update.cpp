@@ -26,10 +26,13 @@
 #include "instruments/FrenchHorn.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
+#include "instruments/MelodicTom.h"
 #include "instruments/SapranoSax.h"
 #include "instruments/StageChoir.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/SynthDrum.h"
+#include "instruments/Taiko.h"
 #include "instruments/TenorSax.h"
 #include "instruments/Timpani.h"
 #include "instruments/Xylophone.h"
@@ -383,11 +386,11 @@ BOOL UpdateMidiJam() {
             glPopMatrix();
         }
 
-        // if (g_melodicTom) RenderMelodicTom();
-        // if (g_synthDrum) RenderSynthDrum();
+        if (g_melodicTom) RenderMelodicTom();
+        if (g_synthDrum) RenderSynthDrum();
         // if (g_steelDrum) RenderSteelDrum();
         if (g_timpani) RenderTimpani();
-        // if (g_taiko) RenderTaiko();
+        if (g_taiko) RenderTaiko();
         // if (g_telephone) RenderTelephone();
         // if (g_tubularBells) RenderTubularBells();
 
@@ -539,16 +542,16 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         //     if ( g_musicBox && UpdateMusicBox(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_melodicTom && UpdateMelodicTom(pmtNow) )
-        //       anyInstrumentActive = 1;
-        //     if ( g_synthDrum && UpdateSynthDrum(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if (g_melodicTom && UpdateMelodicTom(pmtNow))
+            anyInstrumentActive = 1;
+        if (g_synthDrum && UpdateSynthDrum(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_steelDrum && UpdateSteelDrum(pmtNow) )
         //       anyInstrumentActive = 1;
         if (g_timpani && UpdateTimpani(pmtNow))
             anyInstrumentActive = 1;
-        //     if ( g_taiko && UpdateTaiko(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if (g_taiko && UpdateTaiko(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_telephone && UpdateTelephone(pmtNow) )
         //       anyInstrumentActive = 1;
         //     if ( g_tubularBells && UpdateTubularBells(pmtNow) )
@@ -1135,5 +1138,23 @@ void UpdateAllRecoils(const float scale) {
         g_timpani[i].recoilOffset = g_timpani[i].recoilOffset - recoil_scale_factor;
         if (g_timpani[i].recoilOffset < 0.0)
             g_timpani[i].recoilOffset = 0.0;
+    }
+
+    for (short i = 0; i < g_melodicTomCount; ++i) {
+        g_melodicTom[i].recoilOffset = g_melodicTom[i].recoilOffset - recoil_scale_factor;
+        if (g_melodicTom[i].recoilOffset < 0.0)
+            g_melodicTom[i].recoilOffset = 0.0;
+    }
+
+    for (short i = 0; i < g_synthDrumCount; ++i) {
+        g_synthDrum[i].recoilOffset = g_synthDrum[i].recoilOffset - recoil_scale_factor;
+        if (g_synthDrum[i].recoilOffset < 0.0)
+            g_synthDrum[i].recoilOffset = 0.0;
+    }
+
+    for (short i = 0; i < g_taikoCount; ++i) {
+        g_taiko[i].recoilOffset = g_taiko[i].recoilOffset - recoil_scale_factor;
+        if (g_taiko[i].recoilOffset < 0.0)
+            g_taiko[i].recoilOffset = 0.0;
     }
 }
