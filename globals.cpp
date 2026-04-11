@@ -198,7 +198,7 @@ float g_recoil_hihat = 0.0f;
 // TODO: populate from binary when each instrument is transcribed
 // ---------------------------------------------------------------------------
 short g_latinSquare[6][6] = {};
-int VIBRATING_STRING_ANIM_SEQUENCE[8] = {};
+int VIBRATING_STRING_ANIM_SEQUENCE[8] = {0, 1, 2, 1, 0, 3, 4, 3};
 short word_46CEE0[23 * 6] = {};
 short word_46B2D0[18 * 4] = {};
 short word_4688C0[18 * 4] = {};
