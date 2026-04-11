@@ -342,9 +342,6 @@ Ms3dBundle* g_tenorSaxBody_ms3d = nullptr;
 Ms3dBundle* g_tenorSaxHorn_ms3d = nullptr;
 Ms3dBundle* g_sapranoSaxBody_ms3d = nullptr;
 Ms3dBundle* g_sapranoSaxHorn_ms3d = nullptr;
-Ms3dBundle* g_altoSaxBody_ms3d = nullptr;
-Ms3dBundle* g_altoSaxHorn_ms3d = nullptr;
-Ms3dBundle* g_altoSaxKeyX_ms3d[40] = {};
 
 // Flute / piccolo / recorder
 Ms3dBundle* g_flute_ms3d = nullptr;

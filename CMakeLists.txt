@@ -117,6 +117,10 @@ add_executable(MidiJam WIN32
         instruments/Woodblocks.h
         instruments/StageChoir.cpp
         instruments/StageChoir.h
+        instruments/AltoSax.cpp
+        instruments/AltoSax.h
+        instruments/sax.h
+        instruments/sax.cpp
 )
 
 # ---------------------------------------------------------------------------

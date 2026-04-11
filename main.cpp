@@ -19,6 +19,7 @@
 #include "macros.h"
 #include "instruments/Accordion.h"
 #include "instruments/Agogos.h"
+#include "instruments/AltoSax.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/StageHorn.h"
@@ -223,9 +224,6 @@ extern Ms3dBundle* g_tenorSaxBody_ms3d;
 extern Ms3dBundle* g_tenorSaxHorn_ms3d;
 extern Ms3dBundle* g_sapranoSaxBody_ms3d;
 extern Ms3dBundle* g_sapranoSaxHorn_ms3d;
-extern Ms3dBundle* g_altoSaxBody_ms3d;
-extern Ms3dBundle* g_altoSaxHorn_ms3d;
-extern Ms3dBundle* g_altoSaxKeyX_ms3d[40]; // [2*i] = up, [2*i+1] = down, 20 keys
 
 // Flute / piccolo / recorder
 extern Ms3dBundle* g_flute_ms3d;
@@ -715,9 +713,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     for (short i = 0; i < 20; ++i) {
         char filename[64];
         sprintf(filename, "AltoSaxKeyUp%d.ms3d", i);
-        LOAD_MODEL(g_altoSaxKeyX_ms3d[2 * i], filename);
+        LOAD_MODEL(g_altoSaxKeyX_ms3d[i][0], filename);
         sprintf(filename, "AltoSaxKeyDown%d.ms3d", i);
-        LOAD_MODEL(g_altoSaxKeyX_ms3d[2 * i + 1], filename);
+        LOAD_MODEL(g_altoSaxKeyX_ms3d[i][1], filename);
     }
 
     LOAD_MODEL(g_ocarina_ms3d, "Ocarina.ms3d");
@@ -944,8 +942,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     for (short i = 0; i < 11; ++i)
         APPLY_TEX((&g_recorderRightHandX_ms3d)[i]);
     for (short i = 0; i < 20; ++i) {
-        APPLY_TEX(g_altoSaxKeyX_ms3d[2 * i]);
-        APPLY_TEX(g_altoSaxKeyX_ms3d[2 * i + 1]);
+        APPLY_TEX(g_altoSaxKeyX_ms3d[i][0]);
+        APPLY_TEX(g_altoSaxKeyX_ms3d[i][1]);
     }
     APPLY_TEX(g_ocarina_ms3d);
     for (short i = 0; i < 12; ++i)

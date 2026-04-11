@@ -10,6 +10,7 @@
 
 #include "instruments/Accordion.h"
 #include "instruments/Agogos.h"
+#include "instruments/AltoSax.h"
 #include "instruments/Bass.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
@@ -264,20 +265,21 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     }
                     break;
                 }
-                    
+
                 case STAGE_CHOIR: {
                     const auto v50 = (noteMsg->wMusicValue + 3) % 12;
-                    int i17 =0;
+                    int i17 = 0;
                     while (g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_64[v50][i17] && i17 < 16) ++i17;
-                    if ( i17 < 16 )
-                    {
+                    if (i17 < 16) {
                         g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_64[v50][i17] = noteMsg->mtDuration;
-                        if ( g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_64[v50][i17] < 0 )
+                        if (g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_64[v50][i17] < 0)
                             g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_64[v50][i17] = 10;
                         (pPerf->GetTime)(&rtNow, &mtNow);
-                        g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_364[v50][i17] = noteMsg->mtTime - mtNow;
-                        g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_364[v50][i17] -= g_currentTempo_scaleFactor0_9;
-                        if ( g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_364[v50][i17] <= 0 )
+                        g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_364[v50][i17] = noteMsg->mtTime -
+                            mtNow;
+                        g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_364[v50][i17] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_364[v50][i17] <= 0)
                             g_stageChoir[g_stageChoirChannel[noteMsg->dwPChannel]].field_364[v50][i17] = 1;
                     }
                     break;
@@ -408,6 +410,27 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case ALTO_SAX: {
+                    const auto v19 = noteMsg->wMusicValue - 49;
+                    if (v19 < 0x21u) {
+                        int i25 = 0;
+                        while (g_altoSax[g_altoSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] && i25 < 16)
+                            i25++;
+                        if (i25 < 16) {
+                            g_altoSax[g_altoSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] = noteMsg->mtDuration;
+                            if (g_altoSax[g_altoSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] < 0)
+                                g_altoSax[g_altoSaxChannel[noteMsg->dwPChannel]].field_10C[v19][i25] = 10;
+                            (pPerf->GetTime)(&rtNow, &mtNow);
+                            g_altoSax[g_altoSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] = noteMsg->mtTime -
+                                mtNow;
+                            g_altoSax[g_altoSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_altoSax[g_altoSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] <= 0)
+                                g_altoSax[g_altoSaxChannel[noteMsg->dwPChannel]].field_94C[v19][i25] = 1;
+                        }
+                    }
+                }
+
                 default:
                     break;
             }
@@ -514,6 +537,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case WOODBLOCKS: {
                     ALLOC_INST(woodblocks, WoodblocksState);
+                    break;
+                }
+
+                case ALTO_SAX: {
+                    ALLOC_INST(altoSax, AltoSaxState);
                     break;
                 }
 

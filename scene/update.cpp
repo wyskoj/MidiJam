@@ -20,6 +20,7 @@
 #include "audio/playback.h"
 #include "instruments/Accordion.h"
 #include "instruments/Agogos.h"
+#include "instruments/AltoSax.h"
 #include "instruments/Bass.h"
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
@@ -327,7 +328,7 @@ BOOL UpdateMidiJam() {
         // if (g_baritoneSax) RenderBaritoneSax();
         // if (g_tenorSax) RenderTenorSax();
         // if (g_sapranoSax) RenderSapranoSax();
-        // if (g_altoSax) RenderAltoSax();
+        if (g_altoSax) RenderAltoSax();
         // if (g_recorder) RenderRecorder();
         // if (g_piccolo) RenderPiccolo();
         // if (g_flute) RenderFlute();
@@ -517,8 +518,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_sapranoSax && UpdateSapranoSax(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_altoSax && UpdateAltoSax(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if (g_altoSax && UpdateAltoSax(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_flute && UpdateFlute(pmtNow) )
         //       anyInstrumentActive = 1;
         //     if ( g_piccolo && UpdatePiccolo(pmtNow) )
@@ -527,8 +528,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_trumpet && UpdateTrumpet(pmtNow) )
         //       anyInstrumentActive = 1;
-        if ( g_stageChoir && UpdateStageChoir(pmtNow) )
-          anyInstrumentActive = 1;
+        if (g_stageChoir && UpdateStageChoir(pmtNow))
+            anyInstrumentActive = 1;
         //     if ( g_musicBox && UpdateMusicBox(pmtNow) )
         //       anyInstrumentActive = 1;
         //     if ( g_melodicTom && UpdateMelodicTom(pmtNow) )
