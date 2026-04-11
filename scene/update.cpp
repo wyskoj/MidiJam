@@ -40,6 +40,7 @@
 #include "instruments/Trombone.h"
 #include "instruments/Trumpet.h"
 #include "instruments/Tuba.h"
+#include "instruments/TubularBells.h"
 #include "instruments/Woodblocks.h"
 
 // ---------------------------------------------------------------------------
@@ -393,7 +394,7 @@ BOOL UpdateMidiJam() {
         if (g_timpani) RenderTimpani();
         if (g_taiko) RenderTaiko();
         // if (g_telephone) RenderTelephone();
-        // if (g_tubularBells) RenderTubularBells();
+        if (g_tubularBells) RenderTubularBells();
 
         if (g_guitar) {
             glPushMatrix();
@@ -555,12 +556,12 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         //     if ( g_telephone && UpdateTelephone(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_tubularBells && UpdateTubularBells(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if (g_tubularBells && UpdateTubularBells(pmtNow))
+            anyInstrumentActive = 1;
         if (g_stageString && UpdateStageString(pmtNow))
             anyInstrumentActive = 1;
-        if ( g_pizzicatoStrings && UpdatePizzicatoStrings(pmtNow) )
-          anyInstrumentActive = 1;
+        if (g_pizzicatoStrings && UpdatePizzicatoStrings(pmtNow))
+            anyInstrumentActive = 1;
         UpdateAllRecoils(recoil_scale_factor);
         //     anyPercussionActive = 0;
         //     if ( g_show_percussion == 1 )
@@ -1157,5 +1158,11 @@ void UpdateAllRecoils(const float scale) {
         g_taiko[i].recoilOffset = g_taiko[i].recoilOffset - recoil_scale_factor;
         if (g_taiko[i].recoilOffset < 0.0)
             g_taiko[i].recoilOffset = 0.0;
+    }
+
+    for (short i = 0; i < g_tubularBellsCount; ++i) {
+        g_tubularBells[i].field_4 = g_tubularBells[i].field_4 - recoil_scale_factor;
+        if (g_tubularBells[i].field_4 < 0.0)
+            g_tubularBells[i].field_4 = 0.0;
     }
 }

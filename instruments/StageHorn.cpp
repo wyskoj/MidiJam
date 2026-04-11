@@ -7,8 +7,6 @@
 
 DEF_INST(stageHorn, StageHornState)
 
-GLfloat startAngle = 12.0f * (-202.5f / STAGE_BASE_Z);
-GLfloat angleStep = -1.125f * (-202.5f / STAGE_BASE_Z);
 
 extern MUSIC_TIME g_currentGlobalTime;
 Ms3dBundle* g_stageHorn_ms3d = nullptr;
@@ -25,7 +23,7 @@ void RenderStageHorn() {
             continue;
 
         for (short horn = 0; horn < 12; ++horn) {
-            const GLfloat angle = startAngle - horn * angleStep;
+            const GLfloat angle = STAGE_RIGHT_ROTATION_BASE - horn * STAGE_RIGHT_ROTATION_DELTA;
             const GLfloat z = STAGE_BASE_Z - visibleCount * 5.0f;
             const GLfloat y = inst.riseTimer[horn] > 0
                                   ? (1.0f - inst.riseTimer[horn] / static_cast<float>(inst.riseDuration[horn])) * -10.0f

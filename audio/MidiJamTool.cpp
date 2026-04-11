@@ -29,6 +29,7 @@
 #include "instruments/Trombone.h"
 #include "instruments/Trumpet.h"
 #include "instruments/Tuba.h"
+#include "instruments/TubularBells.h"
 #include "instruments/Woodblocks.h"
 #include "instruments/Xylophone.h"
 
@@ -687,6 +688,26 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case TUBULAR_BELLS: {
+                    const auto v63 = (noteMsg->wMusicValue + 3) % 12;
+                    int i14 = 0;
+                    while (g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_68[v63][i14] && i14 < 16)
+                        i14++;
+                    if ( i14 < 16 )
+                    {
+                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_68[v63][i14] = noteMsg->mtDuration;
+                        if ( g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_68[v63][i14] < 0 )
+                            g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_68[v63][i14] = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_368[v63][i14] = noteMsg->mtTime - mtNow;
+                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_518[v63][i14] = noteMsg->bVelocity;
+                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_368[v63][i14] -= g_currentTempo_scaleFactor0_9;
+                        if ( g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_368[v63][i14] <= 0 )
+                            g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_368[v63][i14] = 1;
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -861,6 +882,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case PIZZICATO_STRINGS: {
                     ALLOC_INST(pizzicatoStrings, PizzicatoStringsState);
+                    break;
+                }
+
+                case TUBULAR_BELLS: {
+                    ALLOC_INST(tubularBells, TubularBellsState);
                     break;
                 }
 

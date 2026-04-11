@@ -35,6 +35,7 @@
 #include "instruments/Timpani.h"
 #include "instruments/Trumpet.h"
 #include "instruments/Tuba.h"
+#include "instruments/TubularBells.h"
 #include "instruments/Xylophone.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
@@ -213,11 +214,6 @@ extern Ms3dBundle* g_violinString_ms3d;
 extern Ms3dBundle* g_violinStringPlayedX_ms3d[5]; // TODO: verify array type — IDA accessed via vtable offset
 extern Ms3dBundle* g_violinFinger_ms3d; // [0] — telephone keys start at [0] per IDA
 extern Ms3dBundle* g_violinBow_ms3d;
-
-// Tubular bells
-extern Ms3dBundle* g_tubularBell_ms3d;
-extern Ms3dBundle* g_tubularBellDark_ms3d;
-extern Ms3dBundle* g_tubularBellMallet_ms3d;
 
 // Choir
 extern Ms3dBundle* g_stageChoir_ms3d;
