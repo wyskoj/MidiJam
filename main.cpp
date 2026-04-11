@@ -25,6 +25,7 @@
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/MelodicTom.h"
+#include "instruments/PizzicatoStrings.h"
 #include "instruments/SapranoSax.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
@@ -192,7 +193,6 @@ extern Ms3dBundle* g_musicBoxTopBlade_ms3d;
 extern Ms3dBundle* g_musicBoxCase_ms3d;
 
 // String instruments
-extern Ms3dBundle* g_pizzicatoStringHolder_ms3d;
 extern Ms3dBundle* whistle_ms3d;
 extern Ms3dBundle* g_panPipe_ms3d;
 extern Ms3dBundle* g_calliope_ms3d;

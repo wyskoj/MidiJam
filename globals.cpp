@@ -299,7 +299,6 @@ Ms3dBundle* g_musicBoxTopBlade_ms3d = nullptr;
 Ms3dBundle* g_musicBoxCase_ms3d = nullptr;
 
 // Strings / winds
-Ms3dBundle* g_pizzicatoStringHolder_ms3d = nullptr;
 Ms3dBundle* whistle_ms3d = nullptr;
 Ms3dBundle* g_panPipe_ms3d = nullptr;
 Ms3dBundle* g_calliope_ms3d = nullptr;

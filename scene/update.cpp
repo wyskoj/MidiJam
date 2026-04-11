@@ -27,6 +27,7 @@
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/MelodicTom.h"
+#include "instruments/PizzicatoStrings.h"
 #include "instruments/SapranoSax.h"
 #include "instruments/StageChoir.h"
 #include "instruments/StageHorn.h"
@@ -357,7 +358,7 @@ BOOL UpdateMidiJam() {
         if (g_stageChoir) RenderStageChoir();
         if (g_accordion) RenderAccordion();
         if (g_stageString) RenderStageString();
-        // if (g_pizzicatoStrings) RenderPizzicatoStrings();
+        if (g_pizzicatoStrings) RenderPizzicatoStrings();
         // if (g_ocarina) RenderOcarina();
 
         if (g_xylophone) {
@@ -558,8 +559,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         if (g_stageString && UpdateStageString(pmtNow))
             anyInstrumentActive = 1;
-        //     if ( g_pizzicatoStrings && UpdatePizzicatoStrings(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_pizzicatoStrings && UpdatePizzicatoStrings(pmtNow) )
+          anyInstrumentActive = 1;
         UpdateAllRecoils(recoil_scale_factor);
         //     anyPercussionActive = 0;
         //     if ( g_show_percussion == 1 )

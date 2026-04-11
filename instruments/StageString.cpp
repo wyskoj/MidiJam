@@ -4,6 +4,7 @@
 
 #include "StageString.h"
 
+#include "strings.h"
 #include "scene/scene.h"
 
 DEF_INST(stageString, StageStringState)
@@ -14,10 +15,6 @@ Ms3dBundle* g_stageStringHolder_ms3d;
 Ms3dBundle* g_stageStringBow_ms3d;
 Ms3dBundle* g_stageString_ms3d;
 Ms3dBundle* g_stageStringBottomX_ms3d[5];
-
-float flt_46E3AC = 10.53;
-float flt_46E3C0 = 44.55;
-float flt_46E398 = 0.81;
 
 void RenderStageString() {
     GLfloat angle; // [esp+0h] [ebp-2Ch]

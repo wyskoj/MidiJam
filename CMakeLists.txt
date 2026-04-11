@@ -141,6 +141,10 @@ add_executable(MidiJam WIN32
         instruments/Taiko.cpp
         instruments/Timpani.h
         instruments/Timpani.cpp
+        instruments/PizzicatoStrings.cpp
+        instruments/PizzicatoStrings.h
+        instruments/strings.h
+        instruments/strings.cpp
 )
 
 # ---------------------------------------------------------------------------

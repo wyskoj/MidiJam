@@ -17,6 +17,7 @@
 #include "instruments/Guitar.h"
 #include "instruments/Harp.h"
 #include "instruments/MelodicTom.h"
+#include "instruments/PizzicatoStrings.h"
 #include "instruments/SapranoSax.h"
 #include "instruments/StageChoir.h"
 #include "instruments/StageHorn.h"
@@ -662,6 +663,30 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case PIZZICATO_STRINGS: {
+                    const auto v103 = (noteMsg->wMusicValue + 3) % 12;
+                    int i4 = 0;
+                    while (g_pizzicatoStrings[g_pizzicatoStringsChannel[noteMsg->dwPChannel]].field_64[0][16 * v103 +
+                        i4])
+                        i4++;
+                    if (i4 < 16) {
+                        g_pizzicatoStrings[g_pizzicatoStringsChannel[noteMsg->dwPChannel]].field_64[0][16 * v103 + i4] =
+                            noteMsg->mtDuration;
+                        if (g_pizzicatoStrings[g_pizzicatoStringsChannel[noteMsg->dwPChannel]].field_64[0][16 * v103 +
+                            i4] < 0)
+                            g_pizzicatoStrings[g_pizzicatoStringsChannel[noteMsg->dwPChannel]].field_64[0][16 * v103 +
+                                i4] = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_pizzicatoStrings[g_pizzicatoStringsChannel[noteMsg->dwPChannel]].field_37C[v103][i4] = noteMsg
+                            ->mtTime - mtNow;
+                        g_pizzicatoStrings[g_pizzicatoStringsChannel[noteMsg->dwPChannel]].field_37C[v103][i4] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_pizzicatoStrings[g_pizzicatoStringsChannel[noteMsg->dwPChannel]].field_37C[v103][i4] <= 0)
+                            g_pizzicatoStrings[g_pizzicatoStringsChannel[noteMsg->dwPChannel]].field_37C[v103][i4] = 1;
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -831,6 +856,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case TAIKO: {
                     ALLOC_INST(taiko, TaikoState);
+                    break;
+                }
+
+                case PIZZICATO_STRINGS: {
+                    ALLOC_INST(pizzicatoStrings, PizzicatoStringsState);
                     break;
                 }
 
