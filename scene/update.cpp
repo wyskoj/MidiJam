@@ -33,6 +33,7 @@
 #include "instruments/StageChoir.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/SteelDrum.h"
 #include "instruments/SynthDrum.h"
 #include "instruments/Taiko.h"
 #include "instruments/TenorSax.h"
@@ -391,7 +392,7 @@ BOOL UpdateMidiJam() {
 
         if (g_melodicTom) RenderMelodicTom();
         if (g_synthDrum) RenderSynthDrum();
-        // if (g_steelDrum) RenderSteelDrum();
+        if (g_steelDrum) RenderSteelDrum();
         if (g_timpani) RenderTimpani();
         if (g_taiko) RenderTaiko();
         // if (g_telephone) RenderTelephone();
@@ -549,8 +550,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         if (g_synthDrum && UpdateSynthDrum(pmtNow))
             anyInstrumentActive = 1;
-        //     if ( g_steelDrum && UpdateSteelDrum(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_steelDrum && UpdateSteelDrum(pmtNow) )
+          anyInstrumentActive = 1;
         if (g_timpani && UpdateTimpani(pmtNow))
             anyInstrumentActive = 1;
         if (g_taiko && UpdateTaiko(pmtNow))
@@ -1147,6 +1148,12 @@ void UpdateAllRecoils(const float scale) {
         g_melodicTom[i].recoilOffset = g_melodicTom[i].recoilOffset - recoil_scale_factor;
         if (g_melodicTom[i].recoilOffset < 0.0)
             g_melodicTom[i].recoilOffset = 0.0;
+    }
+
+    for (short i = 0; i < g_steelDrumCount; ++i) {
+        g_steelDrum[i].recoilOffset = g_steelDrum[i].recoilOffset - recoil_scale_factor;
+        if (g_steelDrum[i].recoilOffset < 0.0)
+            g_steelDrum[i].recoilOffset = 0.0;
     }
 
     for (short i = 0; i < g_synthDrumCount; ++i) {

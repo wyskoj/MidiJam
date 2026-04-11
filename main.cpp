@@ -30,6 +30,7 @@
 #include "instruments/SapranoSax.h"
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
+#include "instruments/SteelDrum.h"
 #include "instruments/SynthDrum.h"
 #include "instruments/Taiko.h"
 #include "instruments/TenorSax.h"
@@ -181,8 +182,6 @@ extern Ms3dBundle* g_drumSet_BassDrumBeaterHolder_ms3d;
 extern Ms3dBundle* g_drumSet_BassDrumPedal_ms3d;
 
 // Percussion / melodic drums
-extern Ms3dBundle* g_steelDrum_recoil; // IDA named this confusingly; it's the steel drum body model
-extern Ms3dBundle* g_steelDrumMallet_ms3d;
 extern Ms3dBundle* metronome_ms3d;
 extern Ms3dBundle* metronomePendjulum1_ms3d;
 extern Ms3dBundle* metronomePendjulum2_ms3d;
@@ -481,7 +480,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     LOAD_MODEL(g_timpaniBody_ms3d, "TimpaniBody.ms3d");
     LOAD_MODEL(g_timpaniHead_ms3d, "TimpaniHead.ms3d");
     LOAD_MODEL(g_synthDrum_ms3d, "SynthDrum.ms3d");
-    LOAD_MODEL(g_steelDrum_recoil, "SteelDrum.ms3d");
+    LOAD_MODEL(g_steelDrum_ms3d, "SteelDrum.ms3d");
     LOAD_MODEL(g_steelDrumMallet_ms3d, "SteelDrumMallet.ms3d");
     LOAD_MODEL(g_melodicTom_ms3d, "MelodicTom.ms3d");
     LOAD_MODEL(g_taiko_ms3d, "Taiko.ms3d");
@@ -812,7 +811,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(g_timpaniBody_ms3d);
     APPLY_TEX(g_timpaniHead_ms3d);
     APPLY_TEX(g_synthDrum_ms3d);
-    APPLY_TEX(g_steelDrum_recoil);
+    APPLY_TEX(g_steelDrum_ms3d);
     APPLY_TEX(g_steelDrumMallet_ms3d);
     APPLY_TEX(g_melodicTom_ms3d);
     APPLY_TEX(g_taiko_ms3d);

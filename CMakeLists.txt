@@ -149,6 +149,8 @@ add_executable(MidiJam WIN32
         instruments/TubularBells.h
         instruments/MusicBox.cpp
         instruments/MusicBox.h
+        instruments/SteelDrum.cpp
+        instruments/SteelDrum.h
 )
 
 # ---------------------------------------------------------------------------
