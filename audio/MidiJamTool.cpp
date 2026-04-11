@@ -21,6 +21,7 @@
 #include "instruments/StageString.h"
 #include "instruments/TenorSax.h"
 #include "instruments/Trombone.h"
+#include "instruments/Trumpet.h"
 #include "instruments/Woodblocks.h"
 #include "instruments/Xylophone.h"
 
@@ -506,6 +507,29 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case TRUMPET:
+                case MUTED_TRUMPET: {
+                    const auto v43 = noteMsg->wMusicValue - 54;
+                    if (v43 < 0x36u) {
+                        int i19 = 0;
+                        while (g_trumpet[g_trumpetChannel[noteMsg->dwPChannel]].field_1B4[v43][i19] && i19 < 16)
+                            i19++;
+                        if (i19 < 16) {
+                            g_trumpet[g_trumpetChannel[noteMsg->dwPChannel]].field_1B4[v43][i19] = noteMsg->mtDuration;
+                            if (g_trumpet[g_trumpetChannel[noteMsg->dwPChannel]].field_1B4[v43][i19] < 0)
+                                g_trumpet[g_trumpetChannel[noteMsg->dwPChannel]].field_1B4[v43][i19] = 10;
+                            (pPerf->GetTime)(&rtNow, &mtNow);
+                            g_trumpet[g_trumpetChannel[noteMsg->dwPChannel]].field_F34[v43][i19] = noteMsg->
+                                mtTime - mtNow;
+                            g_trumpet[g_trumpetChannel[noteMsg->dwPChannel]].field_F34[v43][i19] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_trumpet[g_trumpetChannel[noteMsg->dwPChannel]].field_F34[v43][i19] <= 0)
+                                g_trumpet[g_trumpetChannel[noteMsg->dwPChannel]].field_F34[v43][i19] = 1;
+                        }
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -632,6 +656,18 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case SAPRANO_SAX: {
                     ALLOC_INST(sapranoSax, SapranoSaxState);
+                    break;
+                }
+
+                case TRUMPET: {
+                    if (g_trumpet)
+                        g_trumpet = static_cast<TrumpetState*>(realloc(
+                            g_trumpet, sizeof(TrumpetState) * (g_trumpetCount + 1)));
+                    else g_trumpet = static_cast<TrumpetState*>(malloc(sizeof(TrumpetState)));
+                    memset(&g_trumpet[g_trumpetCount], 0, sizeof(TrumpetState));
+                    if (g_midiJamInstrumentIds[pPMSG->dwPChannel] == MUTED_TRUMPET)
+                        g_trumpet[g_trumpetCount].field_15F6 = 1;
+                    g_trumpetChannel[pPMSG->dwPChannel] = g_trumpetCount++;
                     break;
                 }
 

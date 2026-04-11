@@ -27,6 +27,7 @@
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
 #include "instruments/TenorSax.h"
+#include "instruments/Trumpet.h"
 #include "instruments/Xylophone.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
@@ -260,14 +261,6 @@ extern Ms3dBundle* g_tubaKey_1_ms3d;
 extern Ms3dBundle* g_tubaKey_2_ms3d;
 extern Ms3dBundle* g_tubaKey_3_ms3d;
 extern Ms3dBundle* g_tubaKey_4_ms3d;
-
-// Trumpet
-extern Ms3dBundle* g_trumpetBody_ms3d;
-extern Ms3dBundle* g_trumpetHorn_ms3d;
-extern Ms3dBundle* g_trumpetMute_ms3d;
-extern Ms3dBundle* g_trumpetKey1_ms3d;
-extern Ms3dBundle* g_trumpetKey2_ms3d;
-extern Ms3dBundle* g_trumpetKey3_ms3d;
 
 // Trombone
 extern Ms3dBundle* g_trombone_ms3d;
@@ -930,8 +923,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         APPLY_TEX(g_flute_rightHandX_ms3d[i]);
     APPLY_TEX(g_telephoneBase_ms3d);
     APPLY_TEX(g_telephoneHandle_ms3d);
-    for (short i = 0; i < 24; ++i)
-        APPLY_TEX((&g_telephoneKeyX_ms3d)[i]);
+    // for (short i = 0; i < 24; ++i)
+    //     APPLY_TEX((&g_telephoneKeyX_ms3d)[i]);
     APPLY_TEX(g_recorder_ms3d);
     for (short i = 0; i < 13; ++i)
         APPLY_TEX(g_recorderLeftHandX_ms3d[i]);

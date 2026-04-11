@@ -32,6 +32,7 @@
 #include "instruments/TenorSax.h"
 #include "instruments/Xylophone.h"
 #include "instruments/Trombone.h"
+#include "instruments/Trumpet.h"
 #include "instruments/Woodblocks.h"
 
 // ---------------------------------------------------------------------------
@@ -326,7 +327,7 @@ BOOL UpdateMidiJam() {
             glPopMatrix();
         }
         if (g_trombone) RenderTrombone();
-        // if (g_trumpet) RenderTrumpet();
+        if (g_trumpet) RenderTrumpet();
         // if (g_frenchHorn) RenderFrenchHorn();
         if (g_baritoneSax) RenderBaritoneSax();
         if (g_tenorSax) RenderTenorSax();
@@ -529,8 +530,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_recorder && UpdateRecorder(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_trumpet && UpdateTrumpet(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_trumpet && UpdateTrumpet(pmtNow) )
+          anyInstrumentActive = 1;
         if (g_stageChoir && UpdateStageChoir(pmtNow))
             anyInstrumentActive = 1;
         //     if ( g_musicBox && UpdateMusicBox(pmtNow) )

@@ -370,14 +370,6 @@ Ms3dBundle* g_tubaKey_1_ms3d = nullptr;
 Ms3dBundle* g_tubaKey_2_ms3d = nullptr;
 Ms3dBundle* g_tubaKey_3_ms3d = nullptr;
 Ms3dBundle* g_tubaKey_4_ms3d = nullptr;
-Ms3dBundle* g_trumpetBody_ms3d = nullptr;
-Ms3dBundle* g_trumpetHorn_ms3d = nullptr;
-Ms3dBundle* g_trumpetMute_ms3d = nullptr;
-Ms3dBundle* g_trumpetKey1_ms3d = nullptr;
-Ms3dBundle* g_trumpetKey2_ms3d = nullptr;
-Ms3dBundle* g_trumpetKey3_ms3d = nullptr;
-
-
 
 // DirectMusic GUID
 GUID GUID_PERF_MASTER_TEMPO = {

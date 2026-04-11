@@ -127,6 +127,8 @@ add_executable(MidiJam WIN32
         instruments/SapranoSax.h
         instruments/sax.h
         instruments/sax.cpp
+        instruments/Trumpet.cpp
+        instruments/Trumpet.h
 )
 
 # ---------------------------------------------------------------------------
