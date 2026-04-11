@@ -791,7 +791,8 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
-                case TRUMPET: {
+                case TRUMPET:
+                case MUTED_TRUMPET: {
                     if (g_trumpet)
                         g_trumpet = static_cast<TrumpetState*>(realloc(
                             g_trumpet, sizeof(TrumpetState) * (g_trumpetCount + 1)));
