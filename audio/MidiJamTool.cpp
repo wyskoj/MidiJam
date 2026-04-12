@@ -38,6 +38,7 @@
 #include "instruments/DoubleBass.h"
 #include "instruments/Ocarina.h"
 #include "instruments/PanPipe.h"
+#include "instruments/Harmonica.h"
 #include "instruments/PopBottles.h"
 #include "instruments/Telephone.h"
 #include "instruments/Whistles.h"
@@ -944,6 +945,26 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case HARMONICA: {
+                    const auto v123 = (noteMsg->wMusicValue + 3) % 12;
+                    int nn = 0;
+                    while (g_harmonica[g_harmonicaChannel[noteMsg->dwPChannel]].field_64[v123][nn] && nn < 16)
+                        ++nn;
+                    if (nn < 16) {
+                        g_harmonica[g_harmonicaChannel[noteMsg->dwPChannel]].field_64[v123][nn] = noteMsg->mtDuration;
+                        if (g_harmonica[g_harmonicaChannel[noteMsg->dwPChannel]].field_64[v123][nn] < 0)
+                            g_harmonica[g_harmonicaChannel[noteMsg->dwPChannel]].field_64[v123][nn] = 10;
+                        pPerf->GetTime(&rtNow, &mtNow);
+                        g_harmonica[g_harmonicaChannel[noteMsg->dwPChannel]].field_364[v123][nn] = noteMsg->mtTime -
+                            mtNow;
+                        g_harmonica[g_harmonicaChannel[noteMsg->dwPChannel]].field_364[v123][nn] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_harmonica[g_harmonicaChannel[noteMsg->dwPChannel]].field_364[v123][nn] <= 0)
+                            g_harmonica[g_harmonicaChannel[noteMsg->dwPChannel]].field_364[v123][nn] = 1;
+                    }
+                    break;
+                }
+
                 case POP_BOTTLES: {
                     const auto v119 = (noteMsg->wMusicValue + 3) % 12;
                     int i1 = 0;
@@ -1200,6 +1221,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     memset(&g_panPipe[g_panPipeCount], 0, sizeof(PanPipeState));
                     g_panPipeChannel[pPMSG->dwPChannel] = g_panPipeCount;
                     g_isPanPipeCalliope[g_panPipeCount++] = patchMsg->byInstrument == 0x52;
+                    break;
+                }
+
+                case HARMONICA: {
+                    ALLOC_INST(harmonica, HarmonicaState);
                     break;
                 }
 

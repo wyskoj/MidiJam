@@ -45,6 +45,7 @@
 #include "instruments/DoubleBass.h"
 #include "instruments/Ocarina.h"
 #include "instruments/PanPipe.h"
+#include "instruments/Harmonica.h"
 #include "instruments/PopBottles.h"
 #include "instruments/Telephone.h"
 #include "instruments/Whistles.h"
@@ -197,11 +198,9 @@ extern Ms3dBundle* metronomePendjulum1_ms3d;
 extern Ms3dBundle* metronomePendjulum2_ms3d;
 
 // String instruments
-extern Ms3dBundle* g_harmonica_ms3d;
 extern Ms3dBundle* g_steamCloud_0_ms3d;
 extern Ms3dBundle* g_steamCloud_1_ms3d;
 extern Ms3dBundle* g_steamCloud_2_ms3d;
-extern Ms3dBundle* g_steamPuff_harmonica_ms3d;
 extern Ms3dBundle* g_viola_ms3d;
 extern Ms3dBundle* g_cello_ms3d;
 extern Ms3dBundle* g_doubleBass_ms3d;
