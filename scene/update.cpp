@@ -49,6 +49,7 @@
 #include "instruments/DoubleBass.h"
 #include "instruments/Ocarina.h"
 #include "instruments/PanPipe.h"
+#include "instruments/PopBottles.h"
 #include "instruments/Telephone.h"
 #include "instruments/Whistles.h"
 #include "instruments/Woodblocks.h"
@@ -363,7 +364,7 @@ BOOL UpdateMidiJam() {
         if (g_viola) RenderViola();
         if (g_cello) RenderCello();
         if (g_doubleBass) RenderDoubleBass();
-        // if (g_popBottle) RenderPopBottle();
+        if (g_popBottles) RenderPopBottles();
         if (g_agogos) RenderAgogos();
         if (g_woodblocks) RenderWoodblocks();
         if (g_stageChoir) RenderStageChoir();
@@ -520,8 +521,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
           anyInstrumentActive = 1;
         //     if ( g_harmonica && UpdateHarmonica(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_popBottle && UpdatePopBottle(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_popBottles && UpdatePopBottles(pmtNow) )
+          anyInstrumentActive = 1;
         if (g_agogos && UpdateAgogos(pmtNow))
             anyInstrumentActive = 1;
         if (g_woodblocks && UpdateWoodblocks(pmtNow))

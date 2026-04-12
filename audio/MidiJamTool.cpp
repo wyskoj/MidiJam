@@ -38,6 +38,7 @@
 #include "instruments/DoubleBass.h"
 #include "instruments/Ocarina.h"
 #include "instruments/PanPipe.h"
+#include "instruments/PopBottles.h"
 #include "instruments/Telephone.h"
 #include "instruments/Whistles.h"
 #include "instruments/Woodblocks.h"
@@ -943,6 +944,26 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case POP_BOTTLES: {
+                    const auto v119 = (noteMsg->wMusicValue + 3) % 12;
+                    int i1 = 0;
+                    while (g_popBottles[g_popBottlesChannel[noteMsg->dwPChannel]].field_64[v119][i1] && i1 < 16)
+                        ++i1;
+                    if (i1 < 16) {
+                        g_popBottles[g_popBottlesChannel[noteMsg->dwPChannel]].field_64[v119][i1] = noteMsg->mtDuration;
+                        if (g_popBottles[g_popBottlesChannel[noteMsg->dwPChannel]].field_64[v119][i1] < 0)
+                            g_popBottles[g_popBottlesChannel[noteMsg->dwPChannel]].field_64[v119][i1] = 10;
+                        pPerf->GetTime(&rtNow, &mtNow);
+                        g_popBottles[g_popBottlesChannel[noteMsg->dwPChannel]].field_364[v119][i1] = noteMsg->mtTime -
+                            mtNow;
+                        g_popBottles[g_popBottlesChannel[noteMsg->dwPChannel]].field_364[v119][i1] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_popBottles[g_popBottlesChannel[noteMsg->dwPChannel]].field_364[v119][i1] <= 0)
+                            g_popBottles[g_popBottlesChannel[noteMsg->dwPChannel]].field_364[v119][i1] = 1;
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -1179,6 +1200,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     memset(&g_panPipe[g_panPipeCount], 0, sizeof(PanPipeState));
                     g_panPipeChannel[pPMSG->dwPChannel] = g_panPipeCount;
                     g_isPanPipeCalliope[g_panPipeCount++] = patchMsg->byInstrument == 0x52;
+                    break;
+                }
+
+                case POP_BOTTLES: {
+                    ALLOC_INST(popBottles, PopBottlesState);
                     break;
                 }
 

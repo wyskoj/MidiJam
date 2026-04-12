@@ -167,6 +167,8 @@ add_executable(MidiJam WIN32
         instruments/Whistles.h
         instruments/PanPipe.cpp
         instruments/PanPipe.h
+        instruments/PopBottles.cpp
+        instruments/PopBottles.h
 )
 
 # ---------------------------------------------------------------------------
