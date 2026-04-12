@@ -12,6 +12,7 @@
 #include <dmusici.h>
 
 #include "audio/MidiJamTool.h"
+#include "instruments/percussion/particles.h"
 
 DirectMusicSegmentPlayer* g_directMusicSegmentPlayer = nullptr;
 char g_midiFileNameDisp[260] = {};
@@ -74,9 +75,9 @@ int g_isShuttingDown = 0;
 int g_isFadingIn = 0;
 DWORD g_applicationStartTime = 0;
 #if _MSC_VER < 1400
-long        g_lastUnixEpochTime = 0;
+long g_lastUnixEpochTime = 0;
 #else
-time_t      g_lastUnixEpochTime = 0;
+time_t g_lastUnixEpochTime = 0;
 #endif
 float g_framesPerSecond = 0.0f;
 int g_framesAlive = 0;
@@ -113,7 +114,6 @@ RotatingCameraDirection g_rotatingCameraDirection = CLOCKWISE;
 int g_rotatingCameraIdleTime = 0;
 
 
-
 // ---------------------------------------------------------------------------
 // Animation
 // ---------------------------------------------------------------------------
@@ -132,15 +132,12 @@ int g_percussion_velocity_queue[88][32] = {};
 int g_percussion_framesWithEmptyQueue = 0;
 int g_hihat_isOpen = 0;
 int g_lastRideCymbal = 0;
-short g_cymbal_patches[7] = {};
 
 // ---------------------------------------------------------------------------
 // Recoil / physics constants (values populated from binary data; zeroed for now)
 // ---------------------------------------------------------------------------
 float RECOIL_SCALE_FACTOR = 5.0f;
 float MAX_RECOIL = 3.0f;
-float CYMBAL_LOC_X[7] = {};
-float CYMBAL_LOC_Z[7] = {};
 float g_cymbal_rot_y[7] = {};
 float g_cymbalRestingAngle[7] = {};
 float g_cymbalMassFactor[7] = {};
@@ -148,16 +145,19 @@ float g_cymbalCurrentWobble[7] = {};
 float g_cymbalAngularVelocity[7] = {};
 float g_cymbalWobbleAmplitude[7] = {};
 float g_recoil_cymbals[7] = {};
-float CYMBAL_MASS_FACTOR[7] = {};
-float CYMBAL_SCALE[7] = {};
-float CYMBAL_MAX_WOBBLE[7] = {};
-float CYMBAL_WOBBLE_AMPLITUDE[7] = {};
-float CYMBAL_ANGULAR_VELOCITY_FACTOR[7] = {};
+float CYMBAL_MASS_FACTOR[7] = {
+    45.0, 45.0, 45.0, 5.625, 5.625, 45.0, 2.0,
+};
+float CYMBAL_WOBBLE_AMPLITUDE[7] = {
+    0.5, 0.3, 0.4, 0.01, 0.01, 0.3, 0.1
+};
+float CYMBAL_ANGULAR_VELOCITY_FACTOR[7] = {
+    0.75, 0.75, 0.75, 0.09375, 0.09375, 0.75, 0.125
+};
 
 float g_recoil_snaredrum = 0.0f;
 float g_recoil_snare = 0.0f;
 float g_recoil_sideStick = 0.0f;
-float g_recoil_tom[6] = {};
 float g_recoil_bassdrum = 0.0f;
 float g_recoil_bassDrumArm = 0.0f;
 float g_recoil_cowbell = 0.0f;
@@ -235,7 +235,7 @@ void* g_pHwfAppendix = nullptr;
 unsigned int g_nHwfAppendixItems = 0;
 
 // Particle system — type unknown until transcribed
-void* g_ds_particles = nullptr;
+DS_Particles g_particles[2] = {};
 
 // Song fill bar
 GLfloat g_songFillbarScale = 0.0f;
@@ -307,8 +307,8 @@ Ms3dBundle* dword_46D264 = nullptr;
 
 // DirectMusic GUID
 GUID GUID_PERF_MASTER_TEMPO = {
-    0x54344c80, 0xddc3, 0x11d1,
-    {0x87, 0x54, 0x00, 0x60, 0x08, 0x33, 0xdb, 0xd8}
+    0xD2AC28B0, 0xB39B, 0x11D1,
+    {0x87, 0x04, 0x00, 0x60, 0x08, 0x93, 0xb1, 0xbd}
 };
 
 

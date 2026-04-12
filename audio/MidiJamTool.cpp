@@ -64,6 +64,10 @@ __int16 word_45EC60[12] = {
     0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6
 };
 
+extern int g_percussion_time_queue[88][32];
+extern int g_percussion_velocity_queue[88][32];
+extern int g_show_percussion;
+extern short g_inst_visible_drumset;
 extern MidiJamInstrumentId g_midiJamInstrumentIds[300];
 extern short g_doubleBass_playingStyle[300];
 extern int g_currentTempo_scaleFactor0_5;
@@ -161,6 +165,28 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                 break;
 
             switch (g_midiJamInstrumentIds[msgChannel]) {
+
+                case PERCUSSION: {
+                    const auto gmPercussionPatch = noteMsg->wMusicValue;
+                    short n = 0;
+                    while (g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] && n < 32)
+                        ++n;
+                    if ( n < 32 )
+                    {
+                        pPerf->GetTime(&rtNow, &mtNow);
+                        g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] = noteMsg->mtTime - mtNow;
+                        g_percussion_velocity_queue[(unsigned __int16)gmPercussionPatch][n] = noteMsg->bVelocity;
+                        if ( !g_show_percussion && IsGmPercussionSupported(static_cast<GM_PERCUSSION>(gmPercussionPatch)) )
+                        {
+                            g_show_percussion = 1;
+                            g_inst_visible_drumset = 1;
+                        }
+                        g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] -= g_currentTempo_scaleFactor0_9;
+                        if ( g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] <= 0 )
+                            g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] = 1;
+                    }
+                    break;
+                }
                 case PIANO: {
                     const unsigned short keyIndex = (noteMsg->wMusicValue) - (21);
                     if ((keyIndex) >= (unsigned short)(88)) break;;

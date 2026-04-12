@@ -177,6 +177,19 @@ add_executable(MidiJam WIN32
         instruments/Piccolo.h
         instruments/Flute.cpp
         instruments/Flute.h
+        instruments/percussion/Toms.cpp
+        instruments/percussion/Toms.h
+        instruments/percussion/SnareDrum.cpp
+        instruments/percussion/SnareDrum.h
+        instruments/percussion/percussion.cpp
+        instruments/percussion/percussion.h
+        instruments/percussion/particles.h
+        instruments/percussion/Metronome.cpp
+        instruments/percussion/Metronome.h
+        instruments/percussion/HiHat.cpp
+        instruments/percussion/HiHat.h
+        instruments/percussion/Cymbals.cpp
+        instruments/percussion/Cymbals.h
 )
 
 # ---------------------------------------------------------------------------

@@ -52,6 +52,7 @@
 #include "instruments/Telephone.h"
 #include "instruments/Whistles.h"
 #include "instruments/Xylophone.h"
+#include "instruments/percussion/particles.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
 #include "render/window.h"
@@ -226,9 +227,7 @@ extern Ms3dBundle* g_tromboneSlide_ms3d;
 extern PianoModels g_pianoModels[4];
 
 // Particle system
-extern void* g_ds_particles; // TODO: type when transcribed
-
-//
+extern DS_Particles g_particles[2];
 
 extern __int16 g_guitarNotes[23][6];
 
@@ -364,8 +363,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     g_hwfStream = fopen(hwfPath, "rb");
     g_pHwfAppendix = ReadHwfAppendix(static_cast<char*>(g_pHwfAppendix), g_hwfStream, &g_nHwfAppendixItems);
 
-    // TODO: sizeof when type is known
-    // memset(g_ds_particles, 0, sizeof(g_ds_particles));
+    memset(g_particles, 0, sizeof(g_particles));
 
     if (MidiJamMain("MidiJam", hInstance, g_hwfStream, g_pHwfAppendix, g_nHwfAppendixItems) == FAILURE) {
         MessageBoxA(nullptr, "Video mode not supported, try running CONFIG.EXE first", "SHUTDOWN ERROR",
