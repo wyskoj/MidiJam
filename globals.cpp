@@ -298,10 +298,7 @@ Ms3dBundle* g_cello_ms3d = nullptr;
 Ms3dBundle* g_doubleBass_ms3d = nullptr;
 
 // Flute / piccolo / recorder
-Ms3dBundle* g_flute_ms3d = nullptr;
 Ms3dBundle* g_piccolo_ms3d = nullptr;
-Ms3dBundle* g_flute_leftHandX_ms3d[13] = {};
-Ms3dBundle* g_flute_rightHandX_ms3d[12] = {};
 
 // Telephone
 Ms3dBundle* dword_46D25C = nullptr;

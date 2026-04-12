@@ -36,6 +36,7 @@
 #include "instruments/Viola.h"
 #include "instruments/Cello.h"
 #include "instruments/DoubleBass.h"
+#include "instruments/Flute.h"
 #include "instruments/Ocarina.h"
 #include "instruments/PanPipe.h"
 #include "instruments/Harmonica.h"
@@ -1009,6 +1010,26 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case FLUTE: {
+                    const auto note = noteMsg->wMusicValue - 59;
+                    if (note < 0x26u) {
+                        int i28 = 0;
+                        while (g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_134[note][i28] && i28 < 16)
+                            ++i28;
+                        if (i28 < 16) {
+                            g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_134[note][i28] = noteMsg->mtDuration;
+                            if (g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_134[note][i28] < 0)
+                                g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_134[note][i28] = 10;
+                            pPerf->GetTime(&rtNow, &mtNow);
+                            g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_AB4[note][i28] = noteMsg->mtTime - mtNow;
+                            g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_AB4[note][i28] -= g_currentTempo_scaleFactor0_9;
+                            if (g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_AB4[note][i28] <= 0)
+                                g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_AB4[note][i28] = 1;
+                        }
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -1260,6 +1281,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case RECORDER: {
                     ALLOC_INST(recorder, RecorderState);
+                    break;
+                }
+
+                case FLUTE: {
+                    ALLOC_INST(flute, FluteState);
                     break;
                 }
 

@@ -43,6 +43,7 @@
 #include "instruments/Viola.h"
 #include "instruments/Cello.h"
 #include "instruments/DoubleBass.h"
+#include "instruments/Flute.h"
 #include "instruments/Ocarina.h"
 #include "instruments/PanPipe.h"
 #include "instruments/Harmonica.h"
@@ -210,10 +211,7 @@ extern Ms3dBundle* g_doubleBass_ms3d;
 extern Ms3dBundle* g_stageChoir_ms3d;
 
 // Flute / piccolo / recorder
-extern Ms3dBundle* g_flute_ms3d;
 extern Ms3dBundle* g_piccolo_ms3d;
-extern Ms3dBundle* g_flute_leftHandX_ms3d[13];
-extern Ms3dBundle* g_flute_rightHandX_ms3d[12];
 
 // TODO: the following two are accessed via dword_ in IDA, name when telephone is transcribed
 extern Ms3dBundle* dword_46D25C;
@@ -595,12 +593,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     for (short i = 0; i < 13; ++i) {
         char filename[64];
         sprintf(filename, "Flute_LeftHand%02d.ms3d", i);
-        LOAD_MODEL(g_flute_leftHandX_ms3d[i], filename);
+        LOAD_MODEL(g_fluteLeftHandX_ms3d[i], filename);
     }
     for (short i = 0; i < 12; ++i) {
         char filename[64];
         sprintf(filename, "Flute_RightHand%02d.ms3d", i);
-        LOAD_MODEL(g_flute_rightHandX_ms3d[i], filename);
+        LOAD_MODEL(g_fluteRightHandX_ms3d[i], filename);
     }
 
     LOAD_MODEL(g_telephoneBase_ms3d, "TelePhoneBase.ms3d");
@@ -857,9 +855,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(g_flute_ms3d);
     APPLY_TEX(g_piccolo_ms3d);
     for (short i = 0; i < 13; ++i)
-        APPLY_TEX(g_flute_leftHandX_ms3d[i]);
+        APPLY_TEX(g_fluteLeftHandX_ms3d[i]);
     for (short i = 0; i < 12; ++i)
-        APPLY_TEX(g_flute_rightHandX_ms3d[i]);
+        APPLY_TEX(g_fluteRightHandX_ms3d[i]);
     APPLY_TEX(g_telephoneBase_ms3d);
     APPLY_TEX(g_telephoneHandle_ms3d);
     for (short i = 0; i < 24; ++i)
