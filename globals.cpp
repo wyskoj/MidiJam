@@ -321,10 +321,6 @@ Ms3dBundle* dword_46D25C = nullptr;
 Ms3dBundle* dword_46D260 = nullptr;
 Ms3dBundle* dword_46D264 = nullptr;
 
-// Ocarina
-Ms3dBundle* g_ocarina_ms3d = nullptr;
-Ms3dBundle* g_ocarinaHandX_ms3d = nullptr;
-
 // DirectMusic GUID
 GUID GUID_PERF_MASTER_TEMPO = {
     0x54344c80, 0xddc3, 0x11d1,

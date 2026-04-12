@@ -43,6 +43,7 @@
 #include "instruments/Viola.h"
 #include "instruments/Cello.h"
 #include "instruments/DoubleBass.h"
+#include "instruments/Ocarina.h"
 #include "instruments/Telephone.h"
 #include "instruments/Xylophone.h"
 #include "model/Ms3dBundle.h"
@@ -226,10 +227,6 @@ extern Ms3dBundle* dword_465230; // RecorderHandRight10 — TODO: name
 extern Ms3dBundle* dword_46D25C;
 extern Ms3dBundle* dword_46D260;
 extern Ms3dBundle* dword_46D264;
-
-// Ocarina
-extern Ms3dBundle* g_ocarina_ms3d;
-extern Ms3dBundle* g_ocarinaHandX_ms3d; // [0..11] via pointer arithmetic
 
 // Trombone
 extern Ms3dBundle* g_trombone_ms3d;
@@ -662,7 +659,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     for (short i = 0; i < 12; ++i) {
         char filename[64];
         sprintf(filename, "OcarinaHand%d.ms3d", i);
-        LOAD_MODEL((&g_ocarinaHandX_ms3d)[i], filename);
+        LOAD_MODEL(g_ocarinaHandX_ms3d[i], filename);
     }
 
     LOAD_MODEL(g_frenchHornBody_ms3d, "FrenchHornBody.ms3d");
@@ -886,8 +883,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         APPLY_TEX(g_altoSaxKeyX_ms3d[i][1]);
     }
     APPLY_TEX(g_ocarina_ms3d);
-    // for (short i = 0; i < 12; ++i)
-    //     APPLY_TEX((&g_ocarinaHandX_ms3d)[i]);
+    for (short i = 0; i < 12; ++i)
+        APPLY_TEX(g_ocarinaHandX_ms3d[i]);
     APPLY_TEX(g_frenchHornBody_ms3d);
     APPLY_TEX(g_frenchHornHorn_ms3d);
     APPLY_TEX(g_frenchHornKey1_ms3d);

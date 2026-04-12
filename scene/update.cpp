@@ -47,6 +47,7 @@
 #include "instruments/Viola.h"
 #include "instruments/Cello.h"
 #include "instruments/DoubleBass.h"
+#include "instruments/Ocarina.h"
 #include "instruments/Telephone.h"
 #include "instruments/Woodblocks.h"
 
@@ -367,7 +368,7 @@ BOOL UpdateMidiJam() {
         if (g_accordion) RenderAccordion();
         if (g_stageString) RenderStageString();
         if (g_pizzicatoStrings) RenderPizzicatoStrings();
-        // if (g_ocarina) RenderOcarina();
+        if (g_ocarina) RenderOcarina();
 
         if (g_xylophone) {
             glPushMatrix();
@@ -529,8 +530,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         if (g_frenchHorn && UpdateFrenchHorn(pmtNow))
             anyInstrumentActive = 1;
-        //     if ( g_ocarina && UpdateOcarina(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_ocarina && UpdateOcarina(pmtNow) )
+          anyInstrumentActive = 1;
         if (g_baritoneSax && UpdateBaritoneSax(pmtNow))
             anyInstrumentActive = 1;
         if (g_tenorSax && UpdateTenorSax(pmtNow))

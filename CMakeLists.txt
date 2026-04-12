@@ -161,6 +161,8 @@ add_executable(MidiJam WIN32
         instruments/DoubleBass.h
         instruments/Telephone.cpp
         instruments/Telephone.h
+        instruments/Ocarina.cpp
+        instruments/Ocarina.h
 )
 
 # ---------------------------------------------------------------------------
