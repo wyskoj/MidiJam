@@ -302,17 +302,9 @@ Ms3dBundle* steamCloud_0_ms3d = nullptr;
 Ms3dBundle* steamCloud_1_ms3d = nullptr;
 Ms3dBundle* steamCloud_2_ms3d = nullptr;
 Ms3dBundle* g_steamPuff_harmonica_ms3d = nullptr;
-Ms3dBundle* g_violin_ms3d = nullptr;
 Ms3dBundle* g_viola_ms3d = nullptr;
 Ms3dBundle* g_cello_ms3d = nullptr;
 Ms3dBundle* g_doubleBass_ms3d = nullptr;
-Ms3dBundle* g_violinString_ms3d = nullptr;
-Ms3dBundle* g_violinStringPlayedX_ms3d[5] = {};
-// g_violinFinger_ms3d — IDA uses this as a 21-element array base
-// [0..19] = telephone keys (lit/dark), [20] = actual violin finger
-// Declared as a single pointer; array access uses pointer arithmetic
-Ms3dBundle* g_violinFinger_ms3d = nullptr;
-Ms3dBundle* g_violinBow_ms3d = nullptr;
 
 // Flute / piccolo / recorder
 Ms3dBundle* g_flute_ms3d = nullptr;

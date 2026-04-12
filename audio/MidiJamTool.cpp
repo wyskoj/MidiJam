@@ -32,6 +32,7 @@
 #include "instruments/Trumpet.h"
 #include "instruments/Tuba.h"
 #include "instruments/TubularBells.h"
+#include "instruments/Violin.h"
 #include "instruments/Woodblocks.h"
 #include "instruments/Xylophone.h"
 
@@ -616,7 +617,8 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                         if (g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_68[v79][i10] < 0)
                             g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_68[v79][i10] = 10;
                         (pPerf->GetTime)(&rtNow, &mtNow);
-                        g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_668[v79][i10] = noteMsg->mtTime - mtNow;
+                        g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_668[v79][i10] = noteMsg->mtTime -
+                            mtNow;
                         g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_998[v79][i10] = noteMsg->bVelocity;
                         g_melodicTom[g_melodicTomChannel[noteMsg->dwPChannel]].field_668[v79][i10] -=
                             g_currentTempo_scaleFactor0_9;
@@ -636,7 +638,8 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                         if (g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_68[v79][i10] < 0)
                             g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_68[v79][i10] = 10;
                         (pPerf->GetTime)(&rtNow, &mtNow);
-                        g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] = noteMsg->mtTime - mtNow;
+                        g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] = noteMsg->mtTime -
+                            mtNow;
                         g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_998[v79][i10] = noteMsg->bVelocity;
                         g_synthDrum[g_synthDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] -=
                             g_currentTempo_scaleFactor0_9;
@@ -695,16 +698,19 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     int i14 = 0;
                     while (g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_68[v63][i14] && i14 < 16)
                         i14++;
-                    if ( i14 < 16 )
-                    {
-                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_68[v63][i14] = noteMsg->mtDuration;
-                        if ( g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_68[v63][i14] < 0 )
+                    if (i14 < 16) {
+                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_68[v63][i14] = noteMsg->
+                            mtDuration;
+                        if (g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_68[v63][i14] < 0)
                             g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_68[v63][i14] = 10;
                         (pPerf->GetTime)(&rtNow, &mtNow);
-                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_368[v63][i14] = noteMsg->mtTime - mtNow;
-                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_518[v63][i14] = noteMsg->bVelocity;
-                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_368[v63][i14] -= g_currentTempo_scaleFactor0_9;
-                        if ( g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_368[v63][i14] <= 0 )
+                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_368[v63][i14] = noteMsg->mtTime
+                            - mtNow;
+                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_518[v63][i14] = noteMsg->
+                            bVelocity;
+                        g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_368[v63][i14] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_368[v63][i14] <= 0)
                             g_tubularBells[g_tubularBellsChannel[noteMsg->dwPChannel]].field_368[v63][i14] = 1;
                     }
                     break;
@@ -740,12 +746,37 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                         if (g_steelDrum[g_steelDrumChannel[noteMsg->dwPChannel]].field_68[v79][i10] < 0)
                             g_steelDrum[g_steelDrumChannel[noteMsg->dwPChannel]].field_68[v79][i10] = 10;
                         (pPerf->GetTime)(&rtNow, &mtNow);
-                        g_steelDrum[g_steelDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] = noteMsg->mtTime - mtNow;
+                        g_steelDrum[g_steelDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] = noteMsg->mtTime -
+                            mtNow;
                         g_steelDrum[g_steelDrumChannel[noteMsg->dwPChannel]].field_998[v79][i10] = noteMsg->bVelocity;
                         g_steelDrum[g_steelDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] -=
                             g_currentTempo_scaleFactor0_9;
                         if (g_steelDrum[g_steelDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] <= 0)
                             g_steelDrum[g_steelDrumChannel[noteMsg->dwPChannel]].field_668[v79][i10] = 1;
+                    }
+                    break;
+                }
+
+                case VIOLIN: {
+                    const auto v164 = noteMsg->wMusicValue - 21;
+                    if (v164 < 0x58u) {
+                        int i = 0;
+                        while (g_violin[g_violinChannel[noteMsg->dwPChannel]].queue[v164][i] && i < 16) ++i;
+                        if (i < 16) {
+                            g_violin[g_violinChannel[noteMsg->dwPChannel]].queue[v164][i] = noteMsg->mtDuration;
+                            g_violin[g_violinChannel[noteMsg->dwPChannel]].queue[v164][i] =
+                                g_violin[g_violinChannel[noteMsg->dwPChannel]].queue[v164][i] -
+                                g_currentTempo_scaleFactor0_5;
+                            if (g_violin[g_violinChannel[noteMsg->dwPChannel]].queue[v164][i] < 0)
+                                g_violin[g_violinChannel[noteMsg->dwPChannel]].queue[v164][i] = 10;
+                            (pPerf->GetTime)(&rtNow, &mtNow);
+                            g_violin[g_violinChannel[noteMsg->dwPChannel]].timeDeltas[v164][i] = noteMsg->mtTime -
+                                mtNow;
+                            g_violin[g_violinChannel[noteMsg->dwPChannel]].timeDeltas[v164][i] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_violin[g_violinChannel[noteMsg->dwPChannel]].timeDeltas[v164][i] <= 0)
+                                g_violin[g_violinChannel[noteMsg->dwPChannel]].timeDeltas[v164][i] = 1;
+                        }
                     }
                     break;
                 }
@@ -939,6 +970,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case STEEL_DRUM: {
                     ALLOC_INST(steelDrum, SteelDrumState);
+                    break;
+                }
+
+                case VIOLIN: {
+                    ALLOC_INST(violin, ViolinState);
                     break;
                 }
 

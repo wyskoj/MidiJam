@@ -35,7 +35,7 @@ GLfloat BASS_FRET_HEIGHTS[24] = {
     -19.623f, -21.151f, -22.498f, -23.845f, -25.137f, -26.29f, -27.457f, -28.498f, -29.512f,
     -30.443f, -31.29f, -32.179f, -32.943f,
 };
-GLfloat flt_468BF4[24];
+GLfloat BASS_FRET_HEIGHTS_AS_PERCENT[24];
 __int16 g_bassNotes[24][4];
 
 // ---------------------------------------------------------------------------
@@ -63,7 +63,7 @@ void RenderBass() {
                 glTranslatef(0.0f, BASS_FRET_HEIGHTS[g_bass[i].frets[0]], 0.0f);
                 g_bassNoteFinger_ms3d->Render();
                 glPopMatrix();
-                glScalef(1.0f, flt_468BF4[g_bass[i].frets[0]], 1.0f);
+                glScalef(1.0f, BASS_FRET_HEIGHTS_AS_PERCENT[g_bass[i].frets[0]], 1.0f);
                 g_bassString_ms3d->Render();
             }
             glPopMatrix();
@@ -79,7 +79,7 @@ void RenderBass() {
                 glTranslatef(0.0f, BASS_FRET_HEIGHTS[g_bass[i].frets[1]], 0.0f);
                 g_bassNoteFinger_ms3d->Render();
                 glPopMatrix();
-                glScalef(1.0f, flt_468BF4[g_bass[i].frets[1]], 1.0f);
+                glScalef(1.0f, BASS_FRET_HEIGHTS_AS_PERCENT[g_bass[i].frets[1]], 1.0f);
                 g_bassString_ms3d->Render();
             }
             glPopMatrix();
@@ -95,7 +95,7 @@ void RenderBass() {
                 glTranslatef(0.0f, BASS_FRET_HEIGHTS[g_bass[i].frets[2]], 0.0f);
                 g_bassNoteFinger_ms3d->Render();
                 glPopMatrix();
-                glScalef(1.0f, flt_468BF4[g_bass[i].frets[2]], 1.0f);
+                glScalef(1.0f, BASS_FRET_HEIGHTS_AS_PERCENT[g_bass[i].frets[2]], 1.0f);
                 g_bassString_ms3d->Render();
             }
             glPopMatrix();
@@ -111,7 +111,7 @@ void RenderBass() {
                 glTranslatef(0.0f, BASS_FRET_HEIGHTS[g_bass[i].frets[3]], 0.0f);
                 g_bassNoteFinger_ms3d->Render();
                 glPopMatrix();
-                glScalef(1.0f, flt_468BF4[g_bass[i].frets[3]], 1.0f);
+                glScalef(1.0f, BASS_FRET_HEIGHTS_AS_PERCENT[g_bass[i].frets[3]], 1.0f);
                 g_bassString_ms3d->Render();
             }
             glPopMatrix();
@@ -123,7 +123,7 @@ void RenderBass() {
                     g_bassStringBottomX_ms3d[g_vibratingString_frame]->Render();
             }
             else {
-                const GLfloat y = 1.0f - flt_468BF4[g_bass[i].frets[0]];
+                const GLfloat y = 1.0f - BASS_FRET_HEIGHTS_AS_PERCENT[g_bass[i].frets[0]];
                 glScalef(1.0f, y, 1.0f);
                 g_bassStringBottomX_ms3d[g_vibratingString_frame]->Render();
             }
@@ -136,7 +136,7 @@ void RenderBass() {
                     g_bassStringBottomX_ms3d[g_vibratingString_frame]->Render();
             }
             else {
-                const GLfloat ya = 1.0f - flt_468BF4[g_bass[i].frets[1]];
+                const GLfloat ya = 1.0f - BASS_FRET_HEIGHTS_AS_PERCENT[g_bass[i].frets[1]];
                 glScalef(1.0f, ya, 1.0f);
                 g_bassStringBottomX_ms3d[g_vibratingString_frame]->Render();
             }
@@ -149,7 +149,7 @@ void RenderBass() {
                     g_bassStringBottomX_ms3d[g_vibratingString_frame]->Render();
             }
             else {
-                const GLfloat yb = 1.0f - flt_468BF4[g_bass[i].frets[2]];
+                const GLfloat yb = 1.0f - BASS_FRET_HEIGHTS_AS_PERCENT[g_bass[i].frets[2]];
                 glScalef(1.0f, yb, 1.0f);
                 g_bassStringBottomX_ms3d[g_vibratingString_frame]->Render();
             }
@@ -162,7 +162,7 @@ void RenderBass() {
                     g_bassStringBottomX_ms3d[g_vibratingString_frame]->Render();
             }
             else {
-                const GLfloat yc = 1.0f - flt_468BF4[g_bass[i].frets[3]];
+                const GLfloat yc = 1.0f - BASS_FRET_HEIGHTS_AS_PERCENT[g_bass[i].frets[3]];
                 glScalef(1.0f, yc, 1.0f);
                 g_bassStringBottomX_ms3d[g_vibratingString_frame]->Render();
             }

@@ -43,6 +43,7 @@
 #include "instruments/Trumpet.h"
 #include "instruments/Tuba.h"
 #include "instruments/TubularBells.h"
+#include "instruments/Violin.h"
 #include "instruments/Woodblocks.h"
 
 // ---------------------------------------------------------------------------
@@ -351,7 +352,7 @@ BOOL UpdateMidiJam() {
         // if (g_whistles) RenderWhistles();
         // if (g_panPipe) RenderPanPipe();
         // if (g_harmonica) RenderHarmonica();
-        // if (g_violin) RenderViolin();
+        if (g_violin) RenderViolin();
         // if (g_viola) RenderViola();
         // if (g_cello) RenderCello();
         // if (g_doubleBass) RenderDoubleBass();
@@ -491,8 +492,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         if (g_xylophone && UpdateXylophone(pmtNow))
             anyInstrumentActive = 1;
-        //     if ( g_violin && UpdateViolin(pmtNow) == 1 )
-        //       anyInstrumentActive = 1;
+        if ( g_violin && UpdateViolin(pmtNow) == 1 )
+          anyInstrumentActive = 1;
         //     if ( g_viola && UpdateViola(pmtNow) == 1 )
         //       anyInstrumentActive = 1;
         //     if ( g_cello && UpdateCello(pmtNow) == 1 )

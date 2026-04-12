@@ -151,6 +151,8 @@ add_executable(MidiJam WIN32
         instruments/MusicBox.h
         instruments/SteelDrum.cpp
         instruments/SteelDrum.h
+        instruments/Violin.cpp
+        instruments/Violin.h
 )
 
 # ---------------------------------------------------------------------------

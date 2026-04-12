@@ -31,6 +31,7 @@
 #include "instruments/StageHorn.h"
 #include "instruments/StageString.h"
 #include "instruments/SteelDrum.h"
+#include "instruments/strings.h"
 #include "instruments/SynthDrum.h"
 #include "instruments/Taiko.h"
 #include "instruments/TenorSax.h"
@@ -38,6 +39,7 @@
 #include "instruments/Trumpet.h"
 #include "instruments/Tuba.h"
 #include "instruments/TubularBells.h"
+#include "instruments/Violin.h"
 #include "instruments/Xylophone.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
@@ -116,7 +118,7 @@ extern short word_46B2D0[];
 extern short word_4688C0[];
 extern short word_46BBB0[];
 extern short word_468258[];
-extern float flt_468BF4[];
+extern float BASS_FRET_HEIGHTS_AS_PERCENT[];
 extern float flt_4654A0[];
 extern float flt_45EAD0[];
 extern float flt_4679E0[];
@@ -199,14 +201,9 @@ extern Ms3dBundle* steamCloud_0_ms3d;
 extern Ms3dBundle* steamCloud_1_ms3d;
 extern Ms3dBundle* steamCloud_2_ms3d;
 extern Ms3dBundle* g_steamPuff_harmonica_ms3d;
-extern Ms3dBundle* g_violin_ms3d;
 extern Ms3dBundle* g_viola_ms3d;
 extern Ms3dBundle* g_cello_ms3d;
 extern Ms3dBundle* g_doubleBass_ms3d;
-extern Ms3dBundle* g_violinString_ms3d;
-extern Ms3dBundle* g_violinStringPlayedX_ms3d[5]; // TODO: verify array type — IDA accessed via vtable offset
-extern Ms3dBundle* g_violinFinger_ms3d; // [0] — telephone keys start at [0] per IDA
-extern Ms3dBundle* g_violinBow_ms3d;
 
 // Choir
 extern Ms3dBundle* g_stageChoir_ms3d;
@@ -247,7 +244,7 @@ extern void* g_ds_particles; // TODO: type when transcribed
 
 //
 
-extern __int16 word_46CEE0[23][6];
+extern __int16 g_guitarNotes[23][6];
 
 // FUNCTION: MIDIJAM 0x413920
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
@@ -275,46 +272,47 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         g_bassNotes[i][1] = i + 12;
         g_bassNotes[i][2] = i + 17;
         g_bassNotes[i][3] = i + 22;
-        flt_468BF4[i + 1] = BASS_FRET_HEIGHTS[i + 1] / -46.081001;
-        word_46CEE0[i][0] = i + 19;
-        word_46CEE0[i][1] = i + 24;
-        word_46CEE0[i][2] = i + 29;
-        word_46CEE0[i][3] = i + 34;
-        word_46CEE0[i][4] = i + 38;
-        word_46CEE0[i][5] = i + 43;
+        BASS_FRET_HEIGHTS_AS_PERCENT[i + 1] = BASS_FRET_HEIGHTS[i + 1] / -46.081001;
+        g_guitarNotes[i][0] = i + 19;
+        g_guitarNotes[i][1] = i + 24;
+        g_guitarNotes[i][2] = i + 29;
+        g_guitarNotes[i][3] = i + 34;
+        g_guitarNotes[i][4] = i + 38;
+        g_guitarNotes[i][5] = i + 43;
         GUITAR_FRET_HEIGHTS_AS_PERCENT[i] = GUITAR_FRET_HEIGHTS[i + 1] / -34.700001;
     }
 
+    // --- Violin/Viola note table ---
     for (short i = 0; i < 18; ++i) {
-        // word_46B2D0[4 * i] = i + 34;
-        // word_46B2D2[4 * i] = i + 41;
-        // word_46B2D4[4 * i] = i + 48;
-        // word_46B2D6[4 * i] = i + 55;
-        // word_4688C0[4 * i] = i + 27;
-        // word_4688C2[4 * i] = i + 34;
-        // word_4688C4[4 * i] = i + 41;
-        // word_4688C6[4 * i] = i + 48;
+        VIOLIN_NOTES[i][0] = i + 34;
+        VIOLIN_NOTES[i][1] = i + 41;
+        VIOLIN_NOTES[i][2] = i + 48;
+        VIOLIN_NOTES[i][3] = i + 55;
+        // VIOLA_NOTES[i][0] = i + 27;
+        // VIOLA_NOTES[i][1] = i + 34;
+        // VIOLA_NOTES[i][2] = i + 41;
+        // VIOLA_NOTES[i][3] = i + 48;
     }
 
-    // --- Wind instrument note table init ---
+    // --- Cello note table ---
     for (short i = 0; i < 28; ++i) {
-        word_46BBB0[4 * i + 0] = i + 15;
-        word_46BBB0[4 * i + 1] = i + 22;
-        word_46BBB0[4 * i + 2] = i + 29;
-        word_46BBB0[4 * i + 3] = i + 36;
+        // CELLO_NOTES[i][0] = i + 15;
+        // CELLO_NOTES[i][1] = i + 22;
+        // CELLO_NOTES[i][2] = i + 29;
+        // CELLO_NOTES[i][3] = i + 36;
     }
 
-    // --- Xylophone/vibraphone note table and fret height init ---
+    // --- Double bass note table ---
     float v603 = 0.0f;
     float v612 = 0.052499998f;
     for (short i = 0; i < 49; ++i) {
-        word_468258[4 * i + 0] = i + 7;
-        word_468258[4 * i + 1] = i + 12;
-        word_468258[4 * i + 2] = i + 17;
-        word_468258[4 * i + 3] = i + 22;
-        flt_4679E0[i] = v603 * 0.80000001f;
-        v603 += v612;
-        v612 *= 0.94999999f;
+        // DOUBLE_BASS_NOTES[i][0] = i + 7;
+        // DOUBLE_BASS_NOTES[i][1] = i + 12;
+        // DOUBLE_BASS_NOTES[i][2] = i + 17;
+        // DOUBLE_BASS_NOTES[i][3] = i + 22;
+        flt_4679E0[i] = v603 * 0.80000001;
+        v603 = v603 + v612;
+        v612 = v612 * 0.94999999;
     }
 
     // --- Vibrating string animation ---
@@ -327,7 +325,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         g_keysOffset += KEY_WIDTHS[KEY_SHAPE_INDEX[i]];
     g_keysOffset *= 0.5f;
 
-    // --- Clave / recoil table init ---
+    // --- Piano key table ---
     g_pianoKeyOffsetX[1] = -0.20833333f;
     g_pianoKeyBackScale[1] = 0.58333331f;
     g_pianoKeyOffsetX[2] = 0.0f;
@@ -540,11 +538,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         LOAD_MODEL(g_violinStringPlayedX_ms3d[i], violinStringPlayedFiles[i]);
     }
 
-
-    // ViolinFinger.ms3d — IDA stored this at offset +20 from g_violinFinger_ms3d
-    // (i.e. a 21-element array, index 20 = the actual violin finger)
-    // TODO: clarify array layout when violin is transcribed
-    LOAD_MODEL((&g_violinFinger_ms3d)[20], "ViolinFinger.ms3d");
+    LOAD_MODEL(g_violinFinger_ms3d, "ViolinFinger.ms3d");
     LOAD_MODEL(g_violinBow_ms3d, "ViolinBow.ms3d");
 
     LOAD_MODEL(g_tubularBell_ms3d, "TubularBell.ms3d");
@@ -621,43 +615,43 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         LOAD_MODEL(g_flute_rightHandX_ms3d[i], filename);
     }
 
-    LOAD_MODEL(g_telephoneBase_ms3d, "TelePhoneBase.ms3d");
-    LOAD_MODEL(g_telephoneHandle_ms3d, "TelePhoneHandle.ms3d");
-
-    // Telephone keys — IDA stores these as a flat array via pointer arithmetic
-    // off g_violinFinger_ms3d and g_telephoneKeyX_ms3d. Transcribed faithfully
-    // using the pointer arithmetic pattern; will be cleaned up when telephone
-    // is transcribed.
-    static const char* telephoneKeyFiles[12] = {
-        "TelePhoneKey1.bmp", "TelePhoneKey2.bmp", "TelePhoneKey3.bmp",
-        "TelePhoneKey4.bmp", "TelePhoneKey5.bmp", "TelePhoneKey6.bmp",
-        "TelePhoneKey7.bmp", "TelePhoneKey8.bmp", "TelePhoneKey9.bmp",
-        "TelePhoneKeyStar.bmp", "TelePhoneKey0.bmp", "TelePhoneKeyPound.bmp"
-    };
-    static const char* telephoneKeyFilesDark[12] = {
-        "TelePhoneKey1Dark.bmp", "TelePhoneKey2Dark.bmp", "TelePhoneKey3Dark.bmp",
-        "TelePhoneKey4Dark.bmp", "TelePhoneKey5Dark.bmp", "TelePhoneKey6Dark.bmp",
-        "TelePhoneKey7Dark.bmp", "TelePhoneKey8Dark.bmp", "TelePhoneKey9Dark.bmp",
-        "TelePhoneKeyStarDark.bmp", "TelePhoneKey0Dark.bmp", "TelePhoneKeyPoundDark.bmp"
-    };
-    // First 12 keys (lit)
-    LOAD_MODEL(g_telephoneKeyX_ms3d, "TelePhoneKey.ms3d");
-    REPLACE_TEX(g_telephoneKeyX_ms3d, "TelePhoneKey.bmp", telephoneKeyFiles[0]);
-    LOAD_MODEL(dword_46D25C, "TelePhoneKey.ms3d");
-    REPLACE_TEX(dword_46D25C, "TelePhoneKey.bmp", telephoneKeyFiles[1]);
-    LOAD_MODEL(dword_46D260, "TelePhoneKey.ms3d");
-    REPLACE_TEX(dword_46D260, "TelePhoneKey.bmp", telephoneKeyFiles[2]);
-    LOAD_MODEL(dword_46D264, "TelePhoneKey.ms3d");
-    REPLACE_TEX(dword_46D264, "TelePhoneKey.bmp", telephoneKeyFiles[3]);
-    // IDA accessed keys 4-19 via pointer arithmetic off g_violinFinger_ms3d [0..19]
-    for (short i = 0; i < 8; ++i) {
-        LOAD_MODEL((&g_violinFinger_ms3d)[i], "TelePhoneKey.ms3d");
-        REPLACE_TEX((&g_violinFinger_ms3d)[i], "TelePhoneKey.bmp", telephoneKeyFiles[4 + i]);
-    }
-    for (short i = 0; i < 12; ++i) {
-        LOAD_MODEL((&g_violinFinger_ms3d)[8 + i], "TelePhoneKey.ms3d");
-        REPLACE_TEX((&g_violinFinger_ms3d)[8 + i], "TelePhoneKey.bmp", telephoneKeyFilesDark[i]);
-    }
+    // LOAD_MODEL(g_telephoneBase_ms3d, "TelePhoneBase.ms3d");
+    // LOAD_MODEL(g_telephoneHandle_ms3d, "TelePhoneHandle.ms3d");
+    //
+    // // Telephone keys — IDA stores these as a flat array via pointer arithmetic
+    // // off g_violinFinger_ms3d and g_telephoneKeyX_ms3d. Transcribed faithfully
+    // // using the pointer arithmetic pattern; will be cleaned up when telephone
+    // // is transcribed.
+    // static const char* telephoneKeyFiles[12] = {
+    //     "TelePhoneKey1.bmp", "TelePhoneKey2.bmp", "TelePhoneKey3.bmp",
+    //     "TelePhoneKey4.bmp", "TelePhoneKey5.bmp", "TelePhoneKey6.bmp",
+    //     "TelePhoneKey7.bmp", "TelePhoneKey8.bmp", "TelePhoneKey9.bmp",
+    //     "TelePhoneKeyStar.bmp", "TelePhoneKey0.bmp", "TelePhoneKeyPound.bmp"
+    // };
+    // static const char* telephoneKeyFilesDark[12] = {
+    //     "TelePhoneKey1Dark.bmp", "TelePhoneKey2Dark.bmp", "TelePhoneKey3Dark.bmp",
+    //     "TelePhoneKey4Dark.bmp", "TelePhoneKey5Dark.bmp", "TelePhoneKey6Dark.bmp",
+    //     "TelePhoneKey7Dark.bmp", "TelePhoneKey8Dark.bmp", "TelePhoneKey9Dark.bmp",
+    //     "TelePhoneKeyStarDark.bmp", "TelePhoneKey0Dark.bmp", "TelePhoneKeyPoundDark.bmp"
+    // };
+    // // First 12 keys (lit)
+    // LOAD_MODEL(g_telephoneKeyX_ms3d, "TelePhoneKey.ms3d");
+    // REPLACE_TEX(g_telephoneKeyX_ms3d, "TelePhoneKey.bmp", telephoneKeyFiles[0]);
+    // LOAD_MODEL(dword_46D25C, "TelePhoneKey.ms3d");
+    // REPLACE_TEX(dword_46D25C, "TelePhoneKey.bmp", telephoneKeyFiles[1]);
+    // LOAD_MODEL(dword_46D260, "TelePhoneKey.ms3d");
+    // REPLACE_TEX(dword_46D260, "TelePhoneKey.bmp", telephoneKeyFiles[2]);
+    // LOAD_MODEL(dword_46D264, "TelePhoneKey.ms3d");
+    // REPLACE_TEX(dword_46D264, "TelePhoneKey.bmp", telephoneKeyFiles[3]);
+    // // IDA accessed keys 4-19 via pointer arithmetic off g_violinFinger_ms3d [0..19]
+    // for (short i = 0; i < 8; ++i) {
+    //     LOAD_MODEL((&g_violinFinger_ms3d)[i], "TelePhoneKey.ms3d");
+    //     REPLACE_TEX((&g_violinFinger_ms3d)[i], "TelePhoneKey.bmp", telephoneKeyFiles[4 + i]);
+    // }
+    // for (short i = 0; i < 12; ++i) {
+    //     LOAD_MODEL((&g_violinFinger_ms3d)[8 + i], "TelePhoneKey.ms3d");
+    //     REPLACE_TEX((&g_violinFinger_ms3d)[8 + i], "TelePhoneKey.bmp", telephoneKeyFilesDark[i]);
+    // }
 
     LOAD_MODEL(g_recorder_ms3d, "Recorder.ms3d");
     for (short i = 0; i < 13; ++i) {
@@ -850,7 +844,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(g_violinString_ms3d);
     for (short i = 0; i < 5; ++i)
         APPLY_TEX(g_violinStringPlayedX_ms3d[i]);
-    APPLY_TEX((&g_violinFinger_ms3d)[20]);
+    APPLY_TEX(g_violinFinger_ms3d);
     APPLY_TEX(g_violinBow_ms3d);
     APPLY_TEX(g_tubularBell_ms3d);
     APPLY_TEX(g_tubularBellDark_ms3d);

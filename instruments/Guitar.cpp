@@ -33,7 +33,7 @@ GLfloat GUITAR_FRET_HEIGHTS[25] = {
 };
 GLfloat GUITAR_FRET_HEIGHTS_AS_PERCENT[23] = {};
 
-__int16 word_46CEE0[23][6];
+__int16 g_guitarNotes[23][6];
 
 // ---------------------------------------------------------------------------
 // FUNCTION: MIDIJAM 0xXXXXXXXX
@@ -299,9 +299,9 @@ bool UpdateGuitar(MUSIC_TIME pmtNow) {
         }
         for (note = 0; note < 6; ++note) {
             if (g_guitar[i].field_2C4[note] > 0
-                && g_guitar[i].field_4[word_46CEE0[g_guitar[i].field_2C4[note] - 1][note]] <= 0) {
-                g_guitar[i].field_4[word_46CEE0[g_guitar[i].field_2C4[note] - 1][note]] = 0;
-                g_guitar[i].field_164[word_46CEE0[g_guitar[i].field_2C4[note] - 1][note]] = 0;
+                && g_guitar[i].field_4[g_guitarNotes[g_guitar[i].field_2C4[note] - 1][note]] <= 0) {
+                g_guitar[i].field_4[g_guitarNotes[g_guitar[i].field_2C4[note] - 1][note]] = 0;
+                g_guitar[i].field_164[g_guitarNotes[g_guitar[i].field_2C4[note] - 1][note]] = 0;
                 g_guitar[i].field_2C4[note] = 0;
             }
         }
@@ -331,7 +331,7 @@ bool UpdateGuitar(MUSIC_TIME pmtNow) {
                 for (j = 0; j < 6; ++j) {
                     for (k = 0; k < 6; ++k) {
                         for (m = 0; m < 23; ++m) {
-                            if (word_46CEE0[m][k] == v27[note] && g_guitar[i].field_2C4[k] == m + 1) {
+                            if (g_guitarNotes[m][k] == v27[note] && g_guitar[i].field_2C4[k] == m + 1) {
                                 g_guitar[i].field_164[v27[note]] = 0;
                                 g_guitar[i].field_2C4[k] = 0;
                             }
@@ -352,7 +352,7 @@ bool UpdateGuitar(MUSIC_TIME pmtNow) {
                     for (n = 0; n < 6; ++n) {
                         v2 = 0;
                         for (ii = 0; ii < 23; ++ii) {
-                            if (word_46CEE0[ii][g_latinSquare[j][n]] == v27[note] && !v12[g_latinSquare[j][n]][j]) {
+                            if (g_guitarNotes[ii][g_latinSquare[j][n]] == v27[note] && !v12[g_latinSquare[j][n]][j]) {
                                 v12[g_latinSquare[j][n]][j] = ii + 1;
                                 v6[g_latinSquare[j][n]][j] = v27[note];
                                 v2 = 1;
