@@ -165,6 +165,8 @@ add_executable(MidiJam WIN32
         instruments/Ocarina.h
         instruments/Whistles.cpp
         instruments/Whistles.h
+        instruments/PanPipe.cpp
+        instruments/PanPipe.h
 )
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,57 @@
+ //
+// Created by Jacob on Saturday, April 11, 2026.
+//
+
+#ifndef MIDIJAM_PANPIPE_H
+#define MIDIJAM_PANPIPE_H
+
+
+#include "../model/Ms3dBundle.h"
+#include "instrument.h"
+
+#include <dmusici.h>
+
+// ---------------------------------------------------------------------------
+// PanPipeState — per-instance state
+// sizeof = 0xXXXX
+// ---------------------------------------------------------------------------
+struct PanPipeState {
+    __int16 isActive;
+    __int16 timeToLive;
+    int field_4[12];
+    int field_34[12];
+    int field_64[12][16];
+    __int16 field_364[12][16];
+    float field_4E4[12][100];
+    float field_17A4[12][100];
+    float field_2A64[12][100];
+    float field_3D24[12][100];
+    float field_4FE4[12][100];
+    float field_62A4[12][100];
+    float field_7564[12][100];
+    float field_8824[12][100];
+    float field_9AE4[12][100];
+    float field_ADA4[12][100];
+    float field_C064[12][100];
+    __int16 field_D324[12];
+    __int16 field_D33C[12];
+};
+
+static_assert(sizeof(PanPipeState) == 0xD354, "PanPipeState layout mismatch");
+
+// ---------------------------------------------------------------------------
+// Globals
+// ---------------------------------------------------------------------------
+DECL_INST_DS(panPipe, PanPipeState)
+
+extern Ms3dBundle *g_calliope_ms3d;
+extern Ms3dBundle *g_panPipe_ms3d;
+extern __int16 g_isPanPipeCalliope[300];
+
+// ---------------------------------------------------------------------------
+// Functions
+// ---------------------------------------------------------------------------
+void RenderPanPipe();
+bool UpdatePanPipe(MUSIC_TIME pmtNow);
+
+#endif // MIDIJAM_PANPIPE_H

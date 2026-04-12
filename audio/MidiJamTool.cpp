@@ -37,6 +37,7 @@
 #include "instruments/Cello.h"
 #include "instruments/DoubleBass.h"
 #include "instruments/Ocarina.h"
+#include "instruments/PanPipe.h"
 #include "instruments/Telephone.h"
 #include "instruments/Whistles.h"
 #include "instruments/Woodblocks.h"
@@ -895,7 +896,8 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                             g_ocarina[g_ocarinaChannel[noteMsg->dwPChannel]].field_64[v75][i11] = 10;
                         pPerf->GetTime(&rtNow, &mtNow);
                         g_ocarina[g_ocarinaChannel[noteMsg->dwPChannel]].field_364[v75][i11] = noteMsg->mtTime - mtNow;
-                        g_ocarina[g_ocarinaChannel[noteMsg->dwPChannel]].field_364[v75][i11] -= g_currentTempo_scaleFactor0_9;
+                        g_ocarina[g_ocarinaChannel[noteMsg->dwPChannel]].field_364[v75][i11] -=
+                            g_currentTempo_scaleFactor0_9;
                         if (g_ocarina[g_ocarinaChannel[noteMsg->dwPChannel]].field_364[v75][i11] <= 0)
                             g_ocarina[g_ocarinaChannel[noteMsg->dwPChannel]].field_364[v75][i11] = 1;
                     }
@@ -912,10 +914,31 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                         if (g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_64[v131][kk] < 0)
                             g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_64[v131][kk] = 10;
                         pPerf->GetTime(&rtNow, &mtNow);
-                        g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_364[v131][kk] = noteMsg->mtTime - mtNow;
-                        g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_364[v131][kk] -= g_currentTempo_scaleFactor0_9;
+                        g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_364[v131][kk] = noteMsg->mtTime -
+                            mtNow;
+                        g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_364[v131][kk] -=
+                            g_currentTempo_scaleFactor0_9;
                         if (g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_364[v131][kk] <= 0)
                             g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_364[v131][kk] = 1;
+                    }
+                    break;
+                }
+
+                case PAN_PIPE: {
+                    const auto v127 = (noteMsg->wMusicValue + 3) % 12;
+                    int mm = 0;
+                    while (g_panPipe[g_panPipeChannel[noteMsg->dwPChannel]].field_64[v127][mm] && mm < 16)
+                        ++mm;
+                    if (mm < 16) {
+                        g_panPipe[g_panPipeChannel[noteMsg->dwPChannel]].field_64[v127][mm] = noteMsg->mtDuration;
+                        if (g_panPipe[g_panPipeChannel[noteMsg->dwPChannel]].field_64[v127][mm] < 0)
+                            g_panPipe[g_panPipeChannel[noteMsg->dwPChannel]].field_64[v127][mm] = 10;
+                        pPerf->GetTime(&rtNow, &mtNow);
+                        g_panPipe[g_panPipeChannel[noteMsg->dwPChannel]].field_364[v127][mm] = noteMsg->mtTime - mtNow;
+                        g_panPipe[g_panPipeChannel[noteMsg->dwPChannel]].field_364[v127][mm] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_panPipe[g_panPipeChannel[noteMsg->dwPChannel]].field_364[v127][mm] <= 0)
+                            g_panPipe[g_panPipeChannel[noteMsg->dwPChannel]].field_364[v127][mm] = 1;
                     }
                     break;
                 }
@@ -1145,6 +1168,17 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case WHISTLES: {
                     ALLOC_INST(whistles, WhistlesState);
+                    break;
+                }
+
+                case PAN_PIPE: {
+                    if (g_panPipe)
+                        g_panPipe = static_cast<PanPipeState*>(realloc(
+                            g_panPipe, sizeof(PanPipeState) * (g_panPipeCount + 1)));
+                    else g_panPipe = static_cast<PanPipeState*>(malloc(sizeof(PanPipeState)));
+                    memset(&g_panPipe[g_panPipeCount], 0, sizeof(PanPipeState));
+                    g_panPipeChannel[pPMSG->dwPChannel] = g_panPipeCount;
+                    g_isPanPipeCalliope[g_panPipeCount++] = patchMsg->byInstrument == 0x52;
                     break;
                 }
 

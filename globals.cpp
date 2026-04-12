@@ -290,8 +290,6 @@ Ms3dBundle* metronomePendjulum1_ms3d = nullptr;
 Ms3dBundle* metronomePendjulum2_ms3d = nullptr;
 
 // Strings / winds
-Ms3dBundle* g_panPipe_ms3d = nullptr;
-Ms3dBundle* g_calliope_ms3d = nullptr;
 Ms3dBundle* g_harmonica_ms3d = nullptr;
 Ms3dBundle* g_popBottle_ms3d = nullptr;
 Ms3dBundle* g_popBottleMiddle_ms3d = nullptr;
@@ -386,7 +384,6 @@ short g_guitar_assignment[300] = {};
 short g_stateChoir_assignment[300] = {};
 short g_whistles_assignment[300] = {};
 short g_panPipe_assignment[300] = {};
-short g_isPanPipeCalliope[300] = {};
 short g_harmonica_assignment[300] = {};
 short g_popBottle_assignment[300] = {};
 short g_agogos_assignment[300] = {};
