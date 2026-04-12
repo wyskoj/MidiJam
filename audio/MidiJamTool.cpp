@@ -33,6 +33,9 @@
 #include "instruments/Tuba.h"
 #include "instruments/TubularBells.h"
 #include "instruments/Violin.h"
+#include "instruments/Viola.h"
+#include "instruments/Cello.h"
+#include "instruments/DoubleBass.h"
 #include "instruments/Woodblocks.h"
 #include "instruments/Xylophone.h"
 
@@ -53,6 +56,7 @@ __int16 word_45EC60[12] = {
 };
 
 extern MidiJamInstrumentId g_midiJamInstrumentIds[300];
+extern short g_doubleBass_playingStyle[300];
 extern int g_currentTempo_scaleFactor0_5;
 extern int g_currentTempo_scaleFactor0_9;
 extern int g_currentTempo_scaleFactor1_15;
@@ -781,6 +785,77 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case VIOLA: {
+                    const auto note = noteMsg->wMusicValue - 21;
+                    if (note < 0x58u) {
+                        int i = 0;
+                        while (g_viola[g_violaChannel[noteMsg->dwPChannel]].queue[note][i] && i < 16) ++i;
+                        if (i < 16) {
+                            g_viola[g_violaChannel[noteMsg->dwPChannel]].queue[note][i] = noteMsg->mtDuration;
+                            g_viola[g_violaChannel[noteMsg->dwPChannel]].queue[note][i] =
+                                g_viola[g_violaChannel[noteMsg->dwPChannel]].queue[note][i] -
+                                g_currentTempo_scaleFactor0_5;
+                            if (g_viola[g_violaChannel[noteMsg->dwPChannel]].queue[note][i] < 0)
+                                g_viola[g_violaChannel[noteMsg->dwPChannel]].queue[note][i] = 10;
+                            pPerf->GetTime(&rtNow, &mtNow);
+                            g_viola[g_violaChannel[noteMsg->dwPChannel]].timeDeltas[note][i] = noteMsg->mtTime - mtNow;
+                            g_viola[g_violaChannel[noteMsg->dwPChannel]].timeDeltas[note][i] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_viola[g_violaChannel[noteMsg->dwPChannel]].timeDeltas[note][i] <= 0)
+                                g_viola[g_violaChannel[noteMsg->dwPChannel]].timeDeltas[note][i] = 1;
+                        }
+                    }
+                    break;
+                }
+
+                case CELLO: {
+                    const auto note = noteMsg->wMusicValue - 21;
+                    if (note < 0x58u) {
+                        int i = 0;
+                        while (g_cello[g_celloChannel[noteMsg->dwPChannel]].queue[note][i] && i < 16) ++i;
+                        if (i < 16) {
+                            g_cello[g_celloChannel[noteMsg->dwPChannel]].queue[note][i] = noteMsg->mtDuration;
+                            g_cello[g_celloChannel[noteMsg->dwPChannel]].queue[note][i] =
+                                g_cello[g_celloChannel[noteMsg->dwPChannel]].queue[note][i] -
+                                g_currentTempo_scaleFactor0_5;
+                            if (g_cello[g_celloChannel[noteMsg->dwPChannel]].queue[note][i] < 0)
+                                g_cello[g_celloChannel[noteMsg->dwPChannel]].queue[note][i] = 10;
+                            pPerf->GetTime(&rtNow, &mtNow);
+                            g_cello[g_celloChannel[noteMsg->dwPChannel]].timeDeltas[note][i] = noteMsg->mtTime - mtNow;
+                            g_cello[g_celloChannel[noteMsg->dwPChannel]].timeDeltas[note][i] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_cello[g_celloChannel[noteMsg->dwPChannel]].timeDeltas[note][i] <= 0)
+                                g_cello[g_celloChannel[noteMsg->dwPChannel]].timeDeltas[note][i] = 1;
+                        }
+                    }
+                    break;
+                }
+
+                case DOUBLE_BASS: {
+                    const auto note = noteMsg->wMusicValue - 21;
+                    if (note < 0x58u) {
+                        g_doubleBass_playingStyle[g_doubleBassChannel[noteMsg->dwPChannel]] = 1;
+                        int i = 0;
+                        while (g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].queue[note][i] && i < 16) ++i;
+                        if (i < 16) {
+                            g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].queue[note][i] = noteMsg->mtDuration;
+                            g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].queue[note][i] =
+                                g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].queue[note][i] -
+                                g_currentTempo_scaleFactor0_5;
+                            if (g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].queue[note][i] < 0)
+                                g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].queue[note][i] = 10;
+                            pPerf->GetTime(&rtNow, &mtNow);
+                            g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].timeDeltas[note][i] = noteMsg->mtTime -
+                                mtNow;
+                            g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].timeDeltas[note][i] -=
+                                g_currentTempo_scaleFactor0_9;
+                            if (g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].timeDeltas[note][i] <= 0)
+                                g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].timeDeltas[note][i] = 1;
+                        }
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -975,6 +1050,22 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case VIOLIN: {
                     ALLOC_INST(violin, ViolinState);
+                    break;
+                }
+
+                case VIOLA: {
+                    ALLOC_INST(viola, ViolaState);
+                    break;
+                }
+
+                case CELLO: {
+                    ALLOC_INST(cello, CelloState);
+                    break;
+                }
+
+                case DOUBLE_BASS: {
+                    ALLOC_INST(doubleBass, DoubleBassState);
+                    g_doubleBass_playingStyle[g_doubleBassCount - 1] = 1;
                     break;
                 }
 

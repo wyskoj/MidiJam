@@ -153,6 +153,12 @@ add_executable(MidiJam WIN32
         instruments/SteelDrum.h
         instruments/Violin.cpp
         instruments/Violin.h
+        instruments/Viola.cpp
+        instruments/Viola.h
+        instruments/Cello.cpp
+        instruments/Cello.h
+        instruments/DoubleBass.cpp
+        instruments/DoubleBass.h
 )
 
 # ---------------------------------------------------------------------------

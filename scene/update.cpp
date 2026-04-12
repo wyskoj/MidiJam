@@ -44,6 +44,9 @@
 #include "instruments/Tuba.h"
 #include "instruments/TubularBells.h"
 #include "instruments/Violin.h"
+#include "instruments/Viola.h"
+#include "instruments/Cello.h"
+#include "instruments/DoubleBass.h"
 #include "instruments/Woodblocks.h"
 
 // ---------------------------------------------------------------------------
@@ -353,9 +356,9 @@ BOOL UpdateMidiJam() {
         // if (g_panPipe) RenderPanPipe();
         // if (g_harmonica) RenderHarmonica();
         if (g_violin) RenderViolin();
-        // if (g_viola) RenderViola();
-        // if (g_cello) RenderCello();
-        // if (g_doubleBass) RenderDoubleBass();
+        if (g_viola) RenderViola();
+        if (g_cello) RenderCello();
+        if (g_doubleBass) RenderDoubleBass();
         // if (g_popBottle) RenderPopBottle();
         if (g_agogos) RenderAgogos();
         if (g_woodblocks) RenderWoodblocks();
@@ -494,12 +497,12 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         if ( g_violin && UpdateViolin(pmtNow) == 1 )
           anyInstrumentActive = 1;
-        //     if ( g_viola && UpdateViola(pmtNow) == 1 )
-        //       anyInstrumentActive = 1;
-        //     if ( g_cello && UpdateCello(pmtNow) == 1 )
-        //       anyInstrumentActive = 1;
-        //     if ( g_doubleBass && UpdateDoubleBass(pmtNow) == 1 )
-        //       anyInstrumentActive = 1;
+        if ( g_viola && UpdateViola(pmtNow) == 1 )
+          anyInstrumentActive = 1;
+        if ( g_cello && UpdateCello(pmtNow) == 1 )
+          anyInstrumentActive = 1;
+        if ( g_doubleBass && UpdateDoubleBass(pmtNow) == 1 )
+          anyInstrumentActive = 1;
         if (g_bass && UpdateBass(pmtNow))
             anyInstrumentActive = 1;
         if (g_guitar && UpdateGuitar(pmtNow))

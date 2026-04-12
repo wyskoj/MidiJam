@@ -40,6 +40,9 @@
 #include "instruments/Tuba.h"
 #include "instruments/TubularBells.h"
 #include "instruments/Violin.h"
+#include "instruments/Viola.h"
+#include "instruments/Cello.h"
+#include "instruments/DoubleBass.h"
 #include "instruments/Xylophone.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
@@ -288,28 +291,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         VIOLIN_NOTES[i][1] = i + 41;
         VIOLIN_NOTES[i][2] = i + 48;
         VIOLIN_NOTES[i][3] = i + 55;
-        // VIOLA_NOTES[i][0] = i + 27;
-        // VIOLA_NOTES[i][1] = i + 34;
-        // VIOLA_NOTES[i][2] = i + 41;
-        // VIOLA_NOTES[i][3] = i + 48;
+        VIOLA_NOTES[i][0] = i + 27;
+        VIOLA_NOTES[i][1] = i + 34;
+        VIOLA_NOTES[i][2] = i + 41;
+        VIOLA_NOTES[i][3] = i + 48;
     }
 
     // --- Cello note table ---
     for (short i = 0; i < 28; ++i) {
-        // CELLO_NOTES[i][0] = i + 15;
-        // CELLO_NOTES[i][1] = i + 22;
-        // CELLO_NOTES[i][2] = i + 29;
-        // CELLO_NOTES[i][3] = i + 36;
+        CELLO_NOTES[i][0] = i + 15;
+        CELLO_NOTES[i][1] = i + 22;
+        CELLO_NOTES[i][2] = i + 29;
+        CELLO_NOTES[i][3] = i + 36;
     }
 
     // --- Double bass note table ---
     float v603 = 0.0f;
     float v612 = 0.052499998f;
     for (short i = 0; i < 49; ++i) {
-        // DOUBLE_BASS_NOTES[i][0] = i + 7;
-        // DOUBLE_BASS_NOTES[i][1] = i + 12;
-        // DOUBLE_BASS_NOTES[i][2] = i + 17;
-        // DOUBLE_BASS_NOTES[i][3] = i + 22;
+        DOUBLE_BASS_NOTES[i][0] = i + 7;
+        DOUBLE_BASS_NOTES[i][1] = i + 12;
+        DOUBLE_BASS_NOTES[i][2] = i + 17;
+        DOUBLE_BASS_NOTES[i][3] = i + 22;
         flt_4679E0[i] = v603 * 0.80000001;
         v603 = v603 + v612;
         v612 = v612 * 0.94999999;
