@@ -38,6 +38,7 @@
 #include "instruments/DoubleBass.h"
 #include "instruments/Ocarina.h"
 #include "instruments/Telephone.h"
+#include "instruments/Whistles.h"
 #include "instruments/Woodblocks.h"
 #include "instruments/Xylophone.h"
 
@@ -901,6 +902,24 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case WHISTLES: {
+                    const auto v131 = (noteMsg->wMusicValue + 3) % 12;
+                    int kk = 0;
+                    while (g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_64[v131][kk] && kk < 16)
+                        ++kk;
+                    if (kk < 16) {
+                        g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_64[v131][kk] = noteMsg->mtDuration;
+                        if (g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_64[v131][kk] < 0)
+                            g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_64[v131][kk] = 10;
+                        pPerf->GetTime(&rtNow, &mtNow);
+                        g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_364[v131][kk] = noteMsg->mtTime - mtNow;
+                        g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_364[v131][kk] -= g_currentTempo_scaleFactor0_9;
+                        if (g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_364[v131][kk] <= 0)
+                            g_whistles[g_whistlesChannel[noteMsg->dwPChannel]].field_364[v131][kk] = 1;
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -1121,6 +1140,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case OCARINA: {
                     ALLOC_INST(ocarina, OcarinaState);
+                    break;
+                }
+
+                case WHISTLES: {
+                    ALLOC_INST(whistles, WhistlesState);
                     break;
                 }
 

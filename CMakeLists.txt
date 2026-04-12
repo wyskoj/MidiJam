@@ -163,6 +163,8 @@ add_executable(MidiJam WIN32
         instruments/Telephone.h
         instruments/Ocarina.cpp
         instruments/Ocarina.h
+        instruments/Whistles.cpp
+        instruments/Whistles.h
 )
 
 # ---------------------------------------------------------------------------

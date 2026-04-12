@@ -290,7 +290,6 @@ Ms3dBundle* metronomePendjulum1_ms3d = nullptr;
 Ms3dBundle* metronomePendjulum2_ms3d = nullptr;
 
 // Strings / winds
-Ms3dBundle* whistle_ms3d = nullptr;
 Ms3dBundle* g_panPipe_ms3d = nullptr;
 Ms3dBundle* g_calliope_ms3d = nullptr;
 Ms3dBundle* g_harmonica_ms3d = nullptr;
@@ -298,9 +297,9 @@ Ms3dBundle* g_popBottle_ms3d = nullptr;
 Ms3dBundle* g_popBottleMiddle_ms3d = nullptr;
 Ms3dBundle* g_popBottlePop_ms3d = nullptr;
 Ms3dBundle* popBottleLabel_ms3d = nullptr;
-Ms3dBundle* steamCloud_0_ms3d = nullptr;
-Ms3dBundle* steamCloud_1_ms3d = nullptr;
-Ms3dBundle* steamCloud_2_ms3d = nullptr;
+Ms3dBundle* g_steamCloud_0_ms3d = nullptr;
+Ms3dBundle* g_steamCloud_1_ms3d = nullptr;
+Ms3dBundle* g_steamCloud_2_ms3d = nullptr;
 Ms3dBundle* g_steamPuff_harmonica_ms3d = nullptr;
 Ms3dBundle* g_viola_ms3d = nullptr;
 Ms3dBundle* g_cello_ms3d = nullptr;

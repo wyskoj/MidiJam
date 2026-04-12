@@ -45,6 +45,7 @@
 #include "instruments/DoubleBass.h"
 #include "instruments/Ocarina.h"
 #include "instruments/Telephone.h"
+#include "instruments/Whistles.h"
 #include "instruments/Xylophone.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
@@ -194,7 +195,6 @@ extern Ms3dBundle* metronomePendjulum1_ms3d;
 extern Ms3dBundle* metronomePendjulum2_ms3d;
 
 // String instruments
-extern Ms3dBundle* whistle_ms3d;
 extern Ms3dBundle* g_panPipe_ms3d;
 extern Ms3dBundle* g_calliope_ms3d;
 extern Ms3dBundle* g_harmonica_ms3d;
@@ -202,9 +202,9 @@ extern Ms3dBundle* g_popBottle_ms3d;
 extern Ms3dBundle* g_popBottleMiddle_ms3d;
 extern Ms3dBundle* g_popBottlePop_ms3d;
 extern Ms3dBundle* popBottleLabel_ms3d;
-extern Ms3dBundle* steamCloud_0_ms3d;
-extern Ms3dBundle* steamCloud_1_ms3d;
-extern Ms3dBundle* steamCloud_2_ms3d;
+extern Ms3dBundle* g_steamCloud_0_ms3d;
+extern Ms3dBundle* g_steamCloud_1_ms3d;
+extern Ms3dBundle* g_steamCloud_2_ms3d;
 extern Ms3dBundle* g_steamPuff_harmonica_ms3d;
 extern Ms3dBundle* g_viola_ms3d;
 extern Ms3dBundle* g_cello_ms3d;
@@ -502,7 +502,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
     LOAD_MODEL(g_stageHorn_ms3d, "StageHorn.ms3d");
-    LOAD_MODEL(whistle_ms3d, "Whistle.ms3d");
+    LOAD_MODEL(g_whistle_ms3d, "Whistle.ms3d");
     LOAD_MODEL(g_panPipe_ms3d, "PanPipe.ms3d");
     LOAD_MODEL(g_calliope_ms3d, "PanPipe.ms3d");
     REPLACE_TEX(g_calliope_ms3d, "Wood.bmp", "HornSkin.bmp");
@@ -511,11 +511,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     LOAD_MODEL(g_popBottleMiddle_ms3d, "PopBottleMiddle.ms3d");
     LOAD_MODEL(g_popBottlePop_ms3d, "PopBottlePop.ms3d");
     LOAD_MODEL(popBottleLabel_ms3d, "PopBottleLabel.ms3d");
-    LOAD_MODEL(steamCloud_0_ms3d, "SteamCloud.ms3d");
-    LOAD_MODEL(steamCloud_1_ms3d, "SteamCloud.ms3d");
-    REPLACE_TEX(steamCloud_1_ms3d, "SteamPuff.bmp", "SteamPuff_Whistle.bmp");
-    LOAD_MODEL(steamCloud_2_ms3d, "SteamCloud.ms3d");
-    REPLACE_TEX(steamCloud_2_ms3d, "SteamPuff.bmp", "SteamPuff_Pop.bmp");
+    LOAD_MODEL(g_steamCloud_0_ms3d, "SteamCloud.ms3d");
+    LOAD_MODEL(g_steamCloud_1_ms3d, "SteamCloud.ms3d");
+    REPLACE_TEX(g_steamCloud_1_ms3d, "SteamPuff.bmp", "SteamPuff_Whistle.bmp");
+    LOAD_MODEL(g_steamCloud_2_ms3d, "SteamCloud.ms3d");
+    REPLACE_TEX(g_steamCloud_2_ms3d, "SteamPuff.bmp", "SteamPuff_Pop.bmp");
     LOAD_MODEL(g_steamPuff_harmonica_ms3d, "SteamCloud.ms3d");
     REPLACE_TEX(g_steamPuff_harmonica_ms3d, "SteamPuff.bmp", "SteamPuff_Harmonica.bmp");
 
@@ -806,7 +806,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     for (short i = 0; i < 5; ++i)
         APPLY_TEX(g_stageStringBottomX_ms3d[i]);
     APPLY_TEX(g_stageHorn_ms3d);
-    APPLY_TEX(whistle_ms3d);
+    APPLY_TEX(g_whistle_ms3d);
     APPLY_TEX(g_panPipe_ms3d);
     APPLY_TEX(g_calliope_ms3d);
     APPLY_TEX(g_harmonica_ms3d);
@@ -814,9 +814,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(g_popBottleMiddle_ms3d);
     APPLY_TEX(g_popBottlePop_ms3d);
     APPLY_TEX(popBottleLabel_ms3d);
-    APPLY_TEX(steamCloud_0_ms3d);
-    APPLY_TEX(steamCloud_1_ms3d);
-    APPLY_TEX(steamCloud_2_ms3d);
+    APPLY_TEX(g_steamCloud_0_ms3d);
+    APPLY_TEX(g_steamCloud_1_ms3d);
+    APPLY_TEX(g_steamCloud_2_ms3d);
     APPLY_TEX(g_steamPuff_harmonica_ms3d);
     APPLY_TEX(g_violin_ms3d);
     APPLY_TEX(g_viola_ms3d);
