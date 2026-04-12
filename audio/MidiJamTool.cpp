@@ -36,6 +36,7 @@
 #include "instruments/Viola.h"
 #include "instruments/Cello.h"
 #include "instruments/DoubleBass.h"
+#include "instruments/Telephone.h"
 #include "instruments/Woodblocks.h"
 #include "instruments/Xylophone.h"
 
@@ -845,13 +846,38 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                             if (g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].queue[note][i] < 0)
                                 g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].queue[note][i] = 10;
                             pPerf->GetTime(&rtNow, &mtNow);
-                            g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].timeDeltas[note][i] = noteMsg->mtTime -
+                            g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].timeDeltas[note][i] = noteMsg->mtTime
+                                -
                                 mtNow;
                             g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].timeDeltas[note][i] -=
                                 g_currentTempo_scaleFactor0_9;
                             if (g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].timeDeltas[note][i] <= 0)
                                 g_doubleBass[g_doubleBassChannel[noteMsg->dwPChannel]].timeDeltas[note][i] = 1;
                         }
+                    }
+                    break;
+                }
+
+                case TELEPHONE: {
+                    const auto v67 = (noteMsg->wMusicValue + 3) % 12;
+                    int i13 = 0;
+                    while (g_telephone[g_telephoneChannel[noteMsg->dwPChannel]].field_68[v67][i13] && i13 < 16)
+                        ++i13;
+                    if (i13 < 16) {
+                        g_telephone[g_telephoneChannel[noteMsg->dwPChannel]].field_68[v67][i13] = noteMsg->
+                            mtDuration;
+                        if (g_telephone[g_telephoneChannel[noteMsg->dwPChannel]].field_68[v67][i13] < 0)
+                            g_telephone[g_telephoneChannel[noteMsg->dwPChannel]].field_68[v67][i13] = 10;
+                        (pPerf->GetTime)(&rtNow, &mtNow);
+                        g_telephone[g_telephoneChannel[noteMsg->dwPChannel]].field_368[v67][i13] = noteMsg->
+                            mtTime -
+                            mtNow;
+                        g_telephone[g_telephoneChannel[noteMsg->dwPChannel]].field_518[v67][i13] = noteMsg->
+                            bVelocity;
+                        g_telephone[g_telephoneChannel[noteMsg->dwPChannel]].field_368[v67][i13] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_telephone[g_telephoneChannel[noteMsg->dwPChannel]].field_368[v67][i13] <= 0)
+                            g_telephone[g_telephoneChannel[noteMsg->dwPChannel]].field_368[v67][i13] = 1;
                     }
                     break;
                 }
@@ -1066,6 +1092,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                 case DOUBLE_BASS: {
                     ALLOC_INST(doubleBass, DoubleBassState);
                     g_doubleBass_playingStyle[g_doubleBassCount - 1] = 1;
+                    break;
+                }
+
+                case TELEPHONE: {
+                    ALLOC_INST(telephone, TelephoneState);
                     break;
                 }
 

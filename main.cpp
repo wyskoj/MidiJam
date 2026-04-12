@@ -43,6 +43,7 @@
 #include "instruments/Viola.h"
 #include "instruments/Cello.h"
 #include "instruments/DoubleBass.h"
+#include "instruments/Telephone.h"
 #include "instruments/Xylophone.h"
 #include "model/Ms3dBundle.h"
 #include "render/texture.h"
@@ -220,11 +221,6 @@ extern Ms3dBundle* g_recorder_ms3d;
 extern Ms3dBundle* g_recorderLeftHandX_ms3d[13];
 extern Ms3dBundle* g_recorderRightHandX_ms3d; // [0..10] via pointer arithmetic
 extern Ms3dBundle* dword_465230; // RecorderHandRight10 — TODO: name
-
-// Telephone keys — IDA stored these via pointer arithmetic off g_violinFinger_ms3d
-extern Ms3dBundle* g_telephoneBase_ms3d;
-extern Ms3dBundle* g_telephoneHandle_ms3d;
-extern Ms3dBundle* g_telephoneKeyX_ms3d; // [0..23] via pointer arithmetic
 
 // TODO: the following two are accessed via dword_ in IDA, name when telephone is transcribed
 extern Ms3dBundle* dword_46D25C;
@@ -618,43 +614,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         LOAD_MODEL(g_flute_rightHandX_ms3d[i], filename);
     }
 
-    // LOAD_MODEL(g_telephoneBase_ms3d, "TelePhoneBase.ms3d");
-    // LOAD_MODEL(g_telephoneHandle_ms3d, "TelePhoneHandle.ms3d");
-    //
-    // // Telephone keys — IDA stores these as a flat array via pointer arithmetic
-    // // off g_violinFinger_ms3d and g_telephoneKeyX_ms3d. Transcribed faithfully
-    // // using the pointer arithmetic pattern; will be cleaned up when telephone
-    // // is transcribed.
-    // static const char* telephoneKeyFiles[12] = {
-    //     "TelePhoneKey1.bmp", "TelePhoneKey2.bmp", "TelePhoneKey3.bmp",
-    //     "TelePhoneKey4.bmp", "TelePhoneKey5.bmp", "TelePhoneKey6.bmp",
-    //     "TelePhoneKey7.bmp", "TelePhoneKey8.bmp", "TelePhoneKey9.bmp",
-    //     "TelePhoneKeyStar.bmp", "TelePhoneKey0.bmp", "TelePhoneKeyPound.bmp"
-    // };
-    // static const char* telephoneKeyFilesDark[12] = {
-    //     "TelePhoneKey1Dark.bmp", "TelePhoneKey2Dark.bmp", "TelePhoneKey3Dark.bmp",
-    //     "TelePhoneKey4Dark.bmp", "TelePhoneKey5Dark.bmp", "TelePhoneKey6Dark.bmp",
-    //     "TelePhoneKey7Dark.bmp", "TelePhoneKey8Dark.bmp", "TelePhoneKey9Dark.bmp",
-    //     "TelePhoneKeyStarDark.bmp", "TelePhoneKey0Dark.bmp", "TelePhoneKeyPoundDark.bmp"
-    // };
-    // // First 12 keys (lit)
-    // LOAD_MODEL(g_telephoneKeyX_ms3d, "TelePhoneKey.ms3d");
-    // REPLACE_TEX(g_telephoneKeyX_ms3d, "TelePhoneKey.bmp", telephoneKeyFiles[0]);
-    // LOAD_MODEL(dword_46D25C, "TelePhoneKey.ms3d");
-    // REPLACE_TEX(dword_46D25C, "TelePhoneKey.bmp", telephoneKeyFiles[1]);
-    // LOAD_MODEL(dword_46D260, "TelePhoneKey.ms3d");
-    // REPLACE_TEX(dword_46D260, "TelePhoneKey.bmp", telephoneKeyFiles[2]);
-    // LOAD_MODEL(dword_46D264, "TelePhoneKey.ms3d");
-    // REPLACE_TEX(dword_46D264, "TelePhoneKey.bmp", telephoneKeyFiles[3]);
-    // // IDA accessed keys 4-19 via pointer arithmetic off g_violinFinger_ms3d [0..19]
-    // for (short i = 0; i < 8; ++i) {
-    //     LOAD_MODEL((&g_violinFinger_ms3d)[i], "TelePhoneKey.ms3d");
-    //     REPLACE_TEX((&g_violinFinger_ms3d)[i], "TelePhoneKey.bmp", telephoneKeyFiles[4 + i]);
-    // }
-    // for (short i = 0; i < 12; ++i) {
-    //     LOAD_MODEL((&g_violinFinger_ms3d)[8 + i], "TelePhoneKey.ms3d");
-    //     REPLACE_TEX((&g_violinFinger_ms3d)[8 + i], "TelePhoneKey.bmp", telephoneKeyFilesDark[i]);
-    // }
+    LOAD_MODEL(g_telephoneBase_ms3d, "TelePhoneBase.ms3d");
+    LOAD_MODEL(g_telephoneHandle_ms3d, "TelePhoneHandle.ms3d");
+    static const char* telephoneKeyFiles[12] = {
+        "TelePhoneKey1.bmp", "TelePhoneKey2.bmp", "TelePhoneKey3.bmp",
+        "TelePhoneKey4.bmp", "TelePhoneKey5.bmp", "TelePhoneKey6.bmp",
+        "TelePhoneKey7.bmp", "TelePhoneKey8.bmp", "TelePhoneKey9.bmp",
+        "TelePhoneKeyStar.bmp", "TelePhoneKey0.bmp", "TelePhoneKeyPound.bmp"
+    };
+    static const char* telephoneKeyFilesDark[12] = {
+        "TelePhoneKey1Dark.bmp", "TelePhoneKey2Dark.bmp", "TelePhoneKey3Dark.bmp",
+        "TelePhoneKey4Dark.bmp", "TelePhoneKey5Dark.bmp", "TelePhoneKey6Dark.bmp",
+        "TelePhoneKey7Dark.bmp", "TelePhoneKey8Dark.bmp", "TelePhoneKey9Dark.bmp",
+        "TelePhoneKeyStarDark.bmp", "TelePhoneKey0Dark.bmp", "TelePhoneKeyPoundDark.bmp"
+    };
+    for (short i = 0; i < 12; ++i) {
+        LOAD_MODEL(g_telephoneKeyX_ms3d[i], "TelePhoneKey.ms3d");
+        REPLACE_TEX(g_telephoneKeyX_ms3d[i], "TelePhoneKey.bmp", telephoneKeyFiles[i]);
+    }
+    for (short i = 0; i < 12; ++i) {
+        LOAD_MODEL(g_telephoneKeyX_ms3d[i + 12], "TelePhoneKey.ms3d");
+        REPLACE_TEX(g_telephoneKeyX_ms3d[i + 12], "TelePhoneKey.bmp", telephoneKeyFilesDark[i]);
+    }
 
     LOAD_MODEL(g_recorder_ms3d, "Recorder.ms3d");
     for (short i = 0; i < 13; ++i) {
@@ -893,13 +874,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         APPLY_TEX(g_flute_rightHandX_ms3d[i]);
     APPLY_TEX(g_telephoneBase_ms3d);
     APPLY_TEX(g_telephoneHandle_ms3d);
-    // for (short i = 0; i < 24; ++i)
-    //     APPLY_TEX((&g_telephoneKeyX_ms3d)[i]);
+    for (short i = 0; i < 24; ++i)
+        APPLY_TEX(g_telephoneKeyX_ms3d[i]);
     APPLY_TEX(g_recorder_ms3d);
-    for (short i = 0; i < 13; ++i)
-        APPLY_TEX(g_recorderLeftHandX_ms3d[i]);
-    for (short i = 0; i < 11; ++i)
-        APPLY_TEX((&g_recorderRightHandX_ms3d)[i]);
+    // for (short i = 0; i < 13; ++i)
+    //     APPLY_TEX(g_recorderLeftHandX_ms3d[i]);
+    // for (short i = 0; i < 11; ++i)
+    //     APPLY_TEX((&g_recorderRightHandX_ms3d)[i]);
     for (short i = 0; i < 20; ++i) {
         APPLY_TEX(g_altoSaxKeyX_ms3d[i][0]);
         APPLY_TEX(g_altoSaxKeyX_ms3d[i][1]);

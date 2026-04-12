@@ -159,6 +159,8 @@ add_executable(MidiJam WIN32
         instruments/Cello.h
         instruments/DoubleBass.cpp
         instruments/DoubleBass.h
+        instruments/Telephone.cpp
+        instruments/Telephone.h
 )
 
 # ---------------------------------------------------------------------------

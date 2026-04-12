@@ -47,6 +47,7 @@
 #include "instruments/Viola.h"
 #include "instruments/Cello.h"
 #include "instruments/DoubleBass.h"
+#include "instruments/Telephone.h"
 #include "instruments/Woodblocks.h"
 
 // ---------------------------------------------------------------------------
@@ -399,7 +400,7 @@ BOOL UpdateMidiJam() {
         if (g_steelDrum) RenderSteelDrum();
         if (g_timpani) RenderTimpani();
         if (g_taiko) RenderTaiko();
-        // if (g_telephone) RenderTelephone();
+        if (g_telephone) RenderTelephone();
         if (g_tubularBells) RenderTubularBells();
 
         if (g_guitar) {
@@ -560,8 +561,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         if (g_taiko && UpdateTaiko(pmtNow))
             anyInstrumentActive = 1;
-        //     if ( g_telephone && UpdateTelephone(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_telephone && UpdateTelephone(pmtNow) )
+          anyInstrumentActive = 1;
         if (g_tubularBells && UpdateTubularBells(pmtNow))
             anyInstrumentActive = 1;
         if (g_stageString && UpdateStageString(pmtNow))

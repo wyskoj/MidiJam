@@ -317,9 +317,6 @@ Ms3dBundle* g_recorderRightHandX_ms3d = nullptr;
 Ms3dBundle* dword_465230 = nullptr;
 
 // Telephone
-Ms3dBundle* g_telephoneBase_ms3d = nullptr;
-Ms3dBundle* g_telephoneHandle_ms3d = nullptr;
-Ms3dBundle* g_telephoneKeyX_ms3d = nullptr;
 Ms3dBundle* dword_46D25C = nullptr;
 Ms3dBundle* dword_46D260 = nullptr;
 Ms3dBundle* dword_46D264 = nullptr;
