@@ -302,10 +302,6 @@ Ms3dBundle* g_flute_ms3d = nullptr;
 Ms3dBundle* g_piccolo_ms3d = nullptr;
 Ms3dBundle* g_flute_leftHandX_ms3d[13] = {};
 Ms3dBundle* g_flute_rightHandX_ms3d[12] = {};
-Ms3dBundle* g_recorder_ms3d = nullptr;
-Ms3dBundle* g_recorderLeftHandX_ms3d[13] = {};
-Ms3dBundle* g_recorderRightHandX_ms3d = nullptr;
-Ms3dBundle* dword_465230 = nullptr;
 
 // Telephone
 Ms3dBundle* dword_46D25C = nullptr;

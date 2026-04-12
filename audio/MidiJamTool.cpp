@@ -40,6 +40,7 @@
 #include "instruments/PanPipe.h"
 #include "instruments/Harmonica.h"
 #include "instruments/PopBottles.h"
+#include "instruments/Recorder.h"
 #include "instruments/Telephone.h"
 #include "instruments/Whistles.h"
 #include "instruments/Woodblocks.h"
@@ -985,6 +986,29 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                     break;
                 }
 
+                case RECORDER: {
+                    const auto note = noteMsg->wMusicValue - 36;
+                    if (note < 0x3Du) {
+                        int i26 = 0;
+                        while (g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_1EC[note][i26] && i26 < 16) {
+                            ++i26;
+                        }
+                        if (i26 < 16) {
+                            g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_1EC[note][i26] = noteMsg->mtDuration;
+                            if (g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_1EC[note][i26] < 0) {
+                                g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_1EC[note][i26] = 10;
+                            }
+                            pPerf->GetTime(&rtNow, &mtNow);
+                            g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_112C[note][i26] = noteMsg->mtTime - mtNow;
+                            g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_112C[note][i26] -= g_currentTempo_scaleFactor0_9;
+                            if (g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_112C[note][i26] <= 0) {
+                                g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_112C[note][i26] = 1;
+                            }
+                        }
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -1231,6 +1255,11 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
 
                 case POP_BOTTLES: {
                     ALLOC_INST(popBottles, PopBottlesState);
+                    break;
+                }
+
+                case RECORDER: {
+                    ALLOC_INST(recorder, RecorderState);
                     break;
                 }
 

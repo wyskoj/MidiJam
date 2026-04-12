@@ -51,6 +51,7 @@
 #include "instruments/PanPipe.h"
 #include "instruments/Harmonica.h"
 #include "instruments/PopBottles.h"
+#include "instruments/Recorder.h"
 #include "instruments/Telephone.h"
 #include "instruments/Whistles.h"
 #include "instruments/Woodblocks.h"
@@ -353,7 +354,7 @@ BOOL UpdateMidiJam() {
         if (g_tenorSax) RenderTenorSax();
         if (g_sapranoSax) RenderSapranoSax();
         if (g_altoSax) RenderAltoSax();
-        // if (g_recorder) RenderRecorder();
+        if (g_recorder) RenderRecorder();
         // if (g_piccolo) RenderPiccolo();
         // if (g_flute) RenderFlute();
         if (g_tuba) RenderTuba();
@@ -548,8 +549,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
         //       anyInstrumentActive = 1;
         //     if ( g_piccolo && UpdatePiccolo(pmtNow) )
         //       anyInstrumentActive = 1;
-        //     if ( g_recorder && UpdateRecorder(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_recorder && UpdateRecorder(pmtNow) )
+          anyInstrumentActive = 1;
         if (g_trumpet && UpdateTrumpet(pmtNow))
             anyInstrumentActive = 1;
         if (g_stageChoir && UpdateStageChoir(pmtNow))

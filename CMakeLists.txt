@@ -171,6 +171,8 @@ add_executable(MidiJam WIN32
         instruments/Harmonica.h
         instruments/PopBottles.cpp
         instruments/PopBottles.h
+        instruments/Recorder.cpp
+        instruments/Recorder.h
 )
 
 # ---------------------------------------------------------------------------

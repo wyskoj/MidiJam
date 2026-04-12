@@ -47,6 +47,7 @@
 #include "instruments/PanPipe.h"
 #include "instruments/Harmonica.h"
 #include "instruments/PopBottles.h"
+#include "instruments/Recorder.h"
 #include "instruments/Telephone.h"
 #include "instruments/Whistles.h"
 #include "instruments/Xylophone.h"
@@ -213,10 +214,6 @@ extern Ms3dBundle* g_flute_ms3d;
 extern Ms3dBundle* g_piccolo_ms3d;
 extern Ms3dBundle* g_flute_leftHandX_ms3d[13];
 extern Ms3dBundle* g_flute_rightHandX_ms3d[12];
-extern Ms3dBundle* g_recorder_ms3d;
-extern Ms3dBundle* g_recorderLeftHandX_ms3d[13];
-extern Ms3dBundle* g_recorderRightHandX_ms3d; // [0..10] via pointer arithmetic
-extern Ms3dBundle* dword_465230; // RecorderHandRight10 — TODO: name
 
 // TODO: the following two are accessed via dword_ in IDA, name when telephone is transcribed
 extern Ms3dBundle* dword_46D25C;
@@ -635,12 +632,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         sprintf(filename, "RecorderHandLeft%d.ms3d", i);
         LOAD_MODEL(g_recorderLeftHandX_ms3d[i], filename);
     }
-    for (short i = 0; i < 10; ++i) {
+    for (short i = 0; i < 11; ++i) {
         char filename[64];
         sprintf(filename, "RecorderHandRight%d.ms3d", i);
-        LOAD_MODEL((&g_recorderRightHandX_ms3d)[i], filename);
+        LOAD_MODEL(g_recorderRightHandX_ms3d[i], filename);
     }
-    LOAD_MODEL(dword_465230, "RecorderHandRight10.ms3d");
 
     for (short i = 0; i < 20; ++i) {
         char filename[64];
@@ -869,10 +865,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     for (short i = 0; i < 24; ++i)
         APPLY_TEX(g_telephoneKeyX_ms3d[i]);
     APPLY_TEX(g_recorder_ms3d);
-    // for (short i = 0; i < 13; ++i)
-    //     APPLY_TEX(g_recorderLeftHandX_ms3d[i]);
-    // for (short i = 0; i < 11; ++i)
-    //     APPLY_TEX((&g_recorderRightHandX_ms3d)[i]);
+    for (short i = 0; i < 13; ++i)
+        APPLY_TEX(g_recorderLeftHandX_ms3d[i]);
+    for (short i = 0; i < 11; ++i)
+        APPLY_TEX(g_recorderRightHandX_ms3d[i]);
     for (short i = 0; i < 20; ++i) {
         APPLY_TEX(g_altoSaxKeyX_ms3d[i][0]);
         APPLY_TEX(g_altoSaxKeyX_ms3d[i][1]);
