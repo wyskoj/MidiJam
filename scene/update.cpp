@@ -48,6 +48,7 @@
 #include "instruments/Cello.h"
 #include "instruments/DoubleBass.h"
 #include "instruments/Flute.h"
+#include "instruments/Piccolo.h"
 #include "instruments/Ocarina.h"
 #include "instruments/PanPipe.h"
 #include "instruments/Harmonica.h"
@@ -356,7 +357,7 @@ BOOL UpdateMidiJam() {
         if (g_sapranoSax) RenderSapranoSax();
         if (g_altoSax) RenderAltoSax();
         if (g_recorder) RenderRecorder();
-        // if (g_piccolo) RenderPiccolo();
+        if (g_piccolo) RenderPiccolo();
         if (g_flute) RenderFlute();
         if (g_tuba) RenderTuba();
         if (g_stageHorn) RenderStageHorn();
@@ -548,8 +549,8 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         if ( g_flute && UpdateFlute(pmtNow) )
           anyInstrumentActive = 1;
-        //     if ( g_piccolo && UpdatePiccolo(pmtNow) )
-        //       anyInstrumentActive = 1;
+        if ( g_piccolo && UpdatePiccolo(pmtNow) )
+          anyInstrumentActive = 1;
         if ( g_recorder && UpdateRecorder(pmtNow) )
           anyInstrumentActive = 1;
         if (g_trumpet && UpdateTrumpet(pmtNow))

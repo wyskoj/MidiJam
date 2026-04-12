@@ -173,6 +173,8 @@ add_executable(MidiJam WIN32
         instruments/PopBottles.h
         instruments/Recorder.cpp
         instruments/Recorder.h
+        instruments/Piccolo.cpp
+        instruments/Piccolo.h
         instruments/Flute.cpp
         instruments/Flute.h
 )

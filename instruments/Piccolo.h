@@ -2,9 +2,8 @@
 // Created by Jacob on Sunday, April 12, 2026.
 //
 
-#ifndef MIDIJAM_FLUTE_H
-#define MIDIJAM_FLUTE_H
-
+#ifndef MIDIJAM_PICCOLO_H
+#define MIDIJAM_PICCOLO_H
 
 #include "../model/Ms3dBundle.h"
 #include "instrument.h"
@@ -12,11 +11,11 @@
 #include <dmusici.h>
 
 // ---------------------------------------------------------------------------
-// FluteState — per-instance state
+// PiccoloState -- per-instance state
 // sizeof = 0xXXXX
 // ---------------------------------------------------------------------------
 #pragma pack(push, 1)
-struct FluteState {
+struct PiccoloState {
     __int16 isActive;
     __int16 timeToLive;
     int field_4[38];
@@ -42,23 +41,20 @@ struct FluteState {
 };
 #pragma pack(pop)
 
-static_assert(sizeof(FluteState) == 0x29E5E, "FluteState layout mismatch");
+static_assert(sizeof(PiccoloState) == 0x29E5E, "PiccoloState layout mismatch");
 
 // ---------------------------------------------------------------------------
 // Globals
 // ---------------------------------------------------------------------------
-DECL_INST_DS(flute, FluteState)
+DECL_INST_DS(piccolo, PiccoloState)
 
-extern Ms3dBundle* g_flute_ms3d;
-extern Ms3dBundle* g_fluteLeftHandX_ms3d[13];
-extern Ms3dBundle* g_fluteRightHandX_ms3d[10];
-extern char FLUTE_LEFT_HAND_INDEX[40];
-extern char FLUTE_RIGHT_HAND_INDEX[40];
+extern Ms3dBundle* g_piccolo_ms3d;
 
 // ---------------------------------------------------------------------------
 // Functions
 // ---------------------------------------------------------------------------
-void RenderFlute();
-bool UpdateFlute(MUSIC_TIME pmtNow);
+void RenderPiccolo();
+bool UpdatePiccolo(MUSIC_TIME pmtNow);
 
-#endif // MIDIJAM_FLUTE_H
+#endif // MIDIJAM_PICCOLO_H
+
