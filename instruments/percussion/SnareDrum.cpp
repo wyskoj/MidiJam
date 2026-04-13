@@ -16,10 +16,9 @@ extern float g_recoil_snare;
 extern Ms3dBundle* g_drumSet_Stick_ms3d;
 extern float MAX_RECOIL;
 extern float g_recoil_sideStick;
+extern short g_stick_visible[43];
 
 __int16 g_snareStickActive = 0;
-__int16 word_469B48[512];
-__int16 word_46919A;
 
 // FUNCTION: MIDIJAM 0x4052B0
 void UpdateSnareDrum() {
@@ -97,24 +96,18 @@ void UpdateSideStick() {
 
     v3 = 10000;
     v4 = 0;
-    for ( i = 0; i < 32; ++i )
-    {
-        if ( word_469B48[i] > 0 && word_469B48[i] < v3 )
-        {
-            v3 = word_469B48[i];
+    for (i = 0; i < 32; ++i) {
+        if (g_percussion_time_queue[SIDE_STICK][i] > 0 && g_percussion_time_queue[SIDE_STICK][i] < v3) {
+            v3 = g_percussion_time_queue[SIDE_STICK][i];
             ++v4;
         }
     }
-    if ( v3 <= 0 || (double)v3 >= 200.0 )
-    {
-        if ( g_recoil_sideStick <= 0.0 )
-        {
-            if ( v4 <= 0 )
-            {
+    if (v3 <= 0 || (double)v3 >= 200.0) {
+        if (g_recoil_sideStick <= 0.0) {
+            if (v4 <= 0) {
                 g_snareStickActive = 0;
             }
-            else if ( word_46919A == 1 )
-            {
+            else if (g_stick_visible[SIDE_STICK] == 1) {
                 glPushMatrix();
                 glRotatef(-75.0, 0.0, 1.0, 0.0);
                 glTranslatef(0.0, 0.27000001, 6.5999999);
@@ -125,9 +118,8 @@ void UpdateSideStick() {
                 glPopMatrix();
             }
         }
-        else
-        {
-            word_46919A = 1;
+        else {
+            g_stick_visible[SIDE_STICK] = 1;
             glPushMatrix();
             glRotatef(-75.0, 0.0, 1.0, 0.0);
             glTranslatef(0.0, 0.27000001, 6.5999999);
@@ -139,9 +131,8 @@ void UpdateSideStick() {
             glPopMatrix();
         }
     }
-    else
-    {
-        word_46919A = 1;
+    else {
+        g_stick_visible[SIDE_STICK] = 1;
         glPushMatrix();
         glRotatef(-75.0, 0.0, 1.0, 0.0);
         glTranslatef(0.0, 0.27000001, 6.5999999);

@@ -8,7 +8,7 @@
 
 extern Ms3dBundle* g_drumSet_Stick_ms3d;
 extern int g_percussion_time_queue[88][32];
-extern short g_stick_visible[37];
+extern short g_stick_visible[43];
 extern float MAX_RECOIL;
 
 GLfloat DRUMSET_TOM_LOC_X[6] = {-15.453f, -9.7229996f, 0.0f, 10.729f, 17.747999f, 20.75f};

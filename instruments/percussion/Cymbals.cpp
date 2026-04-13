@@ -12,7 +12,7 @@ extern int g_percussion_time_queue[88][32];
 extern float g_cymbalMassFactor[7];
 extern int g_lastRideCymbal;
 extern float g_recoil_cymbals[7];
-extern short g_stick_visible[37];
+extern short g_stick_visible[43];
 
 GLfloat CYMBAL_LOC_X[7] = {-2.0999999f, -19.629999f, 13.0f, 24.360001f, -26.35f, 31.754f, 31.754f};
 GLfloat CYMBAL_LOC_Y[7] = {47.5f, 47.0f, 46.5f, 40.0f, 39.0f, 33.0f, 33.0f};
@@ -29,8 +29,6 @@ float CYMBAL_SCALE[7] = {
 float CYMBAL_MAX_WOBBLE[7] = {
     67.5f, 67.5f, 67.5f, 11.25f, 11.25f, 67.5f, 3.0f
 };
-
-__int16 word_469F48[32] = {};
 
 // FUNCTION: MIDIJAM 0x406230
 void UpdateCymbals(short a1) {
@@ -55,11 +53,11 @@ void UpdateCymbals(short a1) {
             v1 = CYMBAL_SCALE[a1];
             g_cymbalMassFactor[a1] = v1 + v1 + 16.75;
         }
-        if (word_469F48[i] > 0
-            && word_469F48[i] < v9
+        if (g_percussion_time_queue[RIDE_BELL][i] > 0
+            && g_percussion_time_queue[RIDE_BELL][i] < v9
             && (g_cymbal_patches[a1] == RIDE_CYMBAL_1 && g_lastRideCymbal != 2
                 || g_cymbal_patches[a1] == RIDE_CYMBAL_2 && g_lastRideCymbal == 2)) {
-            v9 = word_469F48[i];
+            v9 = g_percussion_time_queue[RIDE_BELL][i];
             ++v10;
             g_cymbalMassFactor[a1] = CYMBAL_SCALE[a1] + 13.75;
         }

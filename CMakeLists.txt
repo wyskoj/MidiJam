@@ -190,6 +190,7 @@ add_executable(MidiJam WIN32
         instruments/percussion/HiHat.h
         instruments/percussion/Cymbals.cpp
         instruments/percussion/Cymbals.h
+        instruments/percussion/particles.cpp
 )
 
 # ---------------------------------------------------------------------------

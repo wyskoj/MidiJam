@@ -23,4 +23,6 @@ struct DS_Particles {
 
 static_assert(sizeof(DS_Particles) == 0x1134, "DS_Particles layout mismatch");
 
+bool UpdateSteamPuffers();
+
 #endif //MIDIJAM_PARTICLES_H

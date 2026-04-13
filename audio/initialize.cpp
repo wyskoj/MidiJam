@@ -70,7 +70,7 @@ extern float            g_cymbalWobbleAmplitude[7];
 // --- Percussion ---
 extern int              g_lastRideCymbal;
 extern int              g_show_percussion;
-extern short            g_stick_visible[37];
+extern short            g_stick_visible[43];
 extern int              g_percussion_time_queue[88][32];
 extern int              g_percussion_velocity_queue[88][32];
 extern int              g_percussion_framesWithEmptyQueue;

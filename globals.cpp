@@ -321,7 +321,7 @@ GLfloat g_refreshRate = 0.0f;
 // Percussion
 // ---------------------------------------------------------------------------
 
-short g_stick_visible[37] = {};
+short g_stick_visible[43] = {};
 
 // ---------------------------------------------------------------------------
 // Per-instrument allocation counters

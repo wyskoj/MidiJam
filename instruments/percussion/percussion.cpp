@@ -6,7 +6,7 @@
 
 extern int g_percussion_time_queue[88][32];
 extern float MAX_RECOIL;
-extern short g_stick_visible[37];
+extern short g_stick_visible[43];
 
 // FUNCTION: MIDIJAM 0x405CC0
 bool IsShowPercussionInstrument(GM_PERCUSSION percussionPatch, float recoil) {

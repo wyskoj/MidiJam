@@ -12,7 +12,7 @@ float g_prevBellSwingDelta;
 float g_bellPendulumDirection;
 
 extern int g_percussion_time_queue[88][32];
-extern short g_stick_visible[37];
+extern short g_stick_visible[43];
 extern float MAX_RECOIL;
 
 // FUNCTION: MIDIJAM 0x405DB0

@@ -555,7 +555,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
             anyInstrumentActive = 1;
         if (g_whistles && UpdateWhistles(pmtNow))
             anyInstrumentActive = 1;
-        //     UpdateSteamPuffers();
+        UpdateSteamPuffers();
         if (g_panPipe && UpdatePanPipe(pmtNow))
             anyInstrumentActive = 1;
         if (g_harmonica && UpdateHarmonica(pmtNow))
