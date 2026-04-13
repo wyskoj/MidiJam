@@ -25,7 +25,7 @@ float g_harpStringZ[47] = {};
 float g_harpStringScale[47] = {};
 Ms3dBundle* g_harp_ms3d = nullptr;
 Ms3dBundle* g_harpString_ms3d[3] = {};
-Ms3dBundle* g_harpStringPlaying_ms3d[3][5] = {};
+Ms3dBundle* g_harpStringPlayingX_ms3d[3][5] = {};
 Ms3dBundle* g_harpShadow_ms3d = nullptr;
 
 extern MUSIC_TIME g_currentGlobalTime;
@@ -43,7 +43,7 @@ void RenderHarp() {
                 glScalef(1.0, g_harpStringScale[string], 1.0);
                 if (g_harp[h].stringPlayTimer[string] > 0) {
                     // Render vibrating string
-                    g_harpStringPlaying_ms3d[g_harpStringColors[string]][g_vibratingString_frame]->RenderModel();
+                    g_harpStringPlayingX_ms3d[g_harpStringColors[string]][g_vibratingString_frame]->RenderModel();
                 }
                 else {
                     // Render static string

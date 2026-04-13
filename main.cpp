@@ -95,8 +95,8 @@ extern int g_windowWidth;
 extern float g_normalizedWindowScale;
 extern int g_windowCenter_X;
 extern int g_windowCenter_Y;
-extern int g_windowCenterX;
-extern int g_windowCenterY;
+extern float g_windowCenterXf;
+extern float g_windowCenterYf;
 extern MMRESULT g_timerEventId;
 extern CameraAngle g_targetCameraAngle;
 extern float g_autoCamDeltaTransform[6];
@@ -165,13 +165,13 @@ extern Ms3dBundle* g_woodBlockSingle_ms3d;
 // Drum set models
 extern Ms3dBundle* g_drumSet_Stick_ms3d;
 extern Ms3dBundle* g_cowbell_ms3d;
-extern Ms3dBundle* handRight_ms3d;
-extern Ms3dBundle* handLeft_ms3d;
-extern Ms3dBundle* handTambourine_ms3d;
-extern Ms3dBundle* clave_ms3d;
-extern Ms3dBundle* jingleBells_ms3d;
-extern Ms3dBundle* castanets_ms3d;
-extern Ms3dBundle* shaker_ms3d;
+extern Ms3dBundle* g_handRight_ms3d;
+extern Ms3dBundle* g_handLeft_ms3d;
+extern Ms3dBundle* g_handTambourine_ms3d;
+extern Ms3dBundle* g_clave_ms3d;
+extern Ms3dBundle* g_jingleBells_ms3d;
+extern Ms3dBundle* g_castanets_ms3d;
+extern Ms3dBundle* g_shaker_ms3d;
 extern Ms3dBundle* g_zapper_ms3d;
 extern Ms3dBundle* g_zapperLaser_ms3d;
 extern Ms3dBundle* g_squareShaker_ms3d;
@@ -183,7 +183,7 @@ extern Ms3dBundle* g_woodBlockLow_ms3d;
 extern Ms3dBundle* g_triangle_ms3d;
 extern Ms3dBundle* g_mutedTriangle_ms3d;
 extern Ms3dBundle* g_triangleStick_ms3d;
-extern Ms3dBundle* g_drumSet_Timbale_ms3d;
+extern Ms3dBundle* g_drumSet_timbale_ms3d;
 extern Ms3dBundle* g_drumSet_bongo_ms3d;
 extern Ms3dBundle* g_drumSet_conga_ms3d;
 extern Ms3dBundle* g_drumSet_bassDrum_ms3d;
@@ -191,14 +191,14 @@ extern Ms3dBundle* g_drumSet_snareDrum_ms3d;
 extern Ms3dBundle* g_drumSet_tom_ms3d;
 extern Ms3dBundle* g_drumSet_cymbal_ms3d;
 extern Ms3dBundle* g_drumSet_chinaCymbal_ms3d;
-extern Ms3dBundle* g_drumSet_BassDrumBeaterArm_ms3d;
-extern Ms3dBundle* g_drumSet_BassDrumBeaterHolder_ms3d;
-extern Ms3dBundle* g_drumSet_BassDrumPedal_ms3d;
+extern Ms3dBundle* g_drumSet_bassDrumBeaterArm_ms3d;
+extern Ms3dBundle* g_drumSet_bassDrumBeaterHolder_ms3d;
+extern Ms3dBundle* g_drumSet_bassDrumPedal_ms3d;
 
 // Percussion / melodic drums
-extern Ms3dBundle* metronome_ms3d;
-extern Ms3dBundle* metronomePendjulum1_ms3d;
-extern Ms3dBundle* metronomePendjulum2_ms3d;
+extern Ms3dBundle* g_metronome_ms3d;
+extern Ms3dBundle* g_metronomePendjulum1_ms3d;
+extern Ms3dBundle* g_metronomePendjulum2_ms3d;
 
 // String instruments
 extern Ms3dBundle* g_steamCloud_0_ms3d;
@@ -257,14 +257,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         g_bassNotes[i][1] = i + 12;
         g_bassNotes[i][2] = i + 17;
         g_bassNotes[i][3] = i + 22;
-        BASS_FRET_HEIGHTS_AS_PERCENT[i + 1] = BASS_FRET_HEIGHTS[i + 1] / -46.081001;
+        BASS_FRET_HEIGHTS_AS_PERCENT[i + 1] = BASS_FRET_HEIGHTS[i + 1] / -46.081;
         g_guitarNotes[i][0] = i + 19;
         g_guitarNotes[i][1] = i + 24;
         g_guitarNotes[i][2] = i + 29;
         g_guitarNotes[i][3] = i + 34;
         g_guitarNotes[i][4] = i + 38;
         g_guitarNotes[i][5] = i + 43;
-        GUITAR_FRET_HEIGHTS_AS_PERCENT[i] = GUITAR_FRET_HEIGHTS[i + 1] / -34.700001;
+        GUITAR_FRET_HEIGHTS_AS_PERCENT[i] = GUITAR_FRET_HEIGHTS[i + 1] / -34.7;
     }
 
     // --- Violin/Viola note table ---
@@ -289,15 +289,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     // --- Double bass note table ---
     float v603 = 0.0f;
-    float v612 = 0.052499998f;
+    float v612 = 0.0525f;
     for (short i = 0; i < 49; ++i) {
         DOUBLE_BASS_NOTES[i][0] = i + 7;
         DOUBLE_BASS_NOTES[i][1] = i + 12;
         DOUBLE_BASS_NOTES[i][2] = i + 17;
         DOUBLE_BASS_NOTES[i][3] = i + 22;
-        flt_4679E0[i] = v603 * 0.80000001;
+        flt_4679E0[i] = v603 * 0.8;
         v603 = v603 + v612;
-        v612 = v612 * 0.94999999;
+        v612 = v612 * 0.95;
     }
 
     // --- Vibrating string animation ---
@@ -339,8 +339,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     g_pianoKeyBackScale[13] = 1.0f;
 
     // --- Misc state init ---
-    g_windowCenterX = 0;
-    g_windowCenterY = 0;
+    g_windowCenterXf = 0;
+    g_windowCenterYf = 0;
     g_framesSinceStart = 0;
     g_autoCamIdleTime = 0;
     g_fadeFactor = 1.0f;
@@ -355,6 +355,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     if (g_workingDirectory[strlen(g_workingDirectory) - 1] == '\\')
         g_workingDirectory[strlen(g_workingDirectory) - 1] = 0;
 
+    // --- Time ---
     g_lastUnixEpochTime = time(nullptr);
 
     // --- HWF file ---
@@ -374,15 +375,51 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     gluLookAt(0.0, 50.0, 50.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
     // --- Lighting ---
-    GLfloat light0_ambient[] = {0.25f, 0.25f, 0.25f, 1.0f};
-    GLfloat light0_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat light0_position[] = {15.0f, 75.0f, 5.0f, 1.0f};
-    GLfloat light1_ambient[] = {0.025f, 0.025f, 0.025f, 1.0f};
-    GLfloat light1_diffuse[] = {0.5f, 0.5f, 1.0f, 1.0f};
-    GLfloat light1_position[] = {-25.0f, 5.0f, 25.0f, 1.0f};
-    GLfloat light2_ambient[] = {0.25f, 0.25f, 0.25f, 1.0f};
-    GLfloat light2_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat light2_position[] = {-15.0f, 45.0f, 35.0f, 1.0f};
+    float light0_position[4];
+    float light0_diffuse[4];
+    float light0_ambient[4];
+    float light1_position[4];
+    float light1_diffuse[4];
+    float light1_ambient[4];
+    float light2_position[4];
+    float light2_diffuse[4];
+    float light2_ambient[4];
+    light0_ambient[0] = 0.25;
+    light0_ambient[1] = 0.25;
+    light0_ambient[2] = 0.25;
+    light0_ambient[3] = 1.0;
+    light0_diffuse[0] = 1.0;
+    light0_diffuse[1] = 1.0;
+    light0_diffuse[2] = 1.0;
+    light0_diffuse[3] = 1.0;
+    light0_position[0] = 15.0;
+    light0_position[1] = 75.0;
+    light0_position[2] = 5.0;
+    light0_position[3] = 1.0;
+    light1_ambient[0] = 0.025;
+    light1_ambient[1] = 0.025;
+    light1_ambient[2] = 0.025;
+    light1_ambient[3] = 1.0;
+    light1_diffuse[0] = 0.5;
+    light1_diffuse[1] = 0.5;
+    light1_diffuse[2] = 1.0;
+    light1_diffuse[3] = 1.0;
+    light1_position[0] = -25.0;
+    light1_position[1] = 5.0;
+    light1_position[2] = 25.0;
+    light1_position[3] = 1.0;
+    light2_ambient[0] = 0.25;
+    light2_ambient[1] = 0.25;
+    light2_ambient[2] = 0.25;
+    light2_ambient[3] = 1.0;
+    light2_diffuse[0] = 1.0;
+    light2_diffuse[1] = 1.0;
+    light2_diffuse[2] = 1.0;
+    light2_diffuse[3] = 1.0;
+    light2_position[0] = -15.0;
+    light2_position[1] = 45.0;
+    light2_position[2] = 35.0;
+    light2_position[3] = 1.0;
 
     glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
@@ -399,20 +436,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
     glEnable(GL_LIGHT2);
 
+    // --- Window ---
     g_normalizedWindowScale = g_windowWidth / 1024.0f;
-    g_windowCenterX = g_windowCenter_X;
-    g_windowCenterY = g_windowCenter_Y;
+    g_windowCenterXf = static_cast<float>(g_windowCenter_X);
+    g_windowCenterYf = static_cast<float>(g_windowCenter_Y);
 
-    // --- Model loading ---
+    // --- Percussion ---
     LOAD_MODEL(g_drumSet_Stick_ms3d, "DrumSet_Stick.ms3d");
     LOAD_MODEL(g_cowbell_ms3d, "CowBell.ms3d");
-    LOAD_MODEL(handRight_ms3d, "hand_right.ms3d");
-    LOAD_MODEL(handLeft_ms3d, "hand_left.ms3d");
-    LOAD_MODEL(handTambourine_ms3d, "hand_tamborine.ms3d");
-    LOAD_MODEL(clave_ms3d, "clave.ms3d");
-    LOAD_MODEL(jingleBells_ms3d, "jinglebells.ms3d");
-    LOAD_MODEL(castanets_ms3d, "Castanets.ms3d");
-    LOAD_MODEL(shaker_ms3d, "shaker.ms3d");
+    LOAD_MODEL(g_handRight_ms3d, "hand_right.ms3d");
+    LOAD_MODEL(g_handLeft_ms3d, "hand_left.ms3d");
+    LOAD_MODEL(g_handTambourine_ms3d, "hand_tamborine.ms3d");
+    LOAD_MODEL(g_clave_ms3d, "clave.ms3d");
+    LOAD_MODEL(g_jingleBells_ms3d, "jinglebells.ms3d");
+    LOAD_MODEL(g_castanets_ms3d, "Castanets.ms3d");
+    LOAD_MODEL(g_shaker_ms3d, "shaker.ms3d");
     LOAD_MODEL(g_zapper_ms3d, "Zapper.ms3d");
     LOAD_MODEL(g_zapperLaser_ms3d, "ZapperLaser.ms3d");
     LOAD_MODEL(g_squareShaker_ms3d, "squareshaker.ms3d");
@@ -424,7 +462,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     LOAD_MODEL(g_triangle_ms3d, "Triangle.ms3d");
     LOAD_MODEL(g_mutedTriangle_ms3d, "MutedTriangle.ms3d");
     LOAD_MODEL(g_triangleStick_ms3d, "Triangle_Stick.ms3d");
-    LOAD_MODEL(g_drumSet_Timbale_ms3d, "DrumSet_Timbale.ms3d");
+    LOAD_MODEL(g_drumSet_timbale_ms3d, "DrumSet_Timbale.ms3d");
     LOAD_MODEL(g_drumSet_bongo_ms3d, "DrumSet_Bongo.ms3d");
     LOAD_MODEL(g_drumSet_conga_ms3d, "DrumSet_Conga.ms3d");
     LOAD_MODEL(g_drumSet_bassDrum_ms3d, "DrumSet_BassDrum.ms3d");
@@ -432,11 +470,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     LOAD_MODEL(g_drumSet_tom_ms3d, "DrumSet_Tom.ms3d");
     LOAD_MODEL(g_drumSet_cymbal_ms3d, "DrumSet_Cymbal.ms3d");
     LOAD_MODEL(g_drumSet_chinaCymbal_ms3d, "DrumSet_ChinaCymbal.ms3d");
-    LOAD_MODEL(g_drumSet_BassDrumBeaterArm_ms3d, "DrumSet_BassDrumBeaterArm.ms3d");
-    LOAD_MODEL(g_drumSet_BassDrumBeaterHolder_ms3d, "DrumSet_BassDrumBeaterHolder.ms3d");
-    LOAD_MODEL(g_drumSet_BassDrumPedal_ms3d, "DrumSet_BassDrumPedal.ms3d");
+    LOAD_MODEL(g_drumSet_bassDrumBeaterArm_ms3d, "DrumSet_BassDrumBeaterArm.ms3d");
+    LOAD_MODEL(g_drumSet_bassDrumBeaterHolder_ms3d, "DrumSet_BassDrumBeaterHolder.ms3d");
+    LOAD_MODEL(g_drumSet_bassDrumPedal_ms3d, "DrumSet_BassDrumPedal.ms3d");
 
-    // Harp and strings (chained success checks in original)
+    // --- Harp ---
     LOAD_MODEL(g_harp_ms3d, "Harp.ms3d");
     LOAD_MODEL(g_harpString_ms3d[0], "HarpString.ms3d");
     LOAD_MODEL(g_harpString_ms3d[1], "HarpString.ms3d");
@@ -444,61 +482,106 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     LOAD_MODEL(g_harpString_ms3d[2], "HarpString.ms3d");
     REPLACE_TEX(g_harpString_ms3d[2], "HarpStringWhite.bmp", "HarpStringBlue.bmp");
 
-    static const char* harpPlayingFiles[5] = {
-        "HarpStringPlaying0.ms3d", "HarpStringPlaying1.ms3d", "HarpStringPlaying2.ms3d",
-        "HarpStringPlaying3.ms3d", "HarpStringPlaying4.ms3d"
-    };
-    static const char* harpPlayingTextures[3][2] = {
-        {"HarpStringWhite.bmp", "HarpStringWhitePlaying.bmp"},
-        {"HarpStringWhite.bmp", "HarpStringRedPlaying.bmp"},
-        {"HarpStringWhite.bmp", "HarpStringBluePlaying.bmp"},
-    };
-    for (short c = 0; c < 3; ++c)
-        for (short f = 0; f < 5; ++f) {
-            LOAD_MODEL(g_harpStringPlaying_ms3d[c][f], harpPlayingFiles[f]);
-            REPLACE_TEX(g_harpStringPlaying_ms3d[c][f], harpPlayingTextures[c][0], harpPlayingTextures[c][1]);
-        }
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[0][0], "HarpStringPlaying0.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[0][0], "HarpStringWhite.bmp", "HarpStringWhitePlaying.bmp");
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[1][0], "HarpStringPlaying0.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[1][0], "HarpStringWhite.bmp", "HarpStringRedPlaying.bmp");
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[2][0], "HarpStringPlaying0.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[2][0], "HarpStringWhite.bmp", "HarpStringBluePlaying.bmp");
 
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[0][1], "HarpStringPlaying1.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[0][1], "HarpStringWhite.bmp", "HarpStringWhitePlaying.bmp");
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[1][1], "HarpStringPlaying1.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[1][1], "HarpStringWhite.bmp", "HarpStringRedPlaying.bmp");
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[2][1], "HarpStringPlaying1.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[2][1], "HarpStringWhite.bmp", "HarpStringBluePlaying.bmp");
+
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[0][2], "HarpStringPlaying2.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[0][2], "HarpStringWhite.bmp", "HarpStringWhitePlaying.bmp");
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[1][2], "HarpStringPlaying2.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[1][2], "HarpStringWhite.bmp", "HarpStringRedPlaying.bmp");
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[2][2], "HarpStringPlaying2.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[2][2], "HarpStringWhite.bmp", "HarpStringBluePlaying.bmp");
+
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[0][3], "HarpStringPlaying3.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[0][3], "HarpStringWhite.bmp", "HarpStringWhitePlaying.bmp");
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[1][3], "HarpStringPlaying3.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[1][3], "HarpStringWhite.bmp", "HarpStringRedPlaying.bmp");
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[2][3], "HarpStringPlaying3.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[2][3], "HarpStringWhite.bmp", "HarpStringBluePlaying.bmp");
+
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[0][4], "HarpStringPlaying4.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[0][4], "HarpStringWhite.bmp", "HarpStringWhitePlaying.bmp");
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[1][4], "HarpStringPlaying4.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[1][4], "HarpStringWhite.bmp", "HarpStringRedPlaying.bmp");
+    LOAD_MODEL(g_harpStringPlayingX_ms3d[2][4], "HarpStringPlaying4.ms3d");
+    REPLACE_TEX(g_harpStringPlayingX_ms3d[2][4], "HarpStringWhite.bmp", "HarpStringBluePlaying.bmp");
+
+    // --- Timpani ---
     LOAD_MODEL(g_timpaniBody_ms3d, "TimpaniBody.ms3d");
     LOAD_MODEL(g_timpaniHead_ms3d, "TimpaniHead.ms3d");
+
+    // --- Synth drum ---
     LOAD_MODEL(g_synthDrum_ms3d, "SynthDrum.ms3d");
+
+    // --- Steel drum ---
     LOAD_MODEL(g_steelDrum_ms3d, "SteelDrum.ms3d");
     LOAD_MODEL(g_steelDrumMallet_ms3d, "SteelDrumMallet.ms3d");
+
+    // --- Melodic tom ---
     LOAD_MODEL(g_melodicTom_ms3d, "MelodicTom.ms3d");
+
+    // --- Taiko ---
     LOAD_MODEL(g_taiko_ms3d, "Taiko.ms3d");
     LOAD_MODEL(g_taikoStick_ms3d, "TaikoStick.ms3d");
-    LOAD_MODEL(metronome_ms3d, "MetronomeBox.ms3d");
-    LOAD_MODEL(metronomePendjulum1_ms3d, "MetronomePendjulum1.ms3d");
-    LOAD_MODEL(metronomePendjulum2_ms3d, "MetronomePendjulum2.ms3d");
+
+    // --- Metronome ---
+    LOAD_MODEL(g_metronome_ms3d, "MetronomeBox.ms3d");
+    LOAD_MODEL(g_metronomePendjulum1_ms3d, "MetronomePendjulum1.ms3d");
+    LOAD_MODEL(g_metronomePendjulum2_ms3d, "MetronomePendjulum2.ms3d");
+
+    // --- Music box ---
     LOAD_MODEL(g_musicBoxSpindle_ms3d, "MusicBoxSpindle.ms3d");
     LOAD_MODEL(g_musicBoxPoint_ms3d, "MusicBoxPoint.ms3d");
     LOAD_MODEL(g_musicBoxKey_ms3d, "MusicBoxKey.ms3d");
     LOAD_MODEL(g_musicBoxTopBlade_ms3d, "MusicBoxTopBlade.ms3d");
     LOAD_MODEL(g_musicBoxCase_ms3d, "MusicBoxCase.ms3d");
+
+    // --- Stage/Pizzicato strings ---
     LOAD_MODEL(g_stageStringHolder_ms3d, "StageStringHolder.ms3d");
     LOAD_MODEL(g_pizzicatoStringHolder_ms3d, "PizzicatoStringHolder.ms3d");
     LOAD_MODEL(g_stageStringBow_ms3d, "StageStringBow.ms3d");
     LOAD_MODEL(g_stageString_ms3d, "StageString.ms3d");
 
-    static const char* stageStringBottomFiles[5] = {
-        "StageStringBottom0.ms3d", "StageStringBottom1.ms3d", "StageStringBottom2.ms3d",
-        "StageStringBottom3.ms3d", "StageStringBottom4.ms3d"
-    };
-    for (short i = 0; i < 5; ++i) {
-        LOAD_MODEL(g_stageStringBottomX_ms3d[i], stageStringBottomFiles[i]);
-    }
+    LOAD_MODEL(g_stageStringBottomX_ms3d[0], "StageStringBottom0.ms3d");
+    LOAD_MODEL(g_stageStringBottomX_ms3d[1], "StageStringBottom1.ms3d");
+    LOAD_MODEL(g_stageStringBottomX_ms3d[2], "StageStringBottom2.ms3d");
+    LOAD_MODEL(g_stageStringBottomX_ms3d[3], "StageStringBottom3.ms3d");
+    LOAD_MODEL(g_stageStringBottomX_ms3d[4], "StageStringBottom4.ms3d");
 
-
+    // --- Stage horns ---
     LOAD_MODEL(g_stageHorn_ms3d, "StageHorn.ms3d");
+
+    // --- Whistles ---
     LOAD_MODEL(g_whistle_ms3d, "Whistle.ms3d");
+
+    // --- Pan pipe ---
     LOAD_MODEL(g_panPipe_ms3d, "PanPipe.ms3d");
+
+    // --- Calliope ---
     LOAD_MODEL(g_calliope_ms3d, "PanPipe.ms3d");
     REPLACE_TEX(g_calliope_ms3d, "Wood.bmp", "HornSkin.bmp");
+
+    // --- Harmonica ---
     LOAD_MODEL(g_harmonica_ms3d, "Harmonica.ms3d");
+
+    // --- Pop bottles ---
     LOAD_MODEL(g_popBottle_ms3d, "PopBottle.ms3d");
     LOAD_MODEL(g_popBottleMiddle_ms3d, "PopBottleMiddle.ms3d");
     LOAD_MODEL(g_popBottlePop_ms3d, "PopBottlePop.ms3d");
     LOAD_MODEL(g_popBottleLabel_ms3d, "PopBottleLabel.ms3d");
+
+    // --- Steam clouds ---
     LOAD_MODEL(g_steamCloud_0_ms3d, "SteamCloud.ms3d");
     LOAD_MODEL(g_steamCloud_1_ms3d, "SteamCloud.ms3d");
     REPLACE_TEX(g_steamCloud_1_ms3d, "SteamPuff.bmp", "SteamPuff_Whistle.bmp");
@@ -507,29 +590,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     LOAD_MODEL(g_steamPuff_harmonica_ms3d, "SteamCloud.ms3d");
     REPLACE_TEX(g_steamPuff_harmonica_ms3d, "SteamPuff.bmp", "SteamPuff_Harmonica.bmp");
 
+    // --- String family ---
     LOAD_MODEL(g_violin_ms3d, "Violin.ms3d");
     LOAD_MODEL(g_viola_ms3d, "Violin.ms3d");
     REPLACE_TEX(g_viola_ms3d, "ViolinSkin.bmp", "ViolaSkin.bmp");
     LOAD_MODEL(g_cello_ms3d, "Cello.ms3d");
     LOAD_MODEL(g_doubleBass_ms3d, "DoubleBass.ms3d");
     LOAD_MODEL(g_violinString_ms3d, "ViolinString.ms3d");
-
-    static const char* violinStringPlayedFiles[5] = {
-        "ViolinStringPlayed0.ms3d", "ViolinStringPlayed1.ms3d", "ViolinStringPlayed2.ms3d",
-        "ViolinStringPlayed3.ms3d", "ViolinStringPlayed4.ms3d"
-    };
-    for (short i = 0; i < 5; ++i) {
-        LOAD_MODEL(g_violinStringPlayedX_ms3d[i], violinStringPlayedFiles[i]);
-    }
-
+    LOAD_MODEL(g_violinStringPlayedX_ms3d[0], "ViolinStringPlayed0.ms3d");
+    LOAD_MODEL(g_violinStringPlayedX_ms3d[1], "ViolinStringPlayed1.ms3d");
+    LOAD_MODEL(g_violinStringPlayedX_ms3d[2], "ViolinStringPlayed2.ms3d");
+    LOAD_MODEL(g_violinStringPlayedX_ms3d[3], "ViolinStringPlayed3.ms3d");
+    LOAD_MODEL(g_violinStringPlayedX_ms3d[4], "ViolinStringPlayed4.ms3d");
     LOAD_MODEL(g_violinFinger_ms3d, "ViolinFinger.ms3d");
     LOAD_MODEL(g_violinBow_ms3d, "ViolinBow.ms3d");
 
+    // --- Tubular bells ---
     LOAD_MODEL(g_tubularBell_ms3d, "TubularBell.ms3d");
     LOAD_MODEL(g_tubularBellDark_ms3d, "TubularBellDark.ms3d");
     LOAD_MODEL(g_tubularBellMallet_ms3d, "TubularBellMallet.ms3d");
+
+    // --- Stage choir ---
     LOAD_MODEL(g_stageChoir_ms3d, "StageChoir.ms3d");
 
+    // --- Accordion ---
     LOAD_MODEL(g_accordionKeyWhiteBack_ms3d, "AccordianKeyWhiteBack.ms3d");
     LOAD_MODEL(g_accordionKeyWhiteFront_ms3d, "AccordianKeyWhiteFront.ms3d");
     LOAD_MODEL(g_accordionKeyWhiteBack_Down_ms3d, "AccordianKeyWhiteBack.ms3d");
@@ -543,38 +627,63 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     LOAD_MODEL(g_accordionLeftHand_ms3d, "AccordianLeftHand.ms3d");
     LOAD_MODEL(g_accordionRightHand_ms3d, "AccordianRightHand.ms3d");
 
+    // --- Head-up display ---
     LOAD_MODEL(g_screenGradient_ms3d, "ScreenGradient.ms3d");
     LOAD_MODEL(g_songFillbarBox_ms3d, "SongFillbarBox.ms3d");
     LOAD_MODEL(g_songFillbar_ms3d, "SongFillbar.ms3d");
 
+    // --- Agogos ---
     LOAD_MODEL(g_agogoSingle_ms3d, "AgogoSingle.ms3d");
+
+    // --- Woodblocks ---
     LOAD_MODEL(g_woodBlockSingle_ms3d, "WoodBlockSingle.ms3d");
 
+    // --- Mallets ---
     LOAD_MODEL(g_xylophoneMalletWhite_ms3d, "XylophoneMalletWhite.ms3d");
     LOAD_MODEL(g_malletHitShadow_ms3d, "MalletHitShadow.ms3d");
     LOAD_MODEL(g_xylophoneLegs_ms3d, "XylophoneLegs.ms3d");
     LOAD_MODEL(g_xylophoneCase_ms3d, "XylophoneCase.ms3d");
 
-    static const char* xyloBarTextures[4] = {
-        "XylophoneBar.bmp", "GlockenspielBar.bmp", "VibesBar.bmp", "MarimbaBar.bmp"
-    };
-    for (short i = 0; i < 4; ++i) {
-        g_xylophoneModels[i] = new XylophoneModels();
-    }
-    for (short i = 0; i < 4; ++i) {
-        LOAD_MODEL(g_xylophoneModels[i]->xylophoneWhiteBar, "XylophoneWhiteBar.ms3d");
-        if (i > 0)
-            REPLACE_TEX(g_xylophoneModels[i]->xylophoneWhiteBar, xyloBarTextures[0], xyloBarTextures[i]);
-        LOAD_MODEL(g_xylophoneModels[i]->xylophoneWhiteBarDown, "XylophoneWhiteBarDown.ms3d");
-        if (i > 0)
-            REPLACE_TEX(g_xylophoneModels[i]->xylophoneWhiteBarDown, xyloBarTextures[0], xyloBarTextures[i]);
-        LOAD_MODEL(g_xylophoneModels[i]->xylophoneBlackBar, "XylophoneBlackBar.ms3d");
-        if (i > 0)
-            REPLACE_TEX(g_xylophoneModels[i]->xylophoneBlackBar, xyloBarTextures[0], xyloBarTextures[i]);
-        LOAD_MODEL(g_xylophoneModels[i]->xylophoneBlackBarDown, "XylophoneBlackBarDown.ms3d");
-        if (i > 0)
-            REPLACE_TEX(g_xylophoneModels[i]->xylophoneBlackBarDown, xyloBarTextures[0], xyloBarTextures[i]);
-    }
+    g_xylophoneModels[0] = new XylophoneModels();
+    g_xylophoneModels[1] = new XylophoneModels();
+    g_xylophoneModels[2] = new XylophoneModels();
+    g_xylophoneModels[3] = new XylophoneModels();
+
+    // Variant 0: Xylophone \(\(base texture\)\)
+    LOAD_MODEL(g_xylophoneModels[0]->xylophoneWhiteBar, "XylophoneWhiteBar.ms3d");
+    LOAD_MODEL(g_xylophoneModels[0]->xylophoneWhiteBarDown, "XylophoneWhiteBarDown.ms3d");
+    LOAD_MODEL(g_xylophoneModels[0]->xylophoneBlackBar, "XylophoneBlackBar.ms3d");
+    LOAD_MODEL(g_xylophoneModels[0]->xylophoneBlackBarDown, "XylophoneBlackBarDown.ms3d");
+
+    // Variant 1: Glockenspiel
+    LOAD_MODEL(g_xylophoneModels[1]->xylophoneWhiteBar, "XylophoneWhiteBar.ms3d");
+    REPLACE_TEX(g_xylophoneModels[1]->xylophoneWhiteBar, "XylophoneBar.bmp", "GlockenspielBar.bmp");
+    LOAD_MODEL(g_xylophoneModels[1]->xylophoneWhiteBarDown, "XylophoneWhiteBarDown.ms3d");
+    REPLACE_TEX(g_xylophoneModels[1]->xylophoneWhiteBarDown, "XylophoneBar.bmp", "GlockenspielBar.bmp");
+    LOAD_MODEL(g_xylophoneModels[1]->xylophoneBlackBar, "XylophoneBlackBar.ms3d");
+    REPLACE_TEX(g_xylophoneModels[1]->xylophoneBlackBar, "XylophoneBar.bmp", "GlockenspielBar.bmp");
+    LOAD_MODEL(g_xylophoneModels[1]->xylophoneBlackBarDown, "XylophoneBlackBarDown.ms3d");
+    REPLACE_TEX(g_xylophoneModels[1]->xylophoneBlackBarDown, "XylophoneBar.bmp", "GlockenspielBar.bmp");
+
+    // Variant 2: Vibes
+    LOAD_MODEL(g_xylophoneModels[2]->xylophoneWhiteBar, "XylophoneWhiteBar.ms3d");
+    REPLACE_TEX(g_xylophoneModels[2]->xylophoneWhiteBar, "XylophoneBar.bmp", "VibesBar.bmp");
+    LOAD_MODEL(g_xylophoneModels[2]->xylophoneWhiteBarDown, "XylophoneWhiteBarDown.ms3d");
+    REPLACE_TEX(g_xylophoneModels[2]->xylophoneWhiteBarDown, "XylophoneBar.bmp", "VibesBar.bmp");
+    LOAD_MODEL(g_xylophoneModels[2]->xylophoneBlackBar, "XylophoneBlackBar.ms3d");
+    REPLACE_TEX(g_xylophoneModels[2]->xylophoneBlackBar, "XylophoneBar.bmp", "VibesBar.bmp");
+    LOAD_MODEL(g_xylophoneModels[2]->xylophoneBlackBarDown, "XylophoneBlackBarDown.ms3d");
+    REPLACE_TEX(g_xylophoneModels[2]->xylophoneBlackBarDown, "XylophoneBar.bmp", "VibesBar.bmp");
+
+    // Variant 3: Marimba
+    LOAD_MODEL(g_xylophoneModels[3]->xylophoneWhiteBar, "XylophoneWhiteBar.ms3d");
+    REPLACE_TEX(g_xylophoneModels[3]->xylophoneWhiteBar, "XylophoneBar.bmp", "MarimbaBar.bmp");
+    LOAD_MODEL(g_xylophoneModels[3]->xylophoneWhiteBarDown, "XylophoneWhiteBarDown.ms3d");
+    REPLACE_TEX(g_xylophoneModels[3]->xylophoneWhiteBarDown, "XylophoneBar.bmp", "MarimbaBar.bmp");
+    LOAD_MODEL(g_xylophoneModels[3]->xylophoneBlackBar, "XylophoneBlackBar.ms3d");
+    REPLACE_TEX(g_xylophoneModels[3]->xylophoneBlackBar, "XylophoneBar.bmp", "MarimbaBar.bmp");
+    LOAD_MODEL(g_xylophoneModels[3]->xylophoneBlackBarDown, "XylophoneBlackBarDown.ms3d");
+    REPLACE_TEX(g_xylophoneModels[3]->xylophoneBlackBarDown, "XylophoneBar.bmp", "MarimbaBar.bmp");
 
     LOAD_MODEL(g_baritoneSaxBody_ms3d, "BaritoneSaxBody.ms3d");
     LOAD_MODEL(g_baritoneSaxHorn_ms3d, "BaritoneSaxHorn.ms3d");
@@ -735,13 +844,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // --- ApplyTextures pass ---
     APPLY_TEX(g_drumSet_Stick_ms3d);
     APPLY_TEX(g_cowbell_ms3d);
-    APPLY_TEX(handRight_ms3d);
-    APPLY_TEX(handLeft_ms3d);
-    APPLY_TEX(handTambourine_ms3d);
-    APPLY_TEX(clave_ms3d);
-    APPLY_TEX(castanets_ms3d);
-    APPLY_TEX(jingleBells_ms3d);
-    APPLY_TEX(shaker_ms3d);
+    APPLY_TEX(g_handRight_ms3d);
+    APPLY_TEX(g_handLeft_ms3d);
+    APPLY_TEX(g_handTambourine_ms3d);
+    APPLY_TEX(g_clave_ms3d);
+    APPLY_TEX(g_castanets_ms3d);
+    APPLY_TEX(g_jingleBells_ms3d);
+    APPLY_TEX(g_shaker_ms3d);
     APPLY_TEX(g_zapper_ms3d);
     APPLY_TEX(g_zapperLaser_ms3d);
     APPLY_TEX(g_squareShaker_ms3d);
@@ -753,7 +862,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(g_triangle_ms3d);
     APPLY_TEX(g_mutedTriangle_ms3d);
     APPLY_TEX(g_triangleStick_ms3d);
-    APPLY_TEX(g_drumSet_Timbale_ms3d);
+    APPLY_TEX(g_drumSet_timbale_ms3d);
     APPLY_TEX(g_drumSet_bongo_ms3d);
     APPLY_TEX(g_drumSet_conga_ms3d);
     APPLY_TEX(g_drumSet_bassDrum_ms3d);
@@ -761,14 +870,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(g_drumSet_tom_ms3d);
     APPLY_TEX(g_drumSet_cymbal_ms3d);
     APPLY_TEX(g_drumSet_chinaCymbal_ms3d);
-    APPLY_TEX(g_drumSet_BassDrumBeaterArm_ms3d);
-    APPLY_TEX(g_drumSet_BassDrumBeaterHolder_ms3d);
-    APPLY_TEX(g_drumSet_BassDrumPedal_ms3d);
+    APPLY_TEX(g_drumSet_bassDrumBeaterArm_ms3d);
+    APPLY_TEX(g_drumSet_bassDrumBeaterHolder_ms3d);
+    APPLY_TEX(g_drumSet_bassDrumPedal_ms3d);
     APPLY_TEX(g_harp_ms3d);
     for (short i = 0; i < 3; ++i) {
         APPLY_TEX(g_harpString_ms3d[i]);
         for (short k = 0; k < 5; ++k)
-            APPLY_TEX(g_harpStringPlaying_ms3d[i][k]);
+            APPLY_TEX(g_harpStringPlayingX_ms3d[i][k]);
     }
     APPLY_TEX(g_timpaniBody_ms3d);
     APPLY_TEX(g_timpaniHead_ms3d);
@@ -778,9 +887,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     APPLY_TEX(g_melodicTom_ms3d);
     APPLY_TEX(g_taiko_ms3d);
     APPLY_TEX(g_taikoStick_ms3d);
-    APPLY_TEX(metronome_ms3d);
-    APPLY_TEX(metronomePendjulum1_ms3d);
-    APPLY_TEX(metronomePendjulum2_ms3d);
+    APPLY_TEX(g_metronome_ms3d);
+    APPLY_TEX(g_metronomePendjulum1_ms3d);
+    APPLY_TEX(g_metronomePendjulum2_ms3d);
     APPLY_TEX(g_musicBoxSpindle_ms3d);
     APPLY_TEX(g_musicBoxPoint_ms3d);
     APPLY_TEX(g_musicBoxKey_ms3d);

@@ -89,8 +89,8 @@ MMRESULT g_timerEventId = 0;
 // ---------------------------------------------------------------------------
 int g_windowWidth = 0;
 float g_normalizedWindowScale = 0.0f;
-int g_windowCenterX = 0;
-int g_windowCenterY = 0;
+float g_windowCenterXf = 0;
+float g_windowCenterYf = 0;
 
 // ---------------------------------------------------------------------------
 // Key / input state
@@ -254,13 +254,13 @@ Ms3dBundle* g_drumShadow_ms3d = nullptr;
 // Drum set
 Ms3dBundle* g_drumSet_Stick_ms3d = nullptr;
 Ms3dBundle* g_cowbell_ms3d = nullptr;
-Ms3dBundle* handRight_ms3d = nullptr;
-Ms3dBundle* handLeft_ms3d = nullptr;
-Ms3dBundle* handTambourine_ms3d = nullptr;
-Ms3dBundle* clave_ms3d = nullptr;
-Ms3dBundle* jingleBells_ms3d = nullptr;
-Ms3dBundle* castanets_ms3d = nullptr;
-Ms3dBundle* shaker_ms3d = nullptr;
+Ms3dBundle* g_handRight_ms3d = nullptr;
+Ms3dBundle* g_handLeft_ms3d = nullptr;
+Ms3dBundle* g_handTambourine_ms3d = nullptr;
+Ms3dBundle* g_clave_ms3d = nullptr;
+Ms3dBundle* g_jingleBells_ms3d = nullptr;
+Ms3dBundle* g_castanets_ms3d = nullptr;
+Ms3dBundle* g_shaker_ms3d = nullptr;
 Ms3dBundle* g_zapper_ms3d = nullptr;
 Ms3dBundle* g_zapperLaser_ms3d = nullptr;
 Ms3dBundle* g_squareShaker_ms3d = nullptr;
@@ -272,7 +272,7 @@ Ms3dBundle* g_woodBlockLow_ms3d = nullptr;
 Ms3dBundle* g_triangle_ms3d = nullptr;
 Ms3dBundle* g_mutedTriangle_ms3d = nullptr;
 Ms3dBundle* g_triangleStick_ms3d = nullptr;
-Ms3dBundle* g_drumSet_Timbale_ms3d = nullptr;
+Ms3dBundle* g_drumSet_timbale_ms3d = nullptr;
 Ms3dBundle* g_drumSet_bongo_ms3d = nullptr;
 Ms3dBundle* g_drumSet_conga_ms3d = nullptr;
 Ms3dBundle* g_drumSet_bassDrum_ms3d = nullptr;
@@ -280,14 +280,14 @@ Ms3dBundle* g_drumSet_snareDrum_ms3d = nullptr;
 Ms3dBundle* g_drumSet_tom_ms3d = nullptr;
 Ms3dBundle* g_drumSet_cymbal_ms3d = nullptr;
 Ms3dBundle* g_drumSet_chinaCymbal_ms3d = nullptr;
-Ms3dBundle* g_drumSet_BassDrumBeaterArm_ms3d = nullptr;
-Ms3dBundle* g_drumSet_BassDrumBeaterHolder_ms3d = nullptr;
-Ms3dBundle* g_drumSet_BassDrumPedal_ms3d = nullptr;
+Ms3dBundle* g_drumSet_bassDrumBeaterArm_ms3d = nullptr;
+Ms3dBundle* g_drumSet_bassDrumBeaterHolder_ms3d = nullptr;
+Ms3dBundle* g_drumSet_bassDrumPedal_ms3d = nullptr;
 
 // Percussion / melodic drums
-Ms3dBundle* metronome_ms3d = nullptr;
-Ms3dBundle* metronomePendjulum1_ms3d = nullptr;
-Ms3dBundle* metronomePendjulum2_ms3d = nullptr;
+Ms3dBundle* g_metronome_ms3d = nullptr;
+Ms3dBundle* g_metronomePendjulum1_ms3d = nullptr;
+Ms3dBundle* g_metronomePendjulum2_ms3d = nullptr;
 
 // Strings / winds
 Ms3dBundle* g_steamCloud_0_ms3d = nullptr;

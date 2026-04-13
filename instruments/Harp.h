@@ -43,7 +43,7 @@ extern float g_harpStringZ[47];
 extern float g_harpStringScale[47];
 extern Ms3dBundle* g_harp_ms3d;
 extern Ms3dBundle* g_harpString_ms3d[3];
-extern Ms3dBundle* g_harpStringPlaying_ms3d[3][5];
+extern Ms3dBundle* g_harpStringPlayingX_ms3d[3][5];
 extern Ms3dBundle* g_harpShadow_ms3d;
 
 // ---------------------------------------------------------------------------

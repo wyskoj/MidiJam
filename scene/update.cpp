@@ -197,13 +197,13 @@ extern short g_mouseWheelDelta;
 // PERCUSSION MODELS //
 extern Ms3dBundle* g_drumSet_Stick_ms3d;
 extern Ms3dBundle* g_cowbell_ms3d;
-extern Ms3dBundle* handRight_ms3d;
-extern Ms3dBundle* handLeft_ms3d;
-extern Ms3dBundle* handTambourine_ms3d;
-extern Ms3dBundle* clave_ms3d;
-extern Ms3dBundle* jingleBells_ms3d;
-extern Ms3dBundle* castanets_ms3d;
-extern Ms3dBundle* shaker_ms3d;
+extern Ms3dBundle* g_handRight_ms3d;
+extern Ms3dBundle* g_handLeft_ms3d;
+extern Ms3dBundle* g_handTambourine_ms3d;
+extern Ms3dBundle* g_clave_ms3d;
+extern Ms3dBundle* g_jingleBells_ms3d;
+extern Ms3dBundle* g_castanets_ms3d;
+extern Ms3dBundle* g_shaker_ms3d;
 extern Ms3dBundle* g_zapper_ms3d;
 extern Ms3dBundle* g_zapperLaser_ms3d;
 extern Ms3dBundle* g_squareShaker_ms3d;
@@ -215,7 +215,7 @@ extern Ms3dBundle* g_woodBlockLow_ms3d;
 extern Ms3dBundle* g_triangle_ms3d;
 extern Ms3dBundle* g_mutedTriangle_ms3d;
 extern Ms3dBundle* g_triangleStick_ms3d;
-extern Ms3dBundle* g_drumSet_Timbale_ms3d;
+extern Ms3dBundle* g_drumSet_timbale_ms3d;
 extern Ms3dBundle* g_drumSet_bongo_ms3d;
 extern Ms3dBundle* g_drumSet_conga_ms3d;
 extern Ms3dBundle* g_drumSet_bassDrum_ms3d;
@@ -223,12 +223,12 @@ extern Ms3dBundle* g_drumSet_snareDrum_ms3d;
 extern Ms3dBundle* g_drumSet_tom_ms3d;
 extern Ms3dBundle* g_drumSet_cymbal_ms3d;
 extern Ms3dBundle* g_drumSet_chinaCymbal_ms3d;
-extern Ms3dBundle* g_drumSet_BassDrumBeaterArm_ms3d;
-extern Ms3dBundle* g_drumSet_BassDrumBeaterHolder_ms3d;
-extern Ms3dBundle* g_drumSet_BassDrumPedal_ms3d;
-extern Ms3dBundle* metronome_ms3d;
-extern Ms3dBundle* metronomePendjulum1_ms3d;
-extern Ms3dBundle* metronomePendjulum2_ms3d;
+extern Ms3dBundle* g_drumSet_bassDrumBeaterArm_ms3d;
+extern Ms3dBundle* g_drumSet_bassDrumBeaterHolder_ms3d;
+extern Ms3dBundle* g_drumSet_bassDrumPedal_ms3d;
+extern Ms3dBundle* g_metronome_ms3d;
+extern Ms3dBundle* g_metronomePendjulum1_ms3d;
+extern Ms3dBundle* g_metronomePendjulum2_ms3d;
 
 extern DS_Particles g_particles[2];
 extern Ms3dBundle* g_steamCloud_0_ms3d;
@@ -1221,16 +1221,16 @@ void RenderPercussion() {
     glPushMatrix();
     glTranslatef(0.0, 5.5650001, 3.618);
     glRotatef(g_recoil_bassDrumArm, 1.0, 0.0, 0.0);
-    g_drumSet_BassDrumBeaterArm_ms3d->RenderModel();
+    g_drumSet_bassDrumBeaterArm_ms3d->RenderModel();
     glPopMatrix();
     glPushMatrix();
     glTranslatef(0.0, 0.0, 2.3);
-    g_drumSet_BassDrumBeaterHolder_ms3d->RenderModel();
+    g_drumSet_bassDrumBeaterHolder_ms3d->RenderModel();
     glPopMatrix();
     glTranslatef(0.0, 0.477, 9.8540001);
     angle_bassDrumArm = g_recoil_bassDrumArm / 45.0 * 16.0;
     glRotatef(angle_bassDrumArm, 1.0, 0.0, 0.0);
-    g_drumSet_BassDrumPedal_ms3d->RenderModel();
+    g_drumSet_bassDrumPedal_ms3d->RenderModel();
     glPopMatrix();
     glPushMatrix();
     recoil_bassDrum = -g_recoil_bassdrum;
@@ -1276,7 +1276,7 @@ void RenderPercussion() {
         glTranslatef(0.0, yd, 0.0);
         glPushMatrix();
         glScalef(0.75, 0.75, 0.75); // make hi timable smaller
-        g_drumSet_Timbale_ms3d->RenderModel();
+        g_drumSet_timbale_ms3d->RenderModel();
         glPopMatrix();
         glRotatef(-18.75, 0.0, 1.0, 0.0);
         UpdatePercussionStriker(HIGH_TIMBALE, g_recoil_timbale_hi, 3.0, g_drumSet_Stick_ms3d, 0, 0.0);
@@ -1289,7 +1289,7 @@ void RenderPercussion() {
         ye = -g_recoil_timbale_lo;
         glTranslatef(0.0, ye, 0.0);
         glPushMatrix();
-        g_drumSet_Timbale_ms3d->RenderModel();
+        g_drumSet_timbale_ms3d->RenderModel();
         glPopMatrix();
         glRotatef(-18.75, 0.0, 1.0, 0.0);
         UpdatePercussionStriker(LOW_TIMBALE, g_recoil_timbale_lo, 3.0, g_drumSet_Stick_ms3d, 0, 0.0);
@@ -1371,7 +1371,7 @@ void RenderPercussion() {
         glPopMatrix();
         glRotatef(-37.5, 0.0, 1.0, 0.0);
         glTranslatef(0.0, 0.0, -6.0);
-        UpdatePercussionStriker(HIGH_BONGO, g_recoil_bongo_hi, 0.0, handLeft_ms3d, 0, 0.0);
+        UpdatePercussionStriker(HIGH_BONGO, g_recoil_bongo_hi, 0.0, g_handLeft_ms3d, 0, 0.0);
         glPopMatrix();
         glPushMatrix();
         glTranslatef(-37.5, 40.0, 22.0);
@@ -1385,7 +1385,7 @@ void RenderPercussion() {
         glPopMatrix();
         glRotatef(-18.75, 0.0, 1.0, 0.0);
         glTranslatef(0.0, 0.0, -6.0);
-        UpdatePercussionStriker(LOW_BONGO, g_recoil_bongo_lo, 0.0, handRight_ms3d, 0, 0.0);
+        UpdatePercussionStriker(LOW_BONGO, g_recoil_bongo_lo, 0.0, g_handRight_ms3d, 0, 0.0);
         glPopMatrix();
     }
     // CONGAS
@@ -1409,12 +1409,12 @@ void RenderPercussion() {
         glPushMatrix();
         glRotatef(-18.75, 0.0, 1.0, 0.0);
         glTranslatef(0.0, 0.0, -6.0);
-        UpdatePercussionStriker(OPEN_HIGH_CONGA, g_recoil_conga_high_open, 0.0, handLeft_ms3d, 0, 0.0);
+        UpdatePercussionStriker(OPEN_HIGH_CONGA, g_recoil_conga_high_open, 0.0, g_handLeft_ms3d, 0, 0.0);
         glPopMatrix();
         glPushMatrix();
         glRotatef(-9.375, 0.0, 1.0, 0.0);
         glTranslatef(-3.0, 0.0, -12.0);
-        UpdatePercussionStriker(MUTE_HIGH_CONGA, g_recoil_conga_high_mute, 0.0, handLeft_ms3d, 0, 0.0);
+        UpdatePercussionStriker(MUTE_HIGH_CONGA, g_recoil_conga_high_mute, 0.0, g_handLeft_ms3d, 0, 0.0);
         glPopMatrix();
         glPopMatrix();
         glPushMatrix();
@@ -1429,7 +1429,7 @@ void RenderPercussion() {
         glPopMatrix();
         glRotatef(-18.75, 0.0, 1.0, 0.0);
         glTranslatef(0.0, 0.0, -6.0);
-        UpdatePercussionStriker(LOW_CONGA, g_recoil_conga_low, 0.0, handRight_ms3d, 0, 0.0);
+        UpdatePercussionStriker(LOW_CONGA, g_recoil_conga_low, 0.0, g_handRight_ms3d, 0, 0.0);
         glPopMatrix();
     }
     // CLAP
@@ -1439,13 +1439,13 @@ void RenderPercussion() {
         glRotatef(-30.0, 1.0, 0.0, 0.0);
         glRotatef(90.0, 1.0, 0.0, 0.0);
         glRotatef(90.0, 0.0, 0.0, 1.0);
-        UpdatePercussionStriker(HAND_CLAP, g_recoil_clap_hand_l, 0.0, handLeft_ms3d, 0, 0.0);
+        UpdatePercussionStriker(HAND_CLAP, g_recoil_clap_hand_l, 0.0, g_handLeft_ms3d, 0, 0.0);
         glPopMatrix();
         glPushMatrix();
         glTranslatef(0.0, 45.5, 20.0);
         glRotatef(15.0, 1.0, 0.0, 0.0);
         glRotatef(-90.0, 0.0, 0.0, 1.0);
-        UpdatePercussionStriker(HAND_CLAP, g_recoil_clap_hand_r, 0.0, handRight_ms3d, 0, 0.0);
+        UpdatePercussionStriker(HAND_CLAP, g_recoil_clap_hand_r, 0.0, g_handRight_ms3d, 0, 0.0);
         glPopMatrix();
     }
     // TAMBOURINE
@@ -1455,13 +1455,13 @@ void RenderPercussion() {
         glRotatef(-30.0, 1.0, 0.0, 0.0);
         glRotatef(90.0, 1.0, 0.0, 0.0);
         glRotatef(90.0, 0.0, 0.0, 1.0);
-        UpdatePercussionStriker(TAMBOURINE, g_recoil_tambourine, 0.0, handTambourine_ms3d, 0, 0.0);
+        UpdatePercussionStriker(TAMBOURINE, g_recoil_tambourine, 0.0, g_handTambourine_ms3d, 0, 0.0);
         glPopMatrix();
         glPushMatrix();
         glTranslatef(10.0, 45.5, 20.0);
         glRotatef(15.0, 1.0, 0.0, 0.0);
         glRotatef(-90.0, 0.0, 0.0, 1.0);
-        UpdatePercussionStriker(TAMBOURINE, g_recoil_tambourine_hand, 0.0, handRight_ms3d, 0, 0.0);
+        UpdatePercussionStriker(TAMBOURINE, g_recoil_tambourine_hand, 0.0, g_handRight_ms3d, 0, 0.0);
         glPopMatrix();
     }
     // CLAVES
@@ -1471,13 +1471,13 @@ void RenderPercussion() {
         glRotatef(-30.0, 1.0, 0.0, 0.0);
         glRotatef(90.0, 1.0, 0.0, 0.0);
         glRotatef(90.0, 0.0, 0.0, 1.0);
-        UpdatePercussionStriker(CLAVES, g_recoil_clave_l, 0.0, clave_ms3d, 1, 0.0);
+        UpdatePercussionStriker(CLAVES, g_recoil_clave_l, 0.0, g_clave_ms3d, 1, 0.0);
         glPopMatrix();
         glPushMatrix();
         glTranslatef(-10.0, 45.5, 20.0);
         glRotatef(15.0, 1.0, 0.0, 0.0);
         glRotatef(-90.0, 0.0, 0.0, 1.0);
-        UpdatePercussionStriker(CLAVES, g_recoil_clave_l, 0.0, clave_ms3d, 1, 0.0);
+        UpdatePercussionStriker(CLAVES, g_recoil_clave_l, 0.0, g_clave_ms3d, 1, 0.0);
         glPopMatrix();
     }
     //  -- STICKS --
@@ -1501,7 +1501,7 @@ void RenderPercussion() {
         glPushMatrix();
         glTranslatef(12.0, 42.5, 25.0);
         glRotatef(-25.0, 0.0, 0.0, 1.0);
-        UpdatePercussionStriker(SHAKER, g_recoil_shaker, 1.0, shaker_ms3d, 0, 0.0);
+        UpdatePercussionStriker(SHAKER, g_recoil_shaker, 1.0, g_shaker_ms3d, 0, 0.0);
         glPopMatrix();
     }
     //  -- JINGLE BELL --
@@ -1510,7 +1510,7 @@ void RenderPercussion() {
         glTranslatef(17.5, 52.5, 15.0);
         glRotatef(45.0, 1.0, 0.0, 0.0);
         glRotatef(-45.0, 0.0, 1.0, 0.0);
-        UpdatePercussionStriker(JINGLE_BELL, g_recoil_jingleBell, 1.0, jingleBells_ms3d, 0, 0.0);
+        UpdatePercussionStriker(JINGLE_BELL, g_recoil_jingleBell, 1.0, g_jingleBells_ms3d, 0, 0.0);
         glPopMatrix();
     }
     //  -- CASTANETS --
@@ -1518,13 +1518,13 @@ void RenderPercussion() {
         glPushMatrix();
         glTranslatef(27.5, 42.5, 15.0);
         glRotatef(-55.0, 0.0, 1.0, 0.0);
-        UpdatePercussionStriker(CASTANETS, g_recoil_castanets, 1.0, castanets_ms3d, 0, 0.0);
+        UpdatePercussionStriker(CASTANETS, g_recoil_castanets, 1.0, g_castanets_ms3d, 0, 0.0);
         glPopMatrix();
         glPushMatrix();
         glTranslatef(27.5, 44.0, 15.0);
         glRotatef(-55.0, 0.0, 1.0, 0.0);
         glRotatef(180.0, 0.0, 0.0, 1.0);
-        UpdatePercussionStriker(CASTANETS, g_recoil_castanets, 1.0, castanets_ms3d, 0, 0.0);
+        UpdatePercussionStriker(CASTANETS, g_recoil_castanets, 1.0, g_castanets_ms3d, 0, 0.0);
         glPopMatrix();
     }
     //  -- HIGH Q --
@@ -1542,7 +1542,7 @@ void RenderPercussion() {
         glPushMatrix();
         glTranslatef(-20.0, 0.0, 35.0);
         glRotatef(23.0, 0.0, 1.0, 0.0);
-        metronome_ms3d->RenderModel();
+        g_metronome_ms3d->RenderModel();
         // First pendulum (METRONOME CLICK)
         glPushMatrix();
         glTranslatef(0.0, 1.0, 1.0);
@@ -1558,7 +1558,7 @@ void RenderPercussion() {
         else
             anglec = 23.0 * clickSwingAmount;
         glRotatef(anglec, 0.0, 0.0, 1.0);
-        metronomePendjulum1_ms3d->RenderModelShiny();
+        g_metronomePendjulum1_ms3d->RenderModelShiny();
         glPopMatrix();
         // Second pendulum (METRONOME BELL)
         glPushMatrix();
@@ -1575,7 +1575,7 @@ void RenderPercussion() {
         else
             angle = 23.0 * bellSwingAmount;
         glRotatef(angle, 0.0, 0.0, 1.0);
-        metronomePendjulum2_ms3d->RenderModelShiny();
+        g_metronomePendjulum2_ms3d->RenderModelShiny();
         glPopMatrix();
         glPopMatrix();
     }
