@@ -6,6 +6,8 @@
 
 #include <cstdlib>
 
+#include "instruments/Bass.h"
+#include "instruments/Guitar.h"
 #include "instruments/Piano.h"
 
 CameraPosition CAMERA_POSITIONS[11] = {
@@ -30,43 +32,50 @@ int g_autoCameraIsActive = 1;
 CameraAngle g_targetCameraAngle = CAMERA_1A;
 CameraAngle g_lastCameraAngle;
 
+extern int g_show_percussion;
+extern int g_percussion_time_queue[88][32];
+
 // FUNCTION: MIDIJAM 0x4236A0
 void TriggerAutoCam() {
+    int rand; // eax
+    short x; // [esp+0h] [ebp-20h]
+    __int16 i; // [esp+4h] [ebp-1Ch]
+    short viableAngles[12]; // [esp+8h] [ebp-18h]
+
     if (g_autoCameraIsActive && g_autoCamIsIdle) {
-        short viableAngles[12];
-        short angle = CAMERA_1A;
-        for (__int16 i = 0; i < 11; ++i) {
+        x = 0;
+        for (i = 0; i < 11; ++i) {
             if (g_targetCameraAngle != i && g_lastCameraAngle != i) {
                 switch (i) {
                     case CAMERA_2A:
                     case CAMERA_2B:
                         if (IsCameraAngleViable_2())
-                            viableAngles[angle++] = i;
+                            viableAngles[x++] = i;
                         break;
                     case CAMERA_3A:
                     case CAMERA_3B:
                         if (IsCameraAngleViable_3())
-                            viableAngles[angle++] = i;
+                            viableAngles[x++] = i;
                         break;
                     case CAMERA_4A:
                     case CAMERA_4B:
                         if (IsCameraAngleViable_4() == 1)
-                            viableAngles[angle++] = i;
+                            viableAngles[x++] = i;
                         break;
                     case CAMERA_6:
                         if (IsCameraAngleViable_6() == 1)
-                            viableAngles[angle++] = i;
+                            viableAngles[x++] = i;
                         break;
                     default:
                         // Angles 1A, 1B, 1C, and 5 are always viable
-                        viableAngles[angle++] = i;
+                        viableAngles[x++] = i;
                         break;
                 }
             }
         }
-        if (angle > CAMERA_1A) {
-            const int rand = ::rand();
-            MoveCameraToAngle(static_cast<CameraAngle>(viableAngles[angle * rand / 32768]), 1);
+        if (x > CAMERA_1A) {
+            rand = ::rand();
+            MoveCameraToAngle(static_cast<CameraAngle>(viableAngles[x * rand / 32768]), 1);
         }
     }
 }
@@ -107,18 +116,65 @@ bool IsCameraAngleViable_2() {
     return FALSE;
 }
 
+// FUNCTION: MIDIJAM 0x423950
 bool IsCameraAngleViable_3() {
-    return false; // TODO
+    __int16 j; // [esp+0h] [ebp-8h]
+    __int16 i; // [esp+4h] [ebp-4h]
+
+    if (g_show_percussion == 1) {
+        for (i = 0; i < 88; ++i) {
+            for (j = 0; j < 32; ++j) {
+                if (g_percussion_time_queue[i][j] > 0)
+                    return TRUE;
+            }
+        }
+    }
+    return FALSE;
 }
 
+// FUNCTION: MIDIJAM 0x423AA0
 bool IsCameraAngleViable_4() {
-    return false; // TODO
+    __int16 i; // [esp+0h] [ebp-10h]
+    __int16 k; // [esp+4h] [ebp-Ch]
+    __int16 j; // [esp+8h] [ebp-8h]
+
+    if (g_bass) {
+        for (i = 0; i < g_bassCount; ++i) {
+            if (g_bass[i].isActive == 1) {
+                for (j = 0; j < 88; ++j) {
+                    for (k = 0; k < 16; ++k) {
+                        if (g_bass[i].field_18CC[j][k] > 0)
+                            return 1;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
 }
 
-bool IsCameraAngleViable_5() {
-    return false; // TODO
-}
-
+// FUNCTION: MIDIJAM 0x423B70
 bool IsCameraAngleViable_6() {
-    return false; // TODO
+    __int16 i; // [esp+0h] [ebp-10h]
+    __int16 k; // [esp+4h] [ebp-Ch]
+    __int16 j; // [esp+8h] [ebp-8h]
+
+    if ( g_guitar )
+    {
+        for ( i = 0; i < g_guitarCount; ++i )
+        {
+            if ( g_guitar[i].isActive == 1 )
+            {
+                for ( j = 0; j < 88; ++j )
+                {
+                    for ( k = 0; k < 16; ++k )
+                    {
+                        if ( g_guitar[i].field_18D2[j][k] > 0 )
+                            return 1;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
 }

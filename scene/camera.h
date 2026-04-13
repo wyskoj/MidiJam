@@ -49,7 +49,6 @@ void MoveCameraToAngle(CameraAngle angle, short isAutocamEnabled);
 bool IsCameraAngleViable_2();
 bool IsCameraAngleViable_3();
 bool IsCameraAngleViable_4();
-bool IsCameraAngleViable_5();
 bool IsCameraAngleViable_6();
 
 #endif //MIDIJAM_CAMERA_H
