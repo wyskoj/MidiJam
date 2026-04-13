@@ -20,6 +20,7 @@ extern int g_vibratingString_frame;
 extern short g_doubleBass_playingStyle[300];
 extern float flt_4679E0[49];
 
+// FUNCTION: MIDIJAM 0x411480
 void RenderDoubleBass() {
     GLfloat x;
     GLfloat z;
@@ -179,6 +180,7 @@ void RenderDoubleBass() {
     SetTextureState(v12);
 }
 
+// FUNCTION: MIDIJAM 0x427540
 bool UpdateDoubleBass(MUSIC_TIME pmtNow) {
     __int16 jj;
     __int16 v3;

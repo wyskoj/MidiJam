@@ -13,6 +13,7 @@ Ms3dBundle* g_agogoSingle_ms3d;
 extern Ms3dBundle* g_drumSet_Stick_ms3d;
 extern float MAX_RECOIL;
 
+// FUNCTION: MIDIJAM 0x407AE0
 void RenderAgogos() {
     double v0; // st7
     double v1; // st7
@@ -76,6 +77,7 @@ void RenderAgogos() {
     glPopMatrix();
 }
 
+// FUNCTION: MIDIJAM 0x42D270
 bool UpdateAgogos(MUSIC_TIME pmtNow) {
     int v2; // [esp+8h] [ebp-1Ch]
     float v3; // [esp+Ch] [ebp-18h]

@@ -16,6 +16,7 @@ Ms3dBundle* g_stageStringBow_ms3d;
 Ms3dBundle* g_stageString_ms3d;
 Ms3dBundle* g_stageStringBottomX_ms3d[5];
 
+// FUNCTION: MIDIJAM 0x40C140
 void RenderStageString() {
     GLfloat angle; // [esp+0h] [ebp-2Ch]
     GLfloat y; // [esp+8h] [ebp-24h]
@@ -66,6 +67,7 @@ void RenderStageString() {
     glPopMatrix();
 }
 
+// FUNCTION: MIDIJAM 0x4374F0
 bool UpdateStageString(MUSIC_TIME pmtNow) {
     __int16 v2; // [esp+4h] [ebp-14h]
     __int16 i; // [esp+8h] [ebp-10h]

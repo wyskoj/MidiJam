@@ -23,7 +23,7 @@ GLuint LoadTextureFromHwf(
 
 void OnFailLoadMilkshape(const char* modelName);
 
-// FUNCTION: MIDIJAM 0x43A130
+// FUNCTION: MIDIJAM 0x438EC0
 Ms3dBundle::Ms3dBundle() {
     nGroups = 0;
     pGroups = nullptr;
@@ -100,6 +100,10 @@ void Ms3dBundle::Deconstruct() {
         pAnimationController->Destroy();
         pAnimationController = nullptr;
     }
+}
+
+// FUNCTION: MIDIJAM 0x43A130
+void Ms3dBundle::Init() {
 }
 
 // FUNCTION: MIDIJAM 0x439FC0

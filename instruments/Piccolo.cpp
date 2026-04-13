@@ -15,7 +15,7 @@ extern MUSIC_TIME g_currentGlobalTime;
 extern Ms3dBundle* g_steamCloud_0_ms3d;
 extern int g_currentTempo_scaleFactor1_15;
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x40AD00
 void RenderPiccolo() {
     double v0; // st7
   GLfloat x; // [esp+0h] [ebp-4Ch]
@@ -113,7 +113,7 @@ void RenderPiccolo() {
   glPopMatrix();
 }
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x4312E0
 bool UpdatePiccolo(MUSIC_TIME pmtNow) {
     __int16 v2; // [esp+14h] [ebp-20h]
   __int16 v3; // [esp+18h] [ebp-1Ch]

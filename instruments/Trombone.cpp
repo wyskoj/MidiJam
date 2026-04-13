@@ -20,9 +20,7 @@ Ms3dBundle* g_tromboneSlide_ms3d;
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_currentTempo_scaleFactor1_15;
 
-// ---------------------------------------------------------------------------
-// FUNCTION: MIDIJAM 0xXXXXXXXX
-// ---------------------------------------------------------------------------
+// FUNCTION: MIDIJAM 0x4082F0
 void RenderTrombone() {
     __int16 v8 = 0;
     glPushMatrix();
@@ -68,9 +66,7 @@ void RenderTrombone() {
     glPopMatrix();
 }
 
-// ---------------------------------------------------------------------------
-// FUNCTION: MIDIJAM 0xXXXXXXXX
-// ---------------------------------------------------------------------------
+// FUNCTION: MIDIJAM 0x42DF70
 bool UpdateTrombone(MUSIC_TIME pmtNow) {
     float v2; // [esp+10h] [ebp-2Ch]
     __int16 v3; // [esp+14h] [ebp-28h]

@@ -32,6 +32,7 @@ float CYMBAL_MAX_WOBBLE[7] = {
 
 __int16 word_469F48[32] = {};
 
+// FUNCTION: MIDIJAM 0x406230
 void UpdateCymbals(short a1) {
     double v1; // st7
     GLfloat angle; // [esp+0h] [ebp-34h]

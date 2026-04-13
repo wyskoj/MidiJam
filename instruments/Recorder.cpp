@@ -38,7 +38,7 @@ extern Ms3dBundle* g_steamCloud_2_ms3d;
 extern int g_currentTempo_scaleFactor1_15;
 
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x40A720
 void RenderRecorder() {
     double v0; // st7
     GLfloat angle; // [esp+0h] [ebp-44h]
@@ -124,7 +124,7 @@ void RenderRecorder() {
     glPopMatrix();
 }
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x4305D0
 bool UpdateRecorder(MUSIC_TIME pmtNow) {
     __int16 v2; // [esp+14h] [ebp-20h]
     __int16 v3; // [esp+18h] [ebp-1Ch]

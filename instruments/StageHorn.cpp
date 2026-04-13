@@ -11,6 +11,7 @@ DEF_INST(stageHorn, StageHornState)
 extern MUSIC_TIME g_currentGlobalTime;
 Ms3dBundle* g_stageHorn_ms3d = nullptr;
 
+// FUNCTION: MIDIJAM 0x406770
 void RenderStageHorn() {
     short visibleCount = 0;
 
@@ -42,6 +43,7 @@ void RenderStageHorn() {
     glPopMatrix();
 }
 
+// FUNCTION: MIDIJAM 0x429790
 bool UpdateStageHorn(const MUSIC_TIME pmtNow) {
     __int16 anyStageHornActive = 0;
     for (__int16 i = 0; i < g_stageHornCount; ++i) {

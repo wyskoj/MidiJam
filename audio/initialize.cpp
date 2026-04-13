@@ -413,7 +413,7 @@ WINDOW_CREATE_STATUS MidiJamMain(
 }
 
 
-// FUNCTION: MIDIJAM 0x4202E0
+// FUNCTION: MIDIJAM 0x412EA0
 void MidiJamInitialize()
 {
     g_fadeFactor  = 1.0f;

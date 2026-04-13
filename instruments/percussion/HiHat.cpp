@@ -16,6 +16,7 @@ extern float MAX_RECOIL;
 
 short word_4691A4;
 
+// FUNCTION: MIDIJAM 0x4057B0
 void UpdateHiHat() {
     GLfloat angle; // [esp+0h] [ebp-3Ch]
     GLfloat anglea; // [esp+0h] [ebp-3Ch]

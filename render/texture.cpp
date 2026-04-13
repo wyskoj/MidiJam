@@ -545,6 +545,7 @@ BOOL ProcessBitmapFont(char* bitmapFontData, BitmapFontType bitmapFontType)
     return result;
 }
 
+// FUNCTION: MIDIJAM 0x43AD40
 void SetTextureState(const GLboolean wasEnabled)
 {
     if (wasEnabled)

@@ -16,6 +16,7 @@ Ms3dBundle* g_synthDrum_ms3d = nullptr;
 extern Ms3dBundle*g_drumSet_Stick_ms3d;
 extern float MAX_RECOIL;
 
+// FUNCTION: MIDIJAM 0x40D9D0
 void RenderSynthDrum() {
     double v0; // st7
   GLfloat angle; // [esp+0h] [ebp-50h]
@@ -103,6 +104,7 @@ void RenderSynthDrum() {
   glPopMatrix();
 }
 
+// FUNCTION: MIDIJAM 0x434AE0
 bool UpdateSynthDrum(MUSIC_TIME pmtNow) {
      int v2; // [esp+8h] [ebp-1Ch]
   float v3; // [esp+Ch] [ebp-18h]

@@ -31,6 +31,7 @@ Ms3dBundle* g_harpShadow_ms3d = nullptr;
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_vibratingString_frame;
 
+// FUNCTION: MIDIJAM 0x4065F0
 void RenderHarp() {
     __int16 nVisible = 0;
     for (__int16 h = 0; h < g_harpCount; ++h) {
@@ -61,6 +62,7 @@ void RenderHarp() {
     }
 }
 
+// FUNCTION: MIDIJAM 0x4243C0
 bool UpdateHarp(const MUSIC_TIME pmtNow) {
     __int16 anyHarpActive = 0;
     for (__int16 h = 0; h < g_harpCount; ++h) {

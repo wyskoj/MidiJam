@@ -19,6 +19,7 @@ extern float MAX_RECOIL;
 float flt_46E3BC = -11.475;
 float flt_46E3A8 = -27;
 
+// FUNCTION: MIDIJAM 0x40CFA0
 void RenderTaiko() {
     double v0; // st6
     double v1; // st6
@@ -105,6 +106,7 @@ void RenderTaiko() {
     glPopMatrix();
 }
 
+// FUNCTION: MIDIJAM 0x4357A0
 bool UpdateTaiko(MUSIC_TIME pmtNow) {
     int v2; // [esp+8h] [ebp-1Ch]
     float v3; // [esp+Ch] [ebp-18h]

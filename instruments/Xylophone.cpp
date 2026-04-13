@@ -18,6 +18,7 @@ XylophoneModels* g_xylophoneModels[4];
 Ms3dBundle* g_xylophoneShadow_ms3d;
 __int16 g_xylophone_types[300];
 
+// FUNCTION: MIDIJAM 0x412170
 void RenderXylophone() {
      int v0; // eax
   GLfloat angle; // [esp+0h] [ebp-58h]
@@ -190,6 +191,7 @@ LABEL_40:
   }
 }
 
+// FUNCTION: MIDIJAM 0x424C60
 bool UpdateXylophone(MUSIC_TIME pmtNow) {
     __int16 v2; // [esp+8h] [ebp-14h]
   __int16 i; // [esp+Ch] [ebp-10h]

@@ -26,7 +26,7 @@ Ms3dBundle* g_altoSaxKeyX_ms3d[20][2] = {};
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_currentTempo_scaleFactor1_15;
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x40A3D0
 void RenderAltoSax() {
     GLfloat angle; // [esp+0h] [ebp-34h]
     GLfloat anglea; // [esp+0h] [ebp-34h]
@@ -87,7 +87,7 @@ void RenderAltoSax() {
     glPopMatrix();
 }
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x430140
 bool UpdateAltoSax(MUSIC_TIME pmtNow) {
     __int16 v2; // [esp+4h] [ebp-1Ch]
     __int16 v3; // [esp+8h] [ebp-18h]

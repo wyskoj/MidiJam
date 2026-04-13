@@ -18,6 +18,7 @@ __int16 CELLO_NOTES[28][4] = {};
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_vibratingString_frame;
 
+// FUNCTION: MIDIJAM 0x410C50
 void RenderCello() {
     GLfloat x;
     GLfloat z;
@@ -178,6 +179,7 @@ void RenderCello() {
     SetTextureState(v12);
 }
 
+// FUNCTION: MIDIJAM 0x426970
 bool UpdateCello(MUSIC_TIME pmtNow) {
     __int16 jj;
     __int16 v3;

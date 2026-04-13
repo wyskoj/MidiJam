@@ -24,6 +24,7 @@ short GM_TOM_PATCHES[6] = {
 
 float g_recoil_tom[6] = {};
 
+// FUNCTION: MIDIJAM 0x405A20
 void UpdateToms(short tomIndex) {
     GLfloat angle; // [esp+0h] [ebp-34h]
     GLfloat anglea; // [esp+0h] [ebp-34h]

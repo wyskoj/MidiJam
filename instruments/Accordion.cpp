@@ -37,6 +37,7 @@ __int16 ACCORDION_KEY_SHAPE[26] = {
     8,
 };
 
+// FUNCTION: MIDIJAM 0x40BAC0
 void RenderAccordion() {
     GLfloat angle; // [esp+0h] [ebp-20h]
     GLfloat y; // [esp+8h] [ebp-18h]
@@ -117,6 +118,7 @@ void RenderAccordion() {
     glPopMatrix();
 }
 
+// FUNCTION: MIDIJAM 0x423C40
 bool UpdateAccordion(const MUSIC_TIME pmtNow) {
     __int16 v2; // [esp+Ch] [ebp-18h]
     __int16 v3; // [esp+10h] [ebp-14h]

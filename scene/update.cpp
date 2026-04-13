@@ -491,9 +491,7 @@ BOOL UpdateMidiJam() {
     return TRUE;
 }
 
-// ---------------------------------------------------------------------------
-// FUNCTION: MIDIJAM 0x4221E0
-// ---------------------------------------------------------------------------
+// FUNCTION: MIDIJAM 0x421C90
 void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2) {
     double v5; // st7
     int velocity; // [esp+24h] [ebp-44h]
@@ -1008,9 +1006,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
     }
 }
 
-// ---------------------------------------------------------------------------
-// FUNCTION: MIDIJAM 0x421A30
-// ---------------------------------------------------------------------------
+// FUNCTION: MIDIJAM 0x4129A0
 void HandleKeyPresses() {
     g_shiftPressed = g_keyStateArray[VK_SHIFT] != 0;
     //  -- Space key --
@@ -1167,6 +1163,7 @@ void HandleKeyPresses() {
     }
 }
 
+// FUNCTION: MIDIJAM 0x403450
 void RenderPercussion() {
     double v0; // st7
     double v1; // st7
@@ -1744,6 +1741,7 @@ void RenderPercussion() {
     }
 }
 
+// FUNCTION: MIDIJAM 0x4378B0
 void UpdateAllRecoils(const float scale) {
     __int16 i2; // [esp+0h] [ebp-48h]
     __int16 i1; // [esp+4h] [ebp-44h]

@@ -25,7 +25,7 @@ __int16 VIOLIN_NOTES[18][4] = {};
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_vibratingString_frame;
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x40FCA0
 void RenderViolin() {
     GLfloat x; // [esp+0h] [ebp-20h]
     GLfloat y; // [esp+4h] [ebp-1Ch]
@@ -175,7 +175,7 @@ void RenderViolin() {
     SetTextureState(v12);
 }
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x4251D0
 bool UpdateViolin(MUSIC_TIME pmtNow) {
     __int16 jj; // [esp+4h] [ebp-28h]
     __int16 v3; // [esp+8h] [ebp-24h]

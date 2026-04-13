@@ -19,6 +19,7 @@ Ms3dBundle* g_baritoneSaxHorn_ms3d = nullptr;
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_currentTempo_scaleFactor1_15;
 
+// FUNCTION: MIDIJAM 0x4099B0
 void RenderBaritoneSax() {
     GLfloat angle;
     GLfloat anglea;
@@ -80,6 +81,7 @@ void RenderBaritoneSax() {
     glPopMatrix();
 }
 
+// FUNCTION: MIDIJAM 0x42F390
 bool UpdateBaritoneSax(MUSIC_TIME pmtNow) {
     __int16 v2;
     __int16 v3;

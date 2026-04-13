@@ -21,6 +21,7 @@ __int16 g_snareStickActive = 0;
 __int16 word_469B48[512];
 __int16 word_46919A;
 
+// FUNCTION: MIDIJAM 0x4052B0
 void UpdateSnareDrum() {
     GLfloat angle; // [esp+0h] [ebp-3Ch]
     GLfloat anglea; // [esp+0h] [ebp-3Ch]
@@ -86,6 +87,7 @@ void UpdateSnareDrum() {
     }
 }
 
+// FUNCTION: MIDIJAM 0x405520
 void UpdateSideStick() {
     GLfloat angle; // [esp+0h] [ebp-30h]
     GLfloat anglea; // [esp+0h] [ebp-30h]

@@ -8,6 +8,7 @@ extern int g_percussion_time_queue[88][32];
 extern float MAX_RECOIL;
 extern short g_stick_visible[37];
 
+// FUNCTION: MIDIJAM 0x405CC0
 bool IsShowPercussionInstrument(GM_PERCUSSION percussionPatch, float recoil) {
     __int16 i; // [esp+4h] [ebp-18h]
     __int16 time_until_next_hit; // [esp+10h] [ebp-Ch]
@@ -29,6 +30,7 @@ bool IsShowPercussionInstrument(GM_PERCUSSION percussionPatch, float recoil) {
     return true;
 }
 
+// FUNCTION: MIDIJAM 0x405F00
 bool UpdatePercussionStriker(GM_PERCUSSION percussionPatch, float recoilDistance, float a3,
                              Ms3dBundle* stick_model_ms3d, bool isShiny, GLfloat a6) {
     GLfloat angle; // [esp+0h] [ebp-3Ch]

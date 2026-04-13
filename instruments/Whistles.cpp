@@ -25,7 +25,7 @@ Ms3dBundle* g_whistle_ms3d = nullptr;
 extern MUSIC_TIME g_currentGlobalTime;
 extern Ms3dBundle* g_steamCloud_1_ms3d;
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x406950
 void RenderWhistles() {
     double v0; // st7
     GLfloat angle; // [esp+0h] [ebp-50h]
@@ -91,7 +91,7 @@ void RenderWhistles() {
     glPopMatrix();
 }
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x429B50
 bool UpdateWhistles(MUSIC_TIME pmtNow) {
     __int16 v2; // [esp+18h] [ebp-18h]
     __int16 i; // [esp+1Ch] [ebp-14h]

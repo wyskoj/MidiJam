@@ -16,7 +16,8 @@
 // ---------------------------------------------------------------------------
 struct MidiJamTool : IDirectMusicTool
 {
-    // vtable inherited from IDirectMusicTool
+    MidiJamTool();
+    ~MidiJamTool();
 
     // IUnknown
     HRESULT __stdcall QueryInterface(REFIID riid, void** ppv) override;

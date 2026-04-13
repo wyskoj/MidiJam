@@ -119,6 +119,14 @@ HRESULT __stdcall MidiJamTool::Init(IDirectMusicGraph*) {
     return E_NOTIMPL;
 }
 
+// FUNCTION: MIDIJAM 0x43C3A0
+MidiJamTool::MidiJamTool() {
+}
+
+// FUNCTION: MIDIJAM 0x43C3E0
+MidiJamTool::~MidiJamTool() {
+
+}
 
 // FUNCTION: MIDIJAM 0x43C410
 HRESULT __stdcall MidiJamTool::QueryInterface(REFIID riid, void** ppv) {

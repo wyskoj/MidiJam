@@ -15,6 +15,7 @@ extern int g_percussion_time_queue[88][32];
 extern short g_stick_visible[37];
 extern float MAX_RECOIL;
 
+// FUNCTION: MIDIJAM 0x405DB0
 double CalculatePendulumOscillation(GM_PERCUSSION patch, float recoil) {
     __int16 i; // [esp+8h] [ebp-1Ch]
     float v4; // [esp+14h] [ebp-10h]

@@ -19,6 +19,7 @@ Ms3dBundle* g_tenorSaxHorn_ms3d = nullptr;
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_currentTempo_scaleFactor1_15;
 
+// FUNCTION: MIDIJAM 0x409D10
 void RenderTenorSax() {
     GLfloat angle;
     GLfloat anglea;
@@ -80,6 +81,7 @@ void RenderTenorSax() {
     glPopMatrix();
 }
 
+// FUNCTION: MIDIJAM 0x42F820
 bool UpdateTenorSax(MUSIC_TIME pmtNow) {
     __int16 v2;
     __int16 v3;

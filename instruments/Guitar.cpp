@@ -35,9 +35,7 @@ GLfloat GUITAR_FRET_HEIGHTS_AS_PERCENT[23] = {};
 
 __int16 g_guitarNotes[23][6];
 
-// ---------------------------------------------------------------------------
-// FUNCTION: MIDIJAM 0xXXXXXXXX
-// ---------------------------------------------------------------------------
+// FUNCTION: MIDIJAM 0x40E6F0
 void RenderGuitar() {
     GLfloat x; // [esp+0h] [ebp-20h]
     GLfloat y; // [esp+4h] [ebp-1Ch]
@@ -244,9 +242,7 @@ void RenderGuitar() {
         g_guitarVisible = v10;
 }
 
-// ---------------------------------------------------------------------------
-// FUNCTION: MIDIJAM 0xXXXXXXXX
-// ---------------------------------------------------------------------------
+// FUNCTION: MIDIJAM 0x428820
 bool UpdateGuitar(MUSIC_TIME pmtNow) {
     __int16 v2; // [esp+4h] [ebp-138h]
     __int16 ii; // [esp+8h] [ebp-134h]

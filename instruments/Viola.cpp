@@ -24,7 +24,7 @@ __int16 VIOLA_NOTES[18][4] = {};
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_vibratingString_frame;
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x410460
 void RenderViola() {
     GLfloat x;
     GLfloat y;
@@ -176,7 +176,7 @@ void RenderViola() {
     SetTextureState(v12);
 }
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x425DA0
 bool UpdateViola(MUSIC_TIME pmtNow) {
     __int16 jj;
     __int16 v3;

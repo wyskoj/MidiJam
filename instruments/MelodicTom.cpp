@@ -16,6 +16,7 @@ Ms3dBundle* g_melodicTom_ms3d = nullptr;
 extern Ms3dBundle* g_drumSet_Stick_ms3d;
 extern float MAX_RECOIL;
 
+// FUNCTION: MIDIJAM 0x40DDF0
 void RenderMelodicTom() {
     double v0; // st7
     GLfloat angle; // [esp+0h] [ebp-50h]
@@ -97,6 +98,7 @@ void RenderMelodicTom() {
     glPopMatrix();
 }
 
+// FUNCTION: MIDIJAM 0x433E20
 bool UpdateMelodicTom(MUSIC_TIME pmtNow) {
     int v2; // [esp+8h] [ebp-1Ch]
     float v3; // [esp+Ch] [ebp-18h]

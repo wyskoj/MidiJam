@@ -19,6 +19,7 @@ Ms3dBundle* g_sapranoSaxHorn_ms3d = nullptr;
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_currentTempo_scaleFactor1_15;
 
+// FUNCTION: MIDIJAM 0x40A070
 void RenderSapranoSax() {
     GLfloat angle;
     GLfloat anglea;
@@ -80,6 +81,7 @@ void RenderSapranoSax() {
     glPopMatrix();
 }
 
+// FUNCTION: MIDIJAM 0x42FCB0
 bool UpdateSapranoSax(MUSIC_TIME pmtNow) {
     __int16 v2;
     __int16 v3;

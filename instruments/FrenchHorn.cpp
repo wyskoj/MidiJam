@@ -43,7 +43,7 @@ char FRENCH_HORN_KEY_TRIGGER_INDEX[36] = {
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_currentTempo_scaleFactor1_15;
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x409380
 void RenderFrenchHorn() {
     GLfloat angle; // [esp+0h] [ebp-30h]
     GLfloat anglea; // [esp+0h] [ebp-30h]
@@ -169,7 +169,7 @@ void RenderFrenchHorn() {
     glPopMatrix();
 }
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x42EA80
 bool UpdateFrenchHorn(MUSIC_TIME pmtNow) {
     __int16 v2; // [esp+4h] [ebp-1Ch]
     __int16 v3; // [esp+8h] [ebp-18h]

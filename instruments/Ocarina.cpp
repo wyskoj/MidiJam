@@ -23,7 +23,7 @@ Ms3dBundle* g_ocarinaHandX_ms3d[12] = {};
 extern MUSIC_TIME g_currentGlobalTime;
 extern int g_currentTempo_scaleFactor1_15;
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x409120
 void RenderOcarina() {
     GLfloat angle; // [esp+0h] [ebp-2Ch]
     GLfloat y; // [esp+8h] [ebp-24h]
@@ -74,7 +74,7 @@ void RenderOcarina() {
     glPopMatrix();
 }
 
-// FUNCTION: MIDIJAM 0xXXXXXXXX
+// FUNCTION: MIDIJAM 0x42EF10
 bool UpdateOcarina(MUSIC_TIME pmtNow) {
     __int16 v2; // [esp+4h] [ebp-1Ch]
     __int16 v3; // [esp+8h] [ebp-18h]
