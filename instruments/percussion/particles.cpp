@@ -9,6 +9,7 @@ extern float g_recoil_whistle_long;
 extern float g_recoil_whistle_short;
 extern DS_Particles g_particles[2];
 
+// FUNCTION: MIDIJAM 0x42A830
 bool UpdateSteamPuffers() {
     __int16 i; // [esp+18h] [ebp-Ch]
     __int16 j; // [esp+1Ch] [ebp-8h]
