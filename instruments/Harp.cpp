@@ -32,6 +32,7 @@ extern MUSIC_TIME g_currentGlobalTime;
 extern int g_vibratingString_frame;
 
 // FUNCTION: MIDIJAM 0x4065F0
+// MATCH: EXACT
 void RenderHarp() {
     __int16 nVisible = 0;
     for (__int16 h = 0; h < g_harpCount; ++h) {
@@ -44,7 +45,7 @@ void RenderHarp() {
                 glScalef(1.0, g_harpStringScale[string], 1.0);
                 if (g_harp[h].stringPlayTimer[string] > 0) {
                     // Render vibrating string
-                    g_harpStringPlayingX_ms3d[g_harpStringColors[string]][g_vibratingString_frame]->RenderModel();
+                    g_harpStringPlayingX_ms3d[g_harpStringColors[string]][static_cast<__int16>(g_vibratingString_frame)]->RenderModel();
                 }
                 else {
                     // Render static string
