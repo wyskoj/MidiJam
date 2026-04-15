@@ -931,7 +931,7 @@ void __stdcall UpdateMidiJamMM(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD
                 g_inst_visible_drumset = 0;
             }
         }
-        if (g_songFillbarScale >= 1.0 && anyInstrumentActive && !g_isShuttingDown) {
+        if (g_songFillbarScale >= 1.0 && !anyInstrumentActive && !g_isShuttingDown) {
             g_fadeFactor = 0.0;
             g_isShuttingDown = 1;
         }
