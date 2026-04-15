@@ -125,7 +125,6 @@ MidiJamTool::MidiJamTool() {
 
 // FUNCTION: MIDIJAM 0x43C3E0
 MidiJamTool::~MidiJamTool() {
-
 }
 
 // FUNCTION: MIDIJAM 0x43C410
@@ -173,29 +172,31 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                 break;
 
             switch (g_midiJamInstrumentIds[msgChannel]) {
-
                 case PERCUSSION: {
                     const auto gmPercussionPatch = noteMsg->wMusicValue;
                     short n = 0;
                     while (g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] && n < 32)
                         ++n;
-                    if ( n < 32 )
-                    {
+                    if (n < 32) {
                         pPerf->GetTime(&rtNow, &mtNow);
                         g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] = noteMsg->mtTime - mtNow;
                         g_percussion_velocity_queue[(unsigned __int16)gmPercussionPatch][n] = noteMsg->bVelocity;
-                        if ( !g_show_percussion && IsGmPercussionSupported(static_cast<GM_PERCUSSION>(gmPercussionPatch)) )
-                        {
+                        if (!g_show_percussion &&
+                            IsGmPercussionSupported(static_cast<GM_PERCUSSION>(gmPercussionPatch))) {
                             g_show_percussion = 1;
                             g_inst_visible_drumset = 1;
                         }
-                        g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] -= g_currentTempo_scaleFactor0_9;
-                        if ( g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] <= 0 )
+                        g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] -=
+                            g_currentTempo_scaleFactor0_9;
+                        if (g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] <= 0)
                             g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] = 1;
                     }
                     break;
                 }
-                case PIANO: {
+                case PIANO:
+                case ORGAN:
+                case SYNTH:
+                case HARPSICHORD: {
                     const unsigned short keyIndex = (noteMsg->wMusicValue) - (21);
                     if ((keyIndex) >= (unsigned short)(88)) break;;
                     PianoState& inst = g_piano[g_pianoChannel[msgChannel]];
@@ -1030,13 +1031,16 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                             ++i26;
                         }
                         if (i26 < 16) {
-                            g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_1EC[note][i26] = noteMsg->mtDuration;
+                            g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_1EC[note][i26] = noteMsg->
+                                mtDuration;
                             if (g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_1EC[note][i26] < 0) {
                                 g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_1EC[note][i26] = 10;
                             }
                             pPerf->GetTime(&rtNow, &mtNow);
-                            g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_112C[note][i26] = noteMsg->mtTime - mtNow;
-                            g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_112C[note][i26] -= g_currentTempo_scaleFactor0_9;
+                            g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_112C[note][i26] = noteMsg->mtTime -
+                                mtNow;
+                            g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_112C[note][i26] -=
+                                g_currentTempo_scaleFactor0_9;
                             if (g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_112C[note][i26] <= 0) {
                                 g_recorder[g_recorderChannel[noteMsg->dwPChannel]].field_112C[note][i26] = 1;
                             }
@@ -1057,7 +1061,8 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                                 g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_134[note][i28] = 10;
                             pPerf->GetTime(&rtNow, &mtNow);
                             g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_AB4[note][i28] = noteMsg->mtTime - mtNow;
-                            g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_AB4[note][i28] -= g_currentTempo_scaleFactor0_9;
+                            g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_AB4[note][i28] -=
+                                g_currentTempo_scaleFactor0_9;
                             if (g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_AB4[note][i28] <= 0)
                                 g_flute[g_fluteChannel[noteMsg->dwPChannel]].field_AB4[note][i28] = 1;
                         }
@@ -1076,8 +1081,10 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                             if (g_piccolo[g_piccoloChannel[noteMsg->dwPChannel]].field_134[note][i28] < 0)
                                 g_piccolo[g_piccoloChannel[noteMsg->dwPChannel]].field_134[note][i28] = 10;
                             pPerf->GetTime(&rtNow, &mtNow);
-                            g_piccolo[g_piccoloChannel[noteMsg->dwPChannel]].field_AB4[note][i28] = noteMsg->mtTime - mtNow;
-                            g_piccolo[g_piccoloChannel[noteMsg->dwPChannel]].field_AB4[note][i28] -= g_currentTempo_scaleFactor0_9;
+                            g_piccolo[g_piccoloChannel[noteMsg->dwPChannel]].field_AB4[note][i28] = noteMsg->mtTime -
+                                mtNow;
+                            g_piccolo[g_piccoloChannel[noteMsg->dwPChannel]].field_AB4[note][i28] -=
+                                g_currentTempo_scaleFactor0_9;
                             if (g_piccolo[g_piccoloChannel[noteMsg->dwPChannel]].field_AB4[note][i28] <= 0)
                                 g_piccolo[g_piccoloChannel[noteMsg->dwPChannel]].field_AB4[note][i28] = 1;
                         }
@@ -1109,8 +1116,31 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                 static_cast<MidiJamInstrumentId>(MIDIJAM_INSTRUMENT_IDS[patchMsg->byInstrument]);
 
             switch (g_midiJamInstrumentIds[pPMSG->dwPChannel]) {
-                case PIANO: {
-                    ALLOC_INST(piano, PianoState);
+                case PIANO:
+                case ORGAN:
+                case SYNTH:
+                case HARPSICHORD: {
+                    if (g_piano) {
+                        g_piano = static_cast<PianoState*>(realloc(g_piano, sizeof(PianoState) * (g_pianoCount + 1)));
+                    } else {
+                        g_piano = static_cast<PianoState*>(malloc(sizeof(PianoState)));
+                        memset(&g_piano[g_pianoCount], 0, sizeof(PianoState));
+                    }
+                    switch (g_midiJamInstrumentIds[pPMSG->dwPChannel]) {
+                        case ORGAN: {
+                            g_piano[g_pianoCount].materialIndex = 1;
+                            break;
+                        }
+                        case SYNTH: {
+                            g_piano[g_pianoCount].materialIndex = 2;
+                            break;
+                        }
+                        case HARPSICHORD: {
+                            g_piano[g_pianoCount].materialIndex = 3;
+                            break;
+                        }
+                    }
+                    g_pianoChannel[pPMSG->dwPChannel] = g_pianoCount++;
                     break;
                 }
 
