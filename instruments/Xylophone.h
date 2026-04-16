@@ -9,16 +9,18 @@
 #include "dmusici.h"
 #include "model/Ms3dBundle.h"
 
+#pragma pack(push, 1)
 struct XylophoneState {
-    __int16 isActive;
-    __int16 timeToLive;
+    __int16 field_0;
+    __int16 field_2;
     __int16 field_4;
-    float field_6[16];
-    int field_B6[88];
+    float field_6[88];
+    int field_166[88];
     int field_2C6[88][16];
     unsigned __int8 field_18C6[88][16];
-    __int16 queue[88][16];
+    __int16 field_1E46[88][16];
 };
+#pragma pack(pop)
 
 struct XylophoneModels {
     Ms3dBundle* xylophoneWhiteBar;
@@ -27,7 +29,7 @@ struct XylophoneModels {
     Ms3dBundle* xylophoneBlackBarDown;
 };
 
-// static_assert(sizeof(XylophoneState) == 0x2946, "XylophoneState layout mismatch");
+static_assert(sizeof(XylophoneState) == 0x2946, "XylophoneState layout mismatch");
 
 DECL_INST_DS(xylophone, XylophoneState);
 
