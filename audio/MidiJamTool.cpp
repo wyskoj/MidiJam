@@ -172,6 +172,32 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                 break;
 
             switch (g_midiJamInstrumentIds[msgChannel]) {
+                case PIANO:
+                case ORGAN:
+                case SYNTH:
+                case HARPSICHORD: {
+                    const auto keyboardKeyIndex = noteMsg->wMusicValue - 21;
+                    if ( keyboardKeyIndex < 88u )
+                    {
+                        int slot = 0;
+                        while (g_piano[g_pianoChannel[noteMsg->dwPChannel]].queue[keyboardKeyIndex][slot] && slot < 16)
+                            slot++;
+                        if ( slot < 16 )
+                        {
+                            g_piano[g_pianoChannel[noteMsg->dwPChannel]].queue[keyboardKeyIndex][slot] = noteMsg->mtDuration;
+                            g_piano[g_pianoChannel[noteMsg->dwPChannel]].velocities[keyboardKeyIndex][slot] = noteMsg->bVelocity;
+                            g_piano[g_pianoChannel[noteMsg->dwPChannel]].queue[keyboardKeyIndex][slot] = (unsigned __int64)(double)g_piano[g_pianoChannel[noteMsg->dwPChannel]].queue[keyboardKeyIndex][slot] - g_currentTempo_scaleFactor0_5;
+                            if ( g_piano[g_pianoChannel[noteMsg->dwPChannel]].queue[keyboardKeyIndex][slot] < 0 )
+                                g_piano[g_pianoChannel[noteMsg->dwPChannel]].queue[keyboardKeyIndex][slot] = 10;
+                            (pPerf->GetTime)(&rtNow, &mtNow);
+                            g_piano[g_pianoChannel[noteMsg->dwPChannel]].timeDeltas[keyboardKeyIndex][slot] = noteMsg->mtTime - mtNow;
+                            g_piano[g_pianoChannel[noteMsg->dwPChannel]].timeDeltas[keyboardKeyIndex][slot] -= g_currentTempo_scaleFactor0_9;
+                            if ( g_piano[g_pianoChannel[noteMsg->dwPChannel]].timeDeltas[keyboardKeyIndex][slot] <= 0 )
+                                g_piano[g_pianoChannel[noteMsg->dwPChannel]].timeDeltas[keyboardKeyIndex][slot] = 1;
+                        }
+                    }
+                    break;
+                }
                 case PERCUSSION: {
                     const auto gmPercussionPatch = noteMsg->wMusicValue;
                     short n = 0;
@@ -190,32 +216,6 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                             g_currentTempo_scaleFactor0_9;
                         if (g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] <= 0)
                             g_percussion_time_queue[(unsigned __int16)gmPercussionPatch][n] = 1;
-                    }
-                    break;
-                }
-                case PIANO:
-                case ORGAN:
-                case SYNTH:
-                case HARPSICHORD: {
-                    const unsigned short keyIndex = (noteMsg->wMusicValue) - (21);
-                    if ((keyIndex) >= (unsigned short)(88)) break;;
-                    PianoState& inst = g_piano[g_pianoChannel[msgChannel]];
-
-                    pPerf->GetTime(&rtNow, &mtNow);
-                    int duration = noteMsg->mtDuration - g_currentTempo_scaleFactor0_5;
-                    if (duration < 0) duration = 10;
-                    short timeDelta = static_cast<short>(msgMtTime - mtNow)
-                        - static_cast<short>(g_currentTempo_scaleFactor0_9);
-                    if (timeDelta <= 0) timeDelta = 1;
-
-                    short slot = 0;
-                    while ((inst.queue[keyIndex][slot]) && (slot) < (16)) ++(slot);
-                    if ((slot) < (16)) {
-                        {
-                            inst.queue[keyIndex][slot] = duration;
-                            inst.velocities[keyIndex][slot] = noteMsg->bVelocity;
-                            inst.timeDeltas[keyIndex][slot] = timeDelta;
-                        }
                     }
                     break;
                 }
@@ -368,12 +368,12 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                             if (g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] < 0)
                                 g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_2C6[v140][ii] = 10;
                             (pPerf->GetTime)(&rtNow, &mtNow);
-                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].queue[v140][ii] = noteMsg->mtTime -
+                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_1E46[v140][ii] = noteMsg->mtTime -
                                 mtNow;
-                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].queue[v140][ii] -=
+                            g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_1E46[v140][ii] -=
                                 g_currentTempo_scaleFactor0_9;
-                            if (g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].queue[v140][ii] <= 0)
-                                g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].queue[v140][ii] = 1;
+                            if (g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_1E46[v140][ii] <= 0)
+                                g_xylophone[g_xylophoneChannel[noteMsg->dwPChannel]].field_1E46[v140][ii] = 1;
                         }
                     }
                     break;
@@ -1120,25 +1120,27 @@ HRESULT __stdcall MidiJamTool::ProcessPMsg(IDirectMusicPerformance* pPerf, DMUS_
                 case ORGAN:
                 case SYNTH:
                 case HARPSICHORD: {
-                    if (g_piano) {
-                        g_piano = static_cast<PianoState*>(realloc(g_piano, sizeof(PianoState) * (g_pianoCount + 1)));
-                    } else {
-                        g_piano = static_cast<PianoState*>(malloc(sizeof(PianoState)));
+                    if ( g_piano )
+                    {
+                        g_piano = (PianoState *)realloc(g_piano, sizeof(PianoState) * (g_pianoCount + 1));
                         memset(&g_piano[g_pianoCount], 0, sizeof(PianoState));
                     }
-                    switch (g_midiJamInstrumentIds[pPMSG->dwPChannel]) {
-                        case ORGAN: {
+                    else
+                    {
+                        g_piano = (PianoState *)malloc(sizeof(PianoState));
+                        memset(g_piano, 0, sizeof(PianoState));
+                    }
+                    switch ( g_midiJamInstrumentIds[pPMSG->dwPChannel] )
+                    {
+                        case 40:
                             g_piano[g_pianoCount].materialIndex = 1;
                             break;
-                        }
-                        case SYNTH: {
+                        case 44:
                             g_piano[g_pianoCount].materialIndex = 2;
                             break;
-                        }
-                        case HARPSICHORD: {
+                        case 45:
                             g_piano[g_pianoCount].materialIndex = 3;
                             break;
-                        }
                     }
                     g_pianoChannel[pPMSG->dwPChannel] = g_pianoCount++;
                     break;
